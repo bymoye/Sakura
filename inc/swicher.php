@@ -36,17 +36,24 @@ mashiro_option.clipboardCopyright = false;
 mashiro_option.clipboardCopyright = true;
 <?php } ?>
 
+<?php if (akina_option('app_no_jsdelivr_cdn')) {?>
 <?php if(akina_option('entry_content_theme') == "sakura"){ ?>
 mashiro_option.entry_content_theme_src = "<?php echo get_template_directory_uri() ?>/cdn/theme/sakura.css";
 <?php }elseif(akina_option('entry_content_theme') == "github") {?>
 mashiro_option.entry_content_theme_src = "<?php echo get_template_directory_uri() ?>/cdn/theme/github.css";
+<?php } ?>
+<?php } else {if(akina_option('entry_content_theme') == "sakura"){?>
+mashiro_option.entry_content_theme_src = "https://cdn.jsdelivr.net/combine/gh/bymoye/Sakura@0.0.1/cdn/theme/sakura.min.css,npm/aplayer@1.10.1/dist/APlayer.min.css";
+<?php }elseif(akina_option('entry_content_theme') == "github") {?>
+mashiro_option.entry_content_theme_src = "https://cdn.jsdelivr.net/combine/gh/bymoye/Sakura@0.0.1/cdn/theme/github.min.css,npm/aplayer@1.10.1/dist/APlayer.min.css";
+<?php } ?>
 <?php } ?>
 mashiro_option.entry_content_theme = "<?php echo akina_option('entry_content_theme'); ?>";
 
 <?php if(akina_option('jsdelivr_cdn_test')){ ?>
 mashiro_option.jsdelivr_css_src = "<?php echo get_template_directory_uri() ?>/cdn/css/lib.css";
 <?php } else { ?>
-mashiro_option.jsdelivr_css_src = "https://cdn.jsdelivr.net/gh/mashirozx/Sakura@<?php echo SAKURA_VERSION; ?>/cdn/css/lib.min.css";
+mashiro_option.jsdelivr_css_src = "https://cdn.jsdelivr.net/gh/bymoye/Sakura@<?php echo NMX_VERSION; ?>/cdn/css/lib.min.css";
 <?php } ?>
 <?php if (akina_option('playlist_id', '')): ?>
 mashiro_option.float_player_on = true;
