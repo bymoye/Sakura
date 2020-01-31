@@ -108,7 +108,7 @@ if ( akina_option('theme_skin') ) { ?>
         -webkit-backdrop-filter: blur(5px); 
         transform:translateY(80px);
         transition:all .5s linear;
-    }
+        }
 
         .single-center .entry-census span img {
             float: none;
