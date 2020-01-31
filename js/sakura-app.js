@@ -264,7 +264,7 @@ $(document).ready(function getsvg() {
     $('.openNav').addClass('exhide'),
     $('site-header').addClass('exhide');
 var getsvg = new XMLHttpRequest();
-getsvg.open("GET", "https://hc.miym.wang/svg/icon.svg", true);
+getsvg.open("GET", "https://cdn.jsdelivr.net/gh/bymoye/sakura@0.0.2/images/icon.svg", true);
 getsvg.onload = function(e) {
     document.body.insertAdjacentHTML("afterEnd", '<div style="display:none;">' + getsvg.responseText + '</div>');
 }
