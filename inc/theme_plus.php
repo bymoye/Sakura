@@ -41,15 +41,25 @@ function get_avatar_profile_url(){
 
 /*
  * 随机图
- */
 function get_random_bg_url(){
     if ( empty( akina_option('default_feature_image' )) ) {
         return get_template_directory_uri().'/feature/index.php?'.rand(1,1000);
     } else {
-        return akina_option('default_feature_image').'?'.rand(1,1000);
+        return akina_option('default_feature_image').'?&'.rand(1,1000);
     }
 }
-
+*/
+  function get_random_bg_url(){
+    if (empty (akina_option('default_feature_image'))){
+      return get_template_directory_url() . '/feature/index.php?' . rand(1,1000);
+    }else{
+    $url='http://fz.miym.wang/acg?key=json';
+    $html = file_get_contents($url);
+    $arr = json_decode($html, true);
+    $payzt = $arr['acgurl'];
+    return $payzt . '.jpg!q80.jpeg';
+    }
+}
 
 /*
  * 订制时间样式

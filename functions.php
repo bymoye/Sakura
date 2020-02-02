@@ -8,7 +8,7 @@
  */
  
 define( 'SAKURA_VERSION', '3.3.2' );
-define( 'NMX_VERSION', '0.0.2' );
+define( 'NMX_VERSION', '0.0.3' );
 define( 'BUILD_VERSION', '3' );
 
 //ini_set('display_errors', true);
@@ -1646,7 +1646,7 @@ function change_avatar($avatar){
 }
 
 // default feature image
-function DEFAULT_FEATURE_IMAGE() {
+/*function DEFAULT_FEATURE_IMAGE() {
     if ( empty( akina_option('default_feature_image' )) ) {
         return get_template_directory_uri().'/feature/index.php?'.rand(1,1000);
         //return 'https://api.mashiro.top/feature/?'.rand(1,1000);
@@ -1654,7 +1654,18 @@ function DEFAULT_FEATURE_IMAGE() {
         return akina_option('default_feature_image').'?'.rand(1,1000);
     }
 }
-
+*/
+function DEFAULT_FEATURE_IMAGE() {
+if (empty (akina_option('default_feature_image'))){
+    return get_template_directory_url() . '/feature/index.php?' . rand(1,1000);
+  }else{
+  $url='http://fz.miym.wang/acg?key=json';
+  $html = file_get_contents($url);
+  $arr = json_decode($html, true);
+  $payzt = $arr['acgurl'];
+  return $payzt;
+  }
+}
 //防止设置置顶文章造成的图片同侧bug
 add_action( 'pre_get_posts', function( $q ){
     if ( $q->is_home() && $q->is_main_query() && $q->get( 'paged' ) > 1 )

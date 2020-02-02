@@ -20,10 +20,10 @@ import codecs
 localtime = time.asctime( time.localtime(time.time()) )
 print (localtime)
 
-pathJS = 'js/src/'
-pathJSroot = 'js/'
-pathCSS = 'css/src/'
-pathCSSroot = 'css/'
+pathJS = 'D:/phpstudy_pro/WWW/wp-content/themes/Sakura/cdn/js/src/'
+pathJSroot = 'D:/phpstudy_pro/WWW/wp-content/themes/Sakura/cdn/js/'
+pathCSS = 'D:/phpstudy_pro/WWW/wp-content/themes/Sakura/cdn/css/src/'
+pathCSSroot = 'D:/phpstudy_pro/WWW/wp-content/themes/Sakura/cdn/css/'
 
 jsfiles = [f for f in listdir(pathJS) if isfile(join(pathJS, f))]
 cssfiles = [f for f in listdir(pathCSS) if isfile(join(pathCSS, f))]

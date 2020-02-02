@@ -264,7 +264,7 @@ $(document).ready(function getsvg() {
     $('.openNav').addClass('exhide'),
     $('site-header').addClass('exhide');
 var getsvg = new XMLHttpRequest();
-getsvg.open("GET", "https://cdn.jsdelivr.net/gh/bymoye/sakura@0.0.2/images/icon.svg", true);
+getsvg.open("GET", "https://cdn.jsdelivr.net/gh/bymoye/sakura@0.0.3/images/icon.svg", true);
 getsvg.onload = function(e) {
     document.body.insertAdjacentHTML("afterEnd", '<div style="display:none;">' + getsvg.responseText + '</div>');
 }
@@ -389,7 +389,7 @@ function killCoverVideo() {
 
 function coverVideoIni() {
     if ($('video').hasClass('hls')) {
-        $.getScript("https://hc.miym.wang/js/16.hls.js", function(){
+        $.getScript("https://cdn.jsdelivr.net/gh/bymoye/sakura@0.0.3/cdn/js/src/16.hls.js", function(){
             var video = addComment.I('coverVideo');
             var video_src = $('#coverVideo').attr('data-src');
             if (Hls.isSupported()) {

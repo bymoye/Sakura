@@ -20,7 +20,7 @@ if ( $site_description && ( is_home() || is_front_page() ) ) echo " - $site_desc
 <?php wp_head(); ?>
 <script>
 var getsvg = new XMLHttpRequest();
-getsvg.open("GET", "https://fz.miym.wang/icon.svg", true);
+getsvg.open("GET", "https://cdn.jsdelivr.net/gh/bymoye/sakura@0.0.3/images/icon.svg", true);
 getsvg.onload = function(e) {
     document.body.insertAdjacentHTML("beforeEnd", '<div style="display:none;">' + getsvg.responseText + '</div>');
 }
