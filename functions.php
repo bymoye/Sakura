@@ -8,7 +8,7 @@
  */
  
 define( 'SAKURA_VERSION', '3.3.2' );
-define( 'NMX_VERSION', '0.0.3' );
+define( 'NMX_VERSION', '0.0.4' );
 define( 'BUILD_VERSION', '3' );
 
 //ini_set('display_errors', true);
@@ -1658,12 +1658,13 @@ function change_avatar($avatar){
 function DEFAULT_FEATURE_IMAGE() {
 if (empty (akina_option('default_feature_image'))){
     return get_template_directory_url() . '/feature/index.php?' . rand(1,1000);
-  }else{
-  $url='http://fz.miym.wang/acg?key=json';
-  $html = file_get_contents($url);
-  $arr = json_decode($html, true);
-  $payzt = $arr['acgurl'];
-  return $payzt;
+  }else
+    $url=akina_option('default_feature_image');
+    $html = json_decode(file_get_contents($url), true);
+    $arr = $html['acgurl'];
+    $md = $arr . '.md.jpg!q80.webp';
+    $th =  $arr . '.jpg!q80.jpeg';
+    return array($md,$th);
   }
 }
 //防止设置置顶文章造成的图片同侧bug

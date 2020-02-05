@@ -16,7 +16,9 @@
 	<?php if ( has_post_thumbnail() ) { ?>
 		<a href="<?php the_permalink();?>"><?php the_post_thumbnail('large'); ?></a>
 		<?php } else {?>
-		<a href="<?php the_permalink();?>"><img src="<?php echo DEFAULT_FEATURE_IMAGE(); ?>" /></a>
+		<?php $feature_image = DEFAULT_FEATURE_IMAGE();
+		if (is_array($feature_image)){$feature_img=$feature_image[1];}else{$feature_img=$feature_image;}?>
+		<a href="<?php the_permalink();?>"><img src="<?php echo $feature_img; ?>" /></a>
 		<?php } ?>
 	</div>
 	

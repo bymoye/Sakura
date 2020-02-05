@@ -55,7 +55,7 @@
 }
 
 .aplayer .aplayer-list ol li {
-    border-top: none
+    border-top: none !important;
 }
 
 .aplayer .aplayer-list ol li.aplayer-list-light {

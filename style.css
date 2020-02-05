@@ -4235,7 +4235,9 @@ i.iconfont.js-toggle-search.iconsearch {
     animation: elastic .5s;
     background-image: url(https://cdn.jsdelivr.net/gh/bymoye/cdn@1/sakura/images/load-loli.gif);
     background-repeat: no-repeat;
-    background-position: bottom right
+    background-position: bottom right;
+    background-color: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(5px);
 }
 
 .search-form .search_close {
@@ -4283,7 +4285,7 @@ i.iconfont.js-toggle-search.iconsearch {
 .search-form input {
     font-size: 24px;
     font-size: 1.5rem;
-    background: #FFF;
+    background: rgba(255,255,255,.8);
     padding: 12px 24px 12px 64px;
     width: 100%;
     outline: 0;

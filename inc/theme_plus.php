@@ -47,20 +47,18 @@ function get_random_bg_url(){
     } else {
         return akina_option('default_feature_image').'?&'.rand(1,1000);
     }
-}
-*/
-  function get_random_bg_url(){
-    if (empty (akina_option('default_feature_image'))){
-      return get_template_directory_url() . '/feature/index.php?' . rand(1,1000);
-    }else{
-    $url='http://fz.miym.wang/acg?key=json';
-    $html = file_get_contents($url);
-    $arr = json_decode($html, true);
-    $payzt = $arr['acgurl'];
-    return $payzt . '.jpg!q80.jpeg';
-    }
-}
-
+}*/
+function get_random_bg_url(){
+  if (empty (akina_option('default_feature_image'))){
+    return get_template_directory_url() . '/feature/index.php?' . rand(1,1000);
+  }else{
+  $url= akina_option('default_feature_image');
+  $html = json_decode(file_get_contents($url), true);
+  $arr = $html['acgurl'];
+  $md = $arr . '.md.jpg!q80.webp';
+  $th =  $arr . '.jpg!q80.jpeg';
+  return array($md,$th);
+  }}
 /*
  * 订制时间样式
  * poi_time_since(strtotime($post->post_date_gmt));
@@ -340,7 +338,8 @@ function the_headPattern(){
   if(!is_home() && $full_image_url) : ?>
   <div class="pattern-center-blank"></div>
   <div class="pattern-center <?php if(is_single()){echo $center;} ?>">
-    <div class="pattern-attachment-img lazyload" style="background-image: url(https://cdn.jsdelivr.net/gh/moezx/cdn@3.0.1/img/svg/loader/orange.progress-bar-stripe-loader.svg)" data-src="<?php echo $full_image_url; ?>"> </div>
+  <?php if(is_array($full_image_url)){$full_image_lazyload=$full_image_url[0];$full_image_url_src=$full_image_url[1];}else{$full_image_lazyload="(https://cdn.jsdelivr.net/gh/moezx/cdn@3.0.1/img/svg/loader/orange.progress-bar-stripe-loader.svg";$full_image_url_src=$full_image_url;}?>
+  <div class="pattern-attachment-img lazyload" style="background-image: url(<?php echo $full_image_lazyload ?>)" data-src="<?php echo $full_image_url_src ?>"> </div>
     <header class="pattern-header <?php if(is_single()){echo $header;} ?>"><?php echo $t; ?></header>
   </div>
   <?php else :
@@ -557,7 +556,7 @@ function get_prev_thumbnail_url() {
 function get_next_thumbnail_url() { 
   $next_post = get_next_post(); 
   if ( has_post_thumbnail($next_post->ID) ) { 
-    $img_src = wp_get_attachment_image_src( get_post_thumbnail_id( $next_post->ID ), 'large'); 
+    $img_src = wp_get_attachment_image_src( get_post_thumbnail_id( $next_post->ID ), 'large');
     return $img_src[0]; 
   } 
   else { 
@@ -565,7 +564,7 @@ function get_next_thumbnail_url() {
     preg_match_all('/<img.*?(?: |\\t|\\r|\\n)?src=[\'"]?(.+?)[\'"]?(?:(?: |\\t|\\r|\\n)+.*?)?>/sim', $content, $strResult, PREG_PATTERN_ORDER); 
     $n = count($strResult[1]); 
     if($n > 0){ 
-      return $strResult[1][0];   
+      return $strResult[1][0];
     }else{
       return get_random_bg_url();
     } 

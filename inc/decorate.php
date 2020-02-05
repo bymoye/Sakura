@@ -65,7 +65,7 @@ if ( akina_option('theme_skin') ) { ?>
             left: 0;
             will-change: transform;
             z-index: -1;
-            background-image: url('<?php echo get_random_bg_url(); ?>');
+            background-image: url('<?php echo get_random_bg_url()[1]; ?>');
             background-repeat: no-repeat;
             background-position: top right;
             background-size: cover;
@@ -135,6 +135,7 @@ if ( akina_option('theme_skin') ) { ?>
         #content, .comments .comments-main {
             border-radius: 0 0 10px 10px;
             box-shadow: 3px 1px 5px rgba(0, 0, 0, 0.28);
+            backdrop-filter: blur(5px);
         }
 
         .meme_btn, .form-submit .submit, #comments_edit, .notification, #pagination a {
