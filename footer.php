@@ -117,7 +117,7 @@
         data-server="netease"
         data-type="playlist"
         data-fixed="true"
-        data-theme="orange">
+        data-theme="<?php echo akina_option('theme_skin')?>>">
     </div>
 <?php endif; ?>
 </body>

@@ -61,7 +61,7 @@ mashiro_option.float_player_on = true;
 
 <?php
 if (akina_option('cover_img')) {
-    $imgurl = akina_option('cover_img');
+    $imgurl = get_random_bg_url()[1];
 } else {
     $imgurl = get_site_url()."/wp-content/themes/Sakura/cover/index.php";
 } ?>

@@ -27,6 +27,9 @@ if ( akina_option('theme_skin') ) { ?>
 .author-profile svg,.love,svg.caidan:hover {
     fill: <?php echo akina_option('theme_skin'); ?> !important
 }
+.aplayer-thumb,.aplayer-played{
+    background:<?php echo akina_option('theme_skin'); ?> !important
+}
 .insert-image-tips:hover, .insert-image-tips-hover{ 
     color: <?php echo akina_option('theme_skin'); ?>;
     border: 1px solid <?php echo akina_option('theme_skin'); ?>;
@@ -135,7 +138,7 @@ if ( akina_option('theme_skin') ) { ?>
         #content, .comments .comments-main {
             border-radius: 0 0 10px 10px;
             box-shadow: 3px 1px 5px rgba(0, 0, 0, 0.28);
-            backdrop-filter: blur(5px);
+            backdrop-filter: blur(5px) brightness(.88);
         }
 
         .meme_btn, .form-submit .submit, #comments_edit, .notification, #pagination a {

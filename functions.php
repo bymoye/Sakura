@@ -8,7 +8,7 @@
  */
  
 define( 'SAKURA_VERSION', '3.3.2' );
-define( 'NMX_VERSION', '0.0.4' );
+define( 'NMX_VERSION', '0.0.5' );
 define( 'BUILD_VERSION', '3' );
 
 //ini_set('display_errors', true);
@@ -1658,7 +1658,7 @@ function change_avatar($avatar){
 function DEFAULT_FEATURE_IMAGE() {
 if (empty (akina_option('default_feature_image'))){
     return get_template_directory_url() . '/feature/index.php?' . rand(1,1000);
-  }else
+  }else{
     $url=akina_option('default_feature_image');
     $html = json_decode(file_get_contents($url), true);
     $arr = $html['acgurl'];
