@@ -1659,7 +1659,7 @@ function DEFAULT_FEATURE_IMAGE() {
 if (akina_option('cover_cdn_options') == "type_2"){
     return get_template_directory_uri() . '/feature/index.php?' . rand(1,1000);
   }elseif(akina_option('cover_cdn_options') == "type_1"){
-    //get_random_image_url();
+    get_random_image_url();
   }
 }
 //防止设置置顶文章造成的图片同侧bug

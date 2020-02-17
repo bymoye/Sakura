@@ -52,7 +52,7 @@ function get_random_bg_url(){
   if (akina_option('cover_cdn_options') == "type_2"){
     return get_template_directory_uri() . '/feature/index.php?' . rand(1,1000);
   }elseif(akina_option('cover_cdn_options') == "type_1"){
-    //get_random_image_url();
+    get_random_image_url();
   }}
 /*
  * 订制时间样式
