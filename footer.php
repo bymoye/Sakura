@@ -32,14 +32,12 @@
 			<p style="font-family: 'Ubuntu', sans-serif;">
 					<span style="color: #b9b9b9;">
 						<?php /* 能保留下面两个链接吗？算是我一个小小的心愿吧~ */ ?>
-						Theme <a href="https://2heng.xin/theme-sakura/" target="_blank" style="color: #b9b9b9;;text-decoration: underline dotted rgba(0, 0, 0, .1);">Sakura</a> <i class="iconfont icon-sakura rotating" style="color: #ffc0cb;display:inline-block"></i> by <a href="https://2heng.xin/" target="_blank" style="color: #b9b9b9;;text-decoration: underline dotted rgba(0, 0, 0, .1);">Mashiro</a>
-					</span>
+						Theme <a href="https://2heng.xin/theme-sakura/" target="_blank" style="color: #b9b9b9;;text-decoration: underline dotted rgba(0, 0, 0, .1);">Sakura</a> <i class="iconfont icon-sakura rotating" style="color: #ffc0cb;display:inline-block"></i> by <a href="https://2heng.xin/" target="_blank" style="color: #b9b9b9;;text-decoration: underline dotted rgba(0, 0, 0, .1);">Mashiro</a><br>
+					<a>查询了 <?php echo get_num_queries()?> 次数据库,耗时 <?php timer_stop(1) ?> 秒,消耗了 <?php echo round(memory_get_peak_usage()/1024/1024,2) ?> MB内存</a>
+				</span>
 				</p>
 			</div>
 			<?php if (akina_option('data_query') != '0') { ?>
-            <div class="footer-device">
-                <p>查询了 <?php echo get_num_queries(); ?> 次数据库,耗时 <?php timer_stop(3); ?> 秒</p>
-            </div>
         <?php } ?>
 		</div><!-- .site-info -->
 	</footer><!-- #colophon -->

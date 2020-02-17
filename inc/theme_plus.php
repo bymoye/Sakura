@@ -49,15 +49,10 @@ function get_random_bg_url(){
     }
 }*/
 function get_random_bg_url(){
-  if (empty (akina_option('default_feature_image'))){
-    return get_template_directory_url() . '/feature/index.php?' . rand(1,1000);
-  }else{
-  $url= akina_option('default_feature_image');
-  $html = json_decode(file_get_contents($url), true);
-  $arr = $html['acgurl'];
-  $md = $arr . '.md.jpg!q80.webp';
-  $th =  $arr . '.jpg!q80.jpeg';
-  return array($md,$th);
+  if (akina_option('cover_cdn_options') == "type_2"){
+    return get_template_directory_uri() . '/feature/index.php?' . rand(1,1000);
+  }elseif(akina_option('cover_cdn_options') == "type_1"){
+    //get_random_image_url();
   }}
 /*
  * 订制时间样式
@@ -338,7 +333,7 @@ function the_headPattern(){
   if(!is_home() && $full_image_url) : ?>
   <div class="pattern-center-blank"></div>
   <div class="pattern-center <?php if(is_single()){echo $center;} ?>">
-  <?php if(is_array($full_image_url)){$full_image_lazyload=$full_image_url[0];$full_image_url_src=$full_image_url[1];}else{$full_image_lazyload="(https://cdn.jsdelivr.net/gh/moezx/cdn@3.0.1/img/svg/loader/orange.progress-bar-stripe-loader.svg";$full_image_url_src=$full_image_url;}?>
+  <?php (is_array($full_image_url)) ? ($full_image_lazyload=$full_image_url[0]).($full_image_url_src=$full_image_url[1]) : ($full_image_lazyload="(https://cdn.jsdelivr.net/gh/moezx/cdn@3.0.1/img/svg/loader/orange.progress-bar-stripe-loader.svg").($full_image_url_src=$full_image_url)?>
   <div class="pattern-attachment-img lazyload" style="background-image: url(<?php echo $full_image_lazyload ?>)" data-src="<?php echo $full_image_url_src ?>"> </div>
     <header class="pattern-header <?php if(is_single()){echo $header;} ?>"><?php echo $t; ?></header>
   </div>

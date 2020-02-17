@@ -1656,15 +1656,10 @@ function change_avatar($avatar){
 }
 */
 function DEFAULT_FEATURE_IMAGE() {
-if (empty (akina_option('default_feature_image'))){
-    return get_template_directory_url() . '/feature/index.php?' . rand(1,1000);
-  }else{
-    $url=akina_option('default_feature_image');
-    $html = json_decode(file_get_contents($url), true);
-    $arr = $html['acgurl'];
-    $md = $arr . '.md.jpg!q80.webp';
-    $th =  $arr . '.jpg!q80.jpeg';
-    return array($md,$th);
+if (akina_option('cover_cdn_options') == "type_2"){
+    return get_template_directory_uri() . '/feature/index.php?' . rand(1,1000);
+  }elseif(akina_option('cover_cdn_options') == "type_1"){
+    //get_random_image_url();
   }
 }
 //防止设置置顶文章造成的图片同侧bug
@@ -1724,6 +1719,12 @@ function save_markdown_comment($comment_ID, $comment_approved) {
     $wpdb->query("UPDATE wp_comments SET comment_markdown='".$comment_content."' WHERE comment_ID='".$comment_ID."';");
 }
 add_action('comment_post', 'save_markdown_comment', 10, 2);
+
+//WordPress 5.0+移除 block-library CSS
+add_action( 'wp_enqueue_scripts', 'fanly_remove_block_library_css', 100 );
+function fanly_remove_block_library_css() {
+	wp_dequeue_style( 'wp-block-library' );
+}
 
 //打开评论HTML标签限制
 function allow_more_tag_in_comment() {

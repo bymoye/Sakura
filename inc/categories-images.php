@@ -1,6 +1,6 @@
 <?php
-
-define('Z_IMAGE_PLACEHOLDER', get_random_bg_url()[1]);
+$image_url_load = get_random_bg_url ();
+(is_array($image_url_load)) ? define('Z_IMAGE_PLACEHOLDER', $image_url_load[1]) : define('Z_IMAGE_PLACEHOLDER', $image_url_load);
 
 add_action('admin_init', 'z_init');
 function z_init() {

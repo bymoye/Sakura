@@ -1729,7 +1729,7 @@ msgid_plural "Hits"
 msgstr[0] "热度"
 
 #: tpl/content-none.php:14
-msgid "There is noyhing here！"
+msgid "There is nothing here！"
 msgstr "没有找到任何东西！"
 
 #: tpl/content-none.php:21

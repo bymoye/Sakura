@@ -59,14 +59,15 @@ mashiro_option.jsdelivr_css_src = "https://cdn.jsdelivr.net/gh/bymoye/Sakura@<?p
 mashiro_option.float_player_on = true;
 <?php endif; ?>
 
+
 <?php
-if (akina_option('cover_img')) {
-    $imgurl = get_random_bg_url()[1];
-} else {
+if (akina_option('cover_cdn_options')=="type_1") {
+    $imgurl = get_random_bg_url()[2];
+} elseif(akina_option('cover_cdn_options')=="type_2"){
     $imgurl = get_site_url()."/wp-content/themes/Sakura/cover/index.php";
 } ?>
-mashiro_option.cover_api = "<?php echo $imgurl; ?>";
 
+mashiro_option.cover_api = "<?php echo $imgurl; ?>";
 /*End of Initial Variables*/
 </script>
 <?php }

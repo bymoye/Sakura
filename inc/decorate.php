@@ -68,7 +68,8 @@ if ( akina_option('theme_skin') ) { ?>
             left: 0;
             will-change: transform;
             z-index: -1;
-            background-image: url('<?php echo get_random_bg_url()[1]; ?>');
+            <?php $img = get_random_bg_url(); (is_array($img)) ? $img_url = $img[2] : $img_url = $img;?>
+            background-image: url('<?php echo $img_url; ?>');
             background-repeat: no-repeat;
             background-position: top right;
             background-size: cover;
@@ -134,11 +135,14 @@ if ( akina_option('theme_skin') ) { ?>
         .info-meta a, .info-meta span {
             color: #6F6F6F;
         }
-
+        .yya {
+            backdrop-filter: blur(0px)!important;
+            -webkit-backdrop-filter: blur(0px)!important;
+        }
         #content, .comments .comments-main {
             border-radius: 0 0 10px 10px;
             box-shadow: 3px 1px 5px rgba(0, 0, 0, 0.28);
-            backdrop-filter: blur(5px) brightness(.88);
+            /*backdrop-filter: blur(5px) brightness(.88);*/
         }
 
         .meme_btn, .form-submit .submit, #comments_edit, .notification, #pagination a {
@@ -226,7 +230,8 @@ if ( akina_option('theme_skin') ) { ?>
     top: 10% !important;
 }
 <?php } ?>
-
+.post-list-thumb{opacity: 0}
+.post-list-show {opacity: 1}
 <?php } // theme-skin ?>
 <?php // Custom style
 if ( akina_option('site_custom_style') ) {

@@ -258,11 +258,16 @@ function optionsframework_options() {
 		));	
         
     $options[] = array(
-		'name' => __('Default article feature image', 'sakura'),/*默认文章特色图*/
+		'name' => __('封面图选项', 'sakura'),/*默认文章特色图*/
 		'desc' => __('The default image displayed without the article feature image set, use random cover if left blank (the image to be displayed is placed in the /wp-content/themes/Sakura/feature/gallery/ directory)', 'sakura'),/*在未设置文章特色图的情况下展示的默认图像，留空则调用本地随机封面（要展示的图片放入 /wp-content/themes/Sakura/feature/gallery/ 目录）*/
-		'id' => 'default_feature_image',
-		'std' => 'https://api.mashiro.top/feature/',
-		'type' => 'text');
+		'id' => 'cover_cdn_options',
+		'std' => 'type_2',
+		'type' => 'select',
+		'options' => array(
+			'type_1' => __('预加载函数', 'sakura'),
+			'type_2' => __('内置原图随机图','sakura'),
+		)
+	);
 		
 	$options[] = array(
 		'name' => __('Comment shrink', 'sakura'),/*评论收缩*/
@@ -419,14 +424,14 @@ function optionsframework_options() {
 		'id' => 'amv_title',
 		'std' => '',
 		'type' => 'text');
-
+	
     $options[] = array(
  		'name' => __('Cover image', 'sakura'),/*封面图*/
- 		'desc' => __('Leave this blank to use the built-in API (put the images that need to be randomly displayed into the /cover/gallery/ directory)', 'sakura'),/*此处留空则使用内置API（将需要随机展示的图片放入 /cover/gallery/ 目录）*/
+ 		'desc' => __('Leave this blank to use the built-in API (put the images that need to be randomly *displayed into the /cover/gallery/ directory)', 'sakura'),/*此处留空则使用内置API（将需要随机展示的图片放入 /cover/gallery/ 目录）*/
  		'id' => 'cover_img',
  		'std' => '',
  		'type' => 'text');
-        
+	
 	$options[] = array(
 		'name' => __('Background image filter', 'sakura'),/*背景图滤镜*/
 		'id' => 'focus_img_filter',
