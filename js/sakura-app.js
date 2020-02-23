@@ -1382,9 +1382,9 @@ var home = location.href,
         },
         NH: function() {
             var h1 = 0,
-            t = $(window).height() / 8,
-            i = $(document).scrollTop()
-            $html = $("<style>body::before{ filter: blur(7px) brightness(.88); }</style>");
+            t = $(window).height() / 6,
+            i = $(document).scrollTop(),
+            $html = $("<style>body::before{ filter: blur(7px) brightness(.88);}</style>");
             $(window).scroll(function() {
                 var s = $(document).scrollTop(),
                 cached = $('.site-header'),

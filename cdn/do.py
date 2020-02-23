@@ -8,8 +8,6 @@ Desc: Auto compress & minfy JavaScript codes and CSS style sheet
 '''
 import os
 import sys
-sys.path.append(r"G:\jsmin-release-2.2.2")
-sys.path.append(r"G:\csscompressor-0.9.5")
 from os import listdir
 from os.path import isfile, join
 from jsmin import jsmin

@@ -147,6 +147,17 @@ function optionsframework_options() {
 		'id' => 'focus_logo_text',
 		'std' => '',
 		'type' => 'text');
+
+	$options[] = array(
+			'name' => __('说说心情', 'options_framework_theme'),
+			'id' => 'shuoshuo',
+			'std' => "no",
+			'type' => "radio",
+			'options' => array(
+				'yes' => __('开启', 'options_framework_theme'),
+				'no' => __('关闭', 'options_framework_theme')
+			)
+		);
 		
 	$options[] = array(
 		'name' => __('logo', 'sakura'),

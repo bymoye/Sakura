@@ -986,14 +986,17 @@ a:hover {
     position: fixed;
     z-index: 9999;
     top: 0;
+    -webkit-transform: translateZ(0);
+    -moz-transform: translateZ(0);
+    -ms-transform: translateZ(0);
+    -o-transform: translateZ(0);
+    transform: translateZ(0);
 }
 
 .yya {
     position: fixed;
     left: 0;
     background: rgba(255, 255, 255, .6);
-    /*backdrop-filter: blur(7px);*/
-    -webkit-backdrop-filter: blur(5px);
     box-shadow: 0 1px 40px -8px rgba(0, 0, 0, .5);
 }
 

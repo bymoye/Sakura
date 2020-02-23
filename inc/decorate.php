@@ -73,7 +73,7 @@ if ( akina_option('theme_skin') ) { ?>
             background-repeat: no-repeat;
             background-position: top right;
             background-size: cover;
-            transition: all 1.3s ease;
+            transition: all .8s ease;
         }
 
         .aplayer .aplayer-list ol::-webkit-scrollbar-thumb {
@@ -135,14 +135,9 @@ if ( akina_option('theme_skin') ) { ?>
         .info-meta a, .info-meta span {
             color: #6F6F6F;
         }
-        .yya {
-            backdrop-filter: blur(0px)!important;
-            -webkit-backdrop-filter: blur(0px)!important;
-        }
         #content, .comments .comments-main {
             border-radius: 0 0 10px 10px;
             box-shadow: 3px 1px 5px rgba(0, 0, 0, 0.28);
-            /*backdrop-filter: blur(5px) brightness(.88);*/
         }
 
         .meme_btn, .form-submit .submit, #comments_edit, .notification, #pagination a {
