@@ -163,7 +163,7 @@ function optionsframework_options() {
 		'name' => __('logo', 'sakura'),
 		'desc' => __('请输入代码的形式但不要超过150字符', 'sakura'),/*最佳高度尺寸40px。*/
 		'id' => 'akina_logo',
-		'type' => 'text');
+		'type' => 'textarea');
 	
 	$options[] = array(
 		'name' => __('Favicon', 'sakura'),
