@@ -94,7 +94,7 @@ window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}
 					<div class="site-branding">
 						<?php if (akina_option('akina_logo')){ ?>
 						<div class="site-title">
-							<a href="<?php bloginfo('url');?>" ><?php echo akina_option('akina_logo'); ?></a>
+							<a href="<?php bloginfo('url');?>" ><svg><use xlink:href="<?php echo akina_option('akina_logo'); ?>"/></svg></a>
 						</div>
 						<?php }else{ ?>
 						<span class="site-title">
