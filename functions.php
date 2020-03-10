@@ -8,7 +8,7 @@
  */
  
 define( 'SAKURA_VERSION', '3.3.2' );
-define( 'NMX_VERSION', '0.0.8' );
+define( 'NMX_VERSION', '0.0.9' );
 define( 'BUILD_VERSION', '3' );
 
 //ini_set('display_errors', true);
