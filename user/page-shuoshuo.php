@@ -6,6 +6,10 @@
 
 get_header();
 ?>
+<?php require_once('MkEncrypt.php'); 
+ MkEncrypt('xx');
+?>
+    <link rel="stylesheet" href="<?php bloginfo('template_url'); ?>/inc/css/shuoshuo.css"/>
     <section class="container">
         <div class="content-wrap">
             <div class="content">
@@ -19,15 +23,23 @@ get_header();
                                 while (have_posts()) : the_post(); ?>
                                     <li>
                                         <time class="cbp_tmtime"><?php the_time('Y年m月d日 G:i'); ?></time>
-                                        <div class="cbp_tmicon">
+                                        <?php if (get_the_author_meta('user_nicename')=='bymoye'){
+                                        echo '<div class="cbp_tmicon">';
+                                        }else{
+                                            echo '<div class="cbp_tmicon cbp_tmicon2">';
+                                        }?>
                                             <a href="<?php echo esc_url(get_author_posts_url(get_the_author_meta('ID'))); ?>" itemprop="url" rel="author">
-                                                <img src="<?php echo get_avatar_profile_url(get_the_author_meta('ID')); ?>">
+                                            <?php if (get_the_author_meta('user_nicename')=='bymoye'){
+                                              echo '<img src="'.get_avatar_url(get_the_author_meta('email')).'">';
+                                            }else{
+                                            echo '<img src="https://nmxc.ltd/213.jpg">';
+                                        }?>
                                             </a>
                                         </div>
-                                        <?php if (get_the_author_meta('user_nicename')=='root'){
-                                        echo '<div class="cbp_tmlabel cbp_tmlabel2">';
+                                        <?php if (get_the_author_meta('user_nicename')=='bymoye'){
+                                        echo '<div class="cbp_tmlabel">';
                                         }else{
-                                            echo '<div class="cbp_tmlabel">';
+                                            echo '<div class="cbp_tmlabel cbp_tmlabel2">' ;
                                         }?>
                                             <?php the_content(); ?>
                                             <h3><?php the_title(); ?></h3>

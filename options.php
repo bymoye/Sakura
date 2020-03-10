@@ -161,9 +161,9 @@ function optionsframework_options() {
 		
 	$options[] = array(
 		'name' => __('logo', 'sakura'),
-		'desc' => __('The best height size is 40px。', 'sakura'),/*最佳高度尺寸40px。*/
+		'desc' => __('请输入代码的形式但不要超过150字符', 'sakura'),/*最佳高度尺寸40px。*/
 		'id' => 'akina_logo',
-		'type' => 'upload');	
+		'type' => 'text');
 	
 	$options[] = array(
 		'name' => __('Favicon', 'sakura'),

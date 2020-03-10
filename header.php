@@ -76,9 +76,6 @@ if (!!window.ActiveXObject || "ActiveXObject" in window) { //is IE?
 window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','<?php echo akina_option('google_analytics_id', ''); ?>');
 </script>
 <?php endif; ?>
-<?php if (akina_option('shuoshuo') == 'yes') { ?>
-        <link rel="stylesheet" href="<?php bloginfo('template_url'); ?>/inc/css/shuoshuo.css"/>
-    <?php } ?>
 </head>
 <body <?php body_class(); ?>>
     <div class="scrollbar" id="bar"></div>
@@ -97,7 +94,7 @@ window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}
 					<div class="site-branding">
 						<?php if (akina_option('akina_logo')){ ?>
 						<div class="site-title">
-							<a href="<?php bloginfo('url');?>" ><img src="<?php echo akina_option('akina_logo'); ?>"></a>
+							<a href="<?php bloginfo('url');?>" ><?php echo akina_option('akina_logo'); ?></a>
 						</div>
 						<?php }else{ ?>
 						<span class="site-title">

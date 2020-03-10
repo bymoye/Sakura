@@ -8,7 +8,7 @@
  */
  
 define( 'SAKURA_VERSION', '3.3.2' );
-define( 'NMX_VERSION', '0.0.7' );
+define( 'NMX_VERSION', '0.0.8' );
 define( 'BUILD_VERSION', '3' );
 
 //ini_set('display_errors', true);
@@ -1749,3 +1749,40 @@ function allow_more_tag_in_comment() {
 }
 add_action('pre_comment_on_post', 'allow_more_tag_in_comment');
 //code end 
+
+//新建说说功能 
+add_action('init', 'my_custom_init');
+function my_custom_init()
+{ $labels = array( 'name' => '说说',
+'singular_name' => '说说', 
+'add_new' => '发表说说', 
+'add_new_item' => '发表说说',
+'edit_item' => '编辑说说', 
+'new_item' => '新说说',
+'view_item' => '查看说说',
+'search_items' => '搜索说说', 
+'not_found' => '暂无说说',
+'not_found_in_trash' => '没有已遗弃的说说',
+'parent_item_colon' => '', 'menu_name' => '说说' );
+$args = array( 'labels' => $labels,
+'public' => true, 
+'publicly_queryable' => true,
+'show_ui' => true,
+'show_in_menu' => true, 
+'exclude_from_search' =>true,
+'query_var' => true, 
+'rewrite' => true, 'capability_type' => 'post',
+'has_archive' => false, 'hierarchical' => false, 
+'menu_position' => null, 'supports' => array('editor','author','title', 'custom-fields') );
+register_post_type('shuoshuo',$args); 
+}
+
+//禁用XML-RPC接口
+add_filter('xmlrpc_enabled', '__return_false');
+
+//禁用XML-RPC的pingback接口
+add_filter( 'xmlrpc_methods', 'remove_xmlrpc_pingback_ping' );
+function remove_xmlrpc_pingback_ping( $methods ) {
+unset( $methods['pingback.ping'] );
+return $methods;
+}
