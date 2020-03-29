@@ -7,7 +7,7 @@
  * @package Sakura
  */
 define( 'SAKURA_VERSION', '3.3.2' );
-define( 'NMX_VERSION', '0.0.9' );
+define( 'NMX_VERSION', '1.0.0' );
 define( 'BUILD_VERSION', '3' );
 
 //ini_set('display_errors', true);
@@ -1578,7 +1578,7 @@ function change_avatar($avatar){
 }
 
 function get_random_image_url(){
-    $randomurl_file = __DIR__ .'\inc\random_url';
+    $randomurl_file = get_template_directory() .'\inc\random_url';
     $randomurl_list = file($randomurl_file);
     $k = array_rand($randomurl_list);
     $html = explode(",",$randomurl_list[$k]);
