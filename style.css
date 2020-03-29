@@ -1152,12 +1152,15 @@ a:hover {
         min-width: 860px;
         z-index: -1;
     }
+    /*
     .site-top .lower nav.navbar {
         right: calc(-50px - 100%);
     }
+    
     .site-top .lower nav.navbar ul {
         background: #fff;
     }
+    */
 }
 
 #show-nav {
