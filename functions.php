@@ -1578,7 +1578,7 @@ function change_avatar($avatar){
 }
 
 function get_random_image_url(){
-    $randomurl_file = get_template_directory() .'\inc\random_url';
+    $randomurl_file = get_template_directory() .'/inc/random_url';
     $randomurl_list = file($randomurl_file);
     $k = array_rand($randomurl_list);
     $html = explode(",",$randomurl_list[$k]);
