@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Sakura\n"
 "POT-Creation-Date: 2020-03-29 17:37+0800\n"
-"PO-Revision-Date: 2020-03-29 17:39+0800\n"
+"PO-Revision-Date: 2020-03-29 17:43+0800\n"
 "Last-Translator: 迷 <964907582@qq.com>\n"
 "Language-Team: \n"
 "Language: zh_CN\n"
@@ -337,26 +337,18 @@ msgid "Edit %s"
 msgstr "编辑 %s"
 
 #: inc/theme_plus.php:67
-#, fuzzy
-#| msgid " days ago"
 msgid "days ago"
 msgstr " 天前"
 
 #: inc/theme_plus.php:68
-#, fuzzy
-#| msgid " hours ago"
 msgid "hours ago"
 msgstr " 小时前"
 
 #: inc/theme_plus.php:69
-#, fuzzy
-#| msgid " minutes ago"
 msgid "minutes ago"
 msgstr " 分钟前"
 
 #: inc/theme_plus.php:70
-#, fuzzy
-#| msgid " seconds ago"
 msgid "seconds ago"
 msgstr " 秒前"
 
@@ -863,10 +855,6 @@ msgid "Cover image"
 msgstr "封面图"
 
 #: options.php:441
-#, fuzzy
-#| msgid ""
-#| "Leave this blank to use the built-in API (put the images that need to be "
-#| "randomly displayed into the /cover/gallery/ directory)"
 msgid ""
 "Leave this blank to use the built-in API (put the images that need to be "
 "randomly *displayed into the /cover/gallery/ directory)"
@@ -1737,8 +1725,6 @@ msgid "This username has been registered."
 msgstr "该用户名已被注册。"
 
 #: user/page-register.php:24
-#, fuzzy
-#| msgid "Please enter email address."
 msgid "Please enter email address."
 msgstr "请填写电子邮件地址。"
 
@@ -1779,8 +1765,6 @@ msgid "Sign up"
 msgstr "注 册"
 
 #: user/page-register.php:93
-#, fuzzy
-#| msgid "Registration is not open yet"
 msgid "Registration is not open yet."
 msgstr "暂未开放注册。"
 
@@ -1789,8 +1773,6 @@ msgid "https://github.com/mashirozx/Sakura/"
 msgstr ""
 
 #. Description of the plugin/theme
-#, fuzzy
-#| msgid "A branch of theme Akina"
 msgid "A wonderful branch of theme Akina"
 msgstr "Akina主题分支（原版地址 http://www.akina.pw/themeakina）"
 
