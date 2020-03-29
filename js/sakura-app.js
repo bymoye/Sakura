@@ -297,7 +297,7 @@ function iconsvg() {
         $("#iconsvg").load("https://cdn.jsdelivr.net/gh/bymoye/sakura@1.0.0/images/icon.svg")),
         $('.openNav').addClass('exhide'),
         $('site-header').addClass('exhide'),
-        $(".sitelogo").load("https://cdn.jsdelivr.net/gh/bymoye/sakura@0.0.9/images/nmx.svg");
+        $(".sitelogo").load("https://cdn.jsdelivr.net/gh/bymoye/sakura@1.0.0/images/nmx.svg");
 })
 }
 
