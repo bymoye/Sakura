@@ -6,7 +6,6 @@
  *
  * @package Sakura
  */
- 
 define( 'SAKURA_VERSION', '3.3.2' );
 define( 'NMX_VERSION', '0.0.9' );
 define( 'BUILD_VERSION', '3' );
@@ -15,7 +14,7 @@ define( 'BUILD_VERSION', '3' );
 //error_reporting(E_ALL);   
 error_reporting(E_ALL ^ E_NOTICE);
 
-if ( !function_exists( 'akina_setup' ) ) :
+if ( !function_exists('akina_setup')) :
 /**
  * Sets up theme defaults and registers support for various WordPress features.
  *
@@ -24,9 +23,9 @@ if ( !function_exists( 'akina_setup' ) ) :
  * as indicating support for post thumbnails.
  */
  
-if ( !function_exists( 'optionsframework_init' ) ) {
+if ( !function_exists('optionsframework_init')) {
 	define( 'OPTIONS_FRAMEWORK_DIRECTORY', get_template_directory_uri() . '/inc/' );
-	require_once dirname( __FILE__ ) . '/inc/options-framework.php';
+	require_once __DIR__ . '/inc/options-framework.php';
 }
 
 function akina_setup() {
@@ -36,7 +35,7 @@ function akina_setup() {
 	 * If you're building a theme based on Akina, use a find and replace
 	 * to change 'akina' to the name of your theme in all the template files.
 	 */
-	load_theme_textdomain( 'sakura', get_template_directory() . '/languages' );
+	load_theme_textdomain('sakura', get_template_directory() . '/languages');
 
 
 	/*
@@ -193,7 +192,7 @@ function sakura_scripts() {
 	$movies = akina_option('focus_amv') ? array('url' => akina_option('amv_url'), 'name' => akina_option('amv_title'), 'live' => $mv_live) : 'close';
 	$auto_height = akina_option('focus_height') ? 'fixed' : 'auto';
 	$code_lamp = 'close';
-	if(wp_is_mobile()) $auto_height = 'fixed'; //拦截移动端
+	//if(wp_is_mobile()) $auto_height = 'fixed'; //拦截移动端
     version_compare( $GLOBALS['wp_version'], '5.1', '>=' ) ? $reply_link_version = 'new' : $reply_link_version = 'old';
 	wp_localize_script( 'app', 'Poi' , array(
 		'pjax' => akina_option('poi_pjax'),
@@ -204,11 +203,12 @@ function sakura_scripts() {
 		'order' => get_option('comment_order'), // ajax comments
 		'formpostion' => 'bottom', // ajax comments 默认为bottom，如果你的表单在顶部则设置为top。
         'reply_link_version' => $reply_link_version,
-        'api' => esc_url_raw( rest_url() ),
-        'nonce' => wp_create_nonce( 'wp_rest' )
+        'api' => esc_url_raw(rest_url()),
+        'nonce' => wp_create_nonce('wp_rest'),
+        'google_analytics_id' => akina_option('google_analytics_id', '')
 	));
 }
-add_action( 'wp_enqueue_scripts', 'sakura_scripts' );
+add_action('wp_enqueue_scripts', 'sakura_scripts');
 
 /**
  * load .php.
@@ -236,7 +236,7 @@ require get_template_directory() . '/inc/categories-images.php';
 //Comment Location Start
 function convertip($ip) {
     error_reporting(E_ALL ^ E_NOTICE);
-	$dat_path = dirname(__FILE__).'/inc/QQWry.Dat'; 
+	$dat_path = __DIR__ . '/inc/QQWry.Dat'; 
     if(!$fd = @fopen($dat_path, 'rb')){
         return 'IP date file not exists or access denied';
     }
@@ -612,33 +612,6 @@ function akina_body_classes( $classes ) {
 }
 add_filter( 'body_class', 'akina_body_classes' );
 
-
-/*
- * 图片CDN
- */
-add_filter( 'upload_dir', 'wpjam_custom_upload_dir' );
-function wpjam_custom_upload_dir( $uploads ) {
-	$upload_path = '';
-	$upload_url_path = akina_option('qiniu_cdn');
-
-	if ( empty( $upload_path ) || 'wp-content/uploads' == $upload_path ) {
-		$uploads['basedir']  = WP_CONTENT_DIR . '/uploads';
-	} elseif ( 0 !== strpos( $upload_path, ABSPATH ) ) {
-		$uploads['basedir'] = path_join( ABSPATH, $upload_path );
-	} else {
-		$uploads['basedir'] = $upload_path;
-	}
-
-	$uploads['path'] = $uploads['basedir'].$uploads['subdir'];
-
-	if ( $upload_url_path ) {
-		$uploads['baseurl'] = $upload_url_path;
-		$uploads['url'] = $uploads['baseurl'].$uploads['subdir'];
-	}
-	return $uploads;
-}
-
-
 /*
  * 删除自带小工具
 */
@@ -925,7 +898,7 @@ function comment_mail_notify($comment_id){
     </div>
 ';
     $message = convert_smilies($message);
-    $message = str_replace("{{",'<img src="https://cdn.jsdelivr.net/gh/moezx/cdn@2.9.4/img/bili/hd/ic_emoji_',$message);
+    $message = str_replace("{{",'<img src="https://cdn.jsdelivr.net/gh/bymoye/cdn@1.2/sakura/images/smiliesbilipng/emoji_',$message);
     $message = str_replace("}}",'.png" alt="emoji" style="height: 2em; max-height: 2em;">',$message);
     
     $message =  str_replace('{UPLOAD}', 'https://i.loli.net/', $message); 
@@ -990,65 +963,45 @@ add_filter( 'comment_text', 'comment_picture_support' );
 /*
  * 修改评论表情调用路径
  */
-add_filter('smilies_src','custom_smilies_src',1,10);
-function custom_smilies_src ($img_src,$img,$siteurl){
-    return 'https://cdn.jsdelivr.net/gh/bymoye/cdn@1.1/sakura/images/smilies/'.$img;
-}
+
 // 简单遍历系统表情库，今后应考虑标识表情包名——使用增加的扩展名，同时保留原有拓展名
 // 还有一个思路是根据表情调用路径来判定<-- 此法最好！
 // 贴吧
-function push_smilies(){
-    global $wpsmiliestrans;
-    foreach ($wpsmiliestrans as $k => $v) {
-        $Sname = str_replace(":","",$k);
-        $Svalue = $v;
-        $return_smiles = $return_smiles . '<span title="'.$Sname.'" onclick="grin('."'".$Sname."'".')"><img src="https://cdn.jsdelivr.net/gh/bymoye/cdn@1.1/sakura/images/smilies/'.$Svalue.'" /></span>';
-    }
-  return $return_smiles;
-}
 
-function smilies_reset() {
+
+$wpsmiliestrans = array();
+function push_tieba_smilies() {
 global $wpsmiliestrans;
 // don't bother setting up smilies if they are disabled
-if ( !get_option( 'use_smilies' ) )
+if ( !get_option('use_smilies'))
     return;
+    $tiebaname = array('good','han','spray','Grievance','shui','reluctantly','anger','tongue','se','haha','rmb','doubt','tear','surprised2','Happy','ku','surprised','theblackline','smilingeyes','spit','huaji','bbd','hu','shame','naive','rbq','britan','aa','niconiconi','niconiconi_t','niconiconit','awesome');
+    $return_smiles = '';
+    for($i=0;$i<count($tiebaname);$i++){
+      $tieba_Name=$tiebaname[$i];
+      if (is_webp() == 1){
+          $tiebaimgdir="tiebawebp/";
+          $smiliesgs=".webp";
+      }else{
+          $tiebaimgdir="tiebapng/";
+          $smiliesgs=".png";
+      }
+      // 选择面版
+      $return_smiles = $return_smiles . '<span title="'.$tieba_Name.'" onclick="grin('."'".$tieba_Name."'".',type = \'tieba\')"><img src="https://cdn.jsdelivr.net/gh/bymoye/cdn@1.2/sakura/images/smilies/'. $tiebaimgdir .'icon_'. $tieba_Name . $smiliesgs.'" /></span>';
+      // 正文转换
+      $wpsmiliestrans['tbprintf(' . $tieba_Name . ')'] = '<span title="'. $tieba_Name .'" onclick="grin('."'". $tieba_Name ."'".',type = \'tieba\')"><img src="https://cdn.jsdelivr.net/gh/bymoye/cdn@1.2/sakura/images/smilies/'.$tiebaimgdir.'icon_'. $tieba_Name .$smiliesgs.'" /></span>';
+      }
+      return $return_smiles;
+  }
+  push_tieba_smilies();
 
-    $wpsmiliestrans = array(
-        ':good:' => 'icon_good.gif',
-        ':han:' => 'icon_han.gif',
-        ':spray:' => 'icon_spray.gif',
-        ':Grievance:' => 'icon_Grievance.gif',
-        ':shui:' => 'icon_shui.gif',
-        ':reluctantly:' => 'icon_reluctantly.gif',
-        ':anger:' => 'icon_anger.gif',
-        ':tongue:' => 'icon_tongue.gif',
-        ':se:' => 'icon_se.gif',
-        ':haha:' => 'icon_haha.gif',
-        ':rmb:' => 'icon_rmb.gif',
-        ':doubt:' => 'icon_doubt.gif',
-        ':tear:' => 'icon_tear.gif',
-        ':surprised2:' => 'icon_surprised2.gif',
-        ':Happy:' => 'icon_Happy.gif',
-        ':ku:' => 'icon_ku.gif',
-        ':surprised:' => 'icon_surprised.gif',
-        ':theblackline:' => 'icon_theblackline.gif',
-        ':smilingeyes:' => 'icon_smilingeyes.gif',
-        ':spit:' => 'icon_spit.gif',
-        ':huaji:' => 'icon_huaji.gif',
-        ':bbd:' => 'icon_bbd.gif',
-        ':hu:' => 'icon_hu.gif',
-        ':shame:' => 'icon_shame.gif',
-        ':naive:' => 'icon_naive.gif',
-        ':rbq:' => 'icon_rbq.gif',
-        ':britan:' => 'icon_britan.gif',
-        ':aa:' => 'icon_aa.gif',
-        ':niconiconi:' => 'icon_niconiconi.gif',
-        ':niconiconi-t:' => 'icon_niconiconi_t.gif',
-        ':niconiconit:' => 'icon_niconiconit.gif',
-        ':awesome:' => 'icon_awesome.gif',
-    );
+function tieba_smile_filter($content) {
+    global $wpsmiliestrans;
+    $content =  str_replace(array_keys($wpsmiliestrans), $wpsmiliestrans, $content); 
+    return $content;
 }
-smilies_reset();
+add_filter('the_content', 'tieba_smile_filter'); //替换文章关键词
+add_filter('comment_text', 'tieba_smile_filter');//替换评论关键词
 
 function push_emoji_panel() {
     return '
@@ -1098,53 +1051,25 @@ function push_emoji_panel() {
     ';
 }
 
-function get_wp_root_path() {
-    $base = dirname(__FILE__);
-    $path = false;
-
-    if (@file_exists(dirname(dirname($base))))
-    {
-        $path = dirname(dirname($base));
-    }
-    else
-    if (@file_exists(dirname(dirname(dirname($base)))))
-    {
-        $path = dirname(dirname(dirname($base)));
-    }
-    else
-    $path = false;
-
-    if ($path != false)
-    {
-        $path = str_replace("\\", "/", $path);
-    }
-    return $path;
-}
-
 // bilibili smiles
 $bilismiliestrans = array();
 function push_bili_smilies(){
   global $bilismiliestrans;
-  $smiles_path = __DIR__. "/images/smilies/bili/";
-  $name = array( 'baiyan','fadai','koubi','qinqin','weiqu','bishi','fanu','kun','se','weixiao','bizui','ganga','lengmo','shengbing','wunai','chan','guilian','liubixue','shengqi','xiaoku','daku','guzhang','liuhan','shuizhao','xieyanxiao','dalao','haixiu','liulei','sikao','yiwen','dalian','heirenwenhao','miantian','tiaokan','yun','dianzan','huaixiao','mudengkoudai','tiaopi','zaijian','doge','jingxia','nanguo','touxiao','zhoumei','facai','keai','outu','tuxue','zhuakuang' );
+  $name = array('baiyan','bishi','bizui','chan','dai','daku','dalao','dalian','dianzan','doge','facai','fanu','ganga','guilian','guzhang','haixiu','heirenwenhao','huaixiao','jingxia','keai','koubizi','kun','lengmo','liubixue','liuhan','liulei','miantian','mudengkoudai','nanguo','outu','qinqin','se','shengbing','shengqi','shuizhao','sikao','tiaokan','tiaopi','touxiao','tuxue','weiqu','weixiao','wunai','xiaoku','xieyanxiao','yiwen','yun','zaijian','zhoumei','zhuakuang');
   $return_smiles = '';
-  for( $i=0;$i<count($name);$i++ ){ 
-    $img_size = getimagesize($smiles_path . $name[$i] . ".png");
-    $img_height = $img_size["1"];
+  for($i=0;$i<count($name);$i++){
+    $smilies_Name=$name[$i];
+    if (is_webp() == 1){
+        $biliimgdir="biliwebp/";
+        $smiliesgs=".webp";
+    }else{
+        $biliimgdir="bilipng/";
+        $smiliesgs=".png";
+    }
     // 选择面版
-    $return_smiles = $return_smiles . '<span class="emotion-secter emotion-item emotion-select-parent" onclick="grin('."'".$name[$i]."'".',type = \'Math\')" style="background-image: url(https://cdn.jsdelivr.net/gh/moezx/cdn@2.9.4/img/bili/hd/ic_emoji_' .$name[$i]. '.png);"><div class="img emotion-select-child" style="background-image: url(https://cdn.jsdelivr.net/gh/moezx/cdn@2.9.4/img/bili/' .$name[$i]. '.png);
-        animation-duration: ' .($img_height / 32 * 40). 'ms;
-        animation-timing-function: steps(' .($img_height / 32). ');
-        transform: translateY(-' .($img_height - 32). 'px);
-        height: ' .$img_height. 'px;
-        "></div></span>';
+    $return_smiles = $return_smiles . '<span title="'.$smilies_Name.'" onclick="grin('."'".$smilies_Name."'".',type = \'Math\')"><img src="https://cdn.jsdelivr.net/gh/bymoye/cdn@1.2/sakura/images/smilies/'. $biliimgdir .'emoji_'. $smilies_Name . $smiliesgs.'" /></span>';
     // 正文转换
-    $bilismiliestrans['{{' . $name[$i] . '}}'] = '<span class="emotion-inline emotion-item"><img src="https://cdn.jsdelivr.net/gh/moezx/cdn@2.9.4/img/bili/' .$name[$i]. '.png" class="img" style="/*background-image: url();*/
-        animation-duration: ' .($img_height / 32 * 40). 'ms;
-        animation-timing-function: steps(' .($img_height / 32). ');
-        transform: translateY(-' .($img_height - 32). 'px);
-        height: ' .$img_height. 'px;
-        "></span>';
+    $bilismiliestrans['smprintf(' . $smilies_Name . ')'] = '<span title="'. $smilies_Name .'" onclick="grin('."'". $smilies_Name ."'".',type = \'Math\')"><img src="https://cdn.jsdelivr.net/gh/bymoye/cdn@1.2/sakura/images/smilies/'.$biliimgdir.'emoji_'. $smilies_Name .$smiliesgs.'" /></span>';
     }
     return $return_smiles;
 }
@@ -1156,7 +1081,7 @@ function bili_smile_filter($content) {
     return $content;
 }
 add_filter('the_content', 'bili_smile_filter'); //替换文章关键词
-add_filter( 'comment_text', 'bili_smile_filter' );//替换评论关键词
+add_filter('comment_text', 'bili_smile_filter');//替换评论关键词
 
 function featuredtoRSS($content) {
     global $post;
@@ -1170,8 +1095,15 @@ add_filter('the_content_feed', 'featuredtoRSS');
 
 //
 function bili_smile_filter_rss($content) {
-    $content = str_replace("{{",'<img src="https://cdn.jsdelivr.net/gh/moezx/cdn@2.9.4/img/bili/hd/ic_emoji_',$content);
-    $content = str_replace("}}",'.png" alt="emoji" style="height: 2em; max-height: 2em;">',$content);
+    if (is_webp() == 1){
+        $biliimgdir="biliwebp/";
+        $smiliesgs=".webp";
+    }else{
+        $biliimgdir="bilipng/";
+        $smiliesgs=".png";
+    }
+    $content = str_replace("{{",'<img src="https://cdn.jsdelivr.net/gh/bymoye/cdn@1.2/sakura/images/smilies/'.$biliimgdir,$content);
+    $content = str_replace("}}",$smilesgs.'" alt="emoji" style="height: 2em; max-height: 2em;">',$content);
     $content =  str_replace('[img]', '<img src="', $content); 
     $content =  str_replace('[/img]', '" style="display: block;margin-left: auto;margin-right: auto;">', $content); 
     return $content;
@@ -1645,16 +1577,18 @@ function change_avatar($avatar){
     }
 }
 
-// default feature image
-/*function DEFAULT_FEATURE_IMAGE() {
-    if ( empty( akina_option('default_feature_image' )) ) {
-        return get_template_directory_uri().'/feature/index.php?'.rand(1,1000);
-        //return 'https://api.mashiro.top/feature/?'.rand(1,1000);
-    } else {
-        return akina_option('default_feature_image').'?'.rand(1,1000);
-    }
+function get_random_image_url(){
+    $randomurl_file = __DIR__ .'\inc\random_url';
+    $randomurl_list = file($randomurl_file);
+    $k = array_rand($randomurl_list);
+    $html = explode(",",$randomurl_list[$k]);
+    is_webp() == 1 ? $gs = "webp" : $gs = "jpeg";
+    $md = 'https://fp1.fghrsh.net/' . $html[0] . '.jpg!q80.150p.' . $gs;
+    $th = 'https://fp1.fghrsh.net/' . $html[0] . '.jpg!q80.1200p.' . $gs;
+    $webp = 'https://fp1.fghrsh.net/' . $html[0] . '.jpg!q80.' . $gs;
+    return array($md,$th,$webp);
 }
-*/
+
 function DEFAULT_FEATURE_IMAGE() {
 if (akina_option('cover_cdn_options') == "type_2"){
     return get_template_directory_uri() . '/feature/index.php?' . rand(1,1000);
@@ -1662,10 +1596,14 @@ if (akina_option('cover_cdn_options') == "type_2"){
     return get_random_image_url();
   }
 }
+
 //防止设置置顶文章造成的图片同侧bug
-add_action( 'pre_get_posts', function( $q ){
-    if ( $q->is_home() && $q->is_main_query() && $q->get( 'paged' ) > 1 )
-        $q->set( 'post__not_in', get_option( 'sticky_posts' ) );
+add_action( 'pre_get_posts', function($q){
+    if ($q->is_home() && $q->is_main_query()){
+        $q->set('posts_per_page', 10 - sizeof(get_option( 'sticky_posts' )));
+        if ( $q->get('paged') > 1 )
+            $q->set('post__not_in', get_option( 'sticky_posts'));
+    }
 });
 
 //评论回复
@@ -1785,4 +1723,51 @@ add_filter( 'xmlrpc_methods', 'remove_xmlrpc_pingback_ping' );
 function remove_xmlrpc_pingback_ping( $methods ) {
 unset( $methods['pingback.ping'] );
 return $methods;
+}
+
+/**
+ * 禁用 embeds
+ */
+if ( !function_exists( 'disable_embeds_init' ) ) :
+    function disable_embeds_init(){
+        global $wp;
+        $wp->public_query_vars = array_diff($wp->public_query_vars, array('embed'));
+        remove_action('rest_api_init', 'wp_oembed_register_route');
+        add_filter('embed_oembed_discover', '__return_false');
+        remove_filter('oembed_dataparse', 'wp_filter_oembed_result', 10);
+        remove_action('wp_head', 'wp_oembed_add_discovery_links');
+        remove_action('wp_head', 'wp_oembed_add_host_js');
+        add_filter('tiny_mce_plugins', 'disable_embeds_tiny_mce_plugin');
+        add_filter('rewrite_rules_array', 'disable_embeds_rewrites');
+    }
+    add_action('init', 'disable_embeds_init', 9999);
+ 
+    function disable_embeds_tiny_mce_plugin($plugins){
+        return array_diff($plugins, array('wpembed'));
+    }
+    function disable_embeds_rewrites($rules){
+        foreach ($rules as $rule => $rewrite) {
+            if (false !== strpos($rewrite, 'embed=true')) {
+                unset($rules[$rule]);
+            }
+        }
+        return $rules;
+    }
+    function disable_embeds_remove_rewrite_rules(){
+        add_filter('rewrite_rules_array', 'disable_embeds_rewrites');
+        flush_rewrite_rules();
+    }
+    register_activation_hook(__FILE__, 'disable_embeds_remove_rewrite_rules');
+ 
+    function disable_embeds_flush_rewrite_rules(){
+        remove_filter('rewrite_rules_array', 'disable_embeds_rewrites');
+        flush_rewrite_rules();
+    }
+    register_deactivation_hook(__FILE__, 'disable_embeds_flush_rewrite_rules');
+endif;
+
+function is_webp(){
+    $webp = strpos($_SERVER['HTTP_ACCEPT'], 'image/webp');
+    $webp === false ? $webp=0 : $webp=1;
+    return $webp;
 }

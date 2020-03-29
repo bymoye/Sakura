@@ -68,6 +68,7 @@ if(is_array($imgurl)){
     $img_url = $imgurl;
 }?>
 mashiro_option.cover_api = "<?php echo $img_url; ?>";
+mashiro_option.windowheight = /Mobile|Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent) ? 'auto' : 'auto';
 /*End of Initial Variables*/
 </script>
 <?php }

@@ -64,10 +64,10 @@ function get_random_bg_url(){
  */
 function poi_time_since( $older_date, $comment_date = false, $text = false ) {
   $chunks = array(
-    array( 24 * 60 * 60, __( ' days ago', 'sakura' ) ),/*天前*/
-    array( 60 * 60 , __( ' hours ago', 'sakura' ) ),/*小时前*/
-    array( 60 , __( ' minutes ago', 'sakura' ) ),/*分钟前*/
-    array( 1, __( ' seconds ago', 'sakura' ) )/*秒前*/
+    array( 24 * 60 * 60, __('days ago','sakura')),/*天前*/
+    array( 60 * 60 , __('hours ago','sakura')),/*小时前*/
+    array( 60 , __('minutes ago','sakura')),/*分钟前*/
+    array( 1, __('seconds ago','sakura'))/*秒前*/
   );
 
   $newer_date = time() - (akina_option('time_zone_fix')*60*60);
@@ -389,7 +389,6 @@ function the_video_headPattern_hls(){
     $t .= '<h1 class="entry-title search-title"> '.sprintf( __( "Search results for \" %s \"","sakura" ), get_search_query()) ./*关于“ '.get_search_query().' ”的搜索结果*/'</h1>';
   }
   $thubm_image_url = $thubm_image_url . "#lazyload-blur";
-	$thubm_image_url = str_replace(akina_option('qiniu_cdn'),'https://cdn.2heng.xin/',$thubm_image_url);
   if(akina_option('patternimg')) $full_image_url = false;
   if(!is_home() && $full_image_url) : ?>
   <div class="pattern-center-blank"></div>
@@ -457,7 +456,6 @@ function the_video_headPattern_normal(){
     $t .= '<h1 class="entry-title search-title"> '.sprintf( __( "Search results for \" %s \"","sakura" ), get_search_query()) ./*关于“ '.get_search_query().' ”的搜索结果*/'</h1>';
   }
   $thubm_image_url = $thubm_image_url . "#lazyload-blur";
-	$thubm_image_url = str_replace(akina_option('qiniu_cdn'),'https://cdn.2heng.xin/',$thubm_image_url);
   if(akina_option('patternimg')) $full_image_url = false;
   if(!is_home() && $full_image_url) : ?>
   <div class="pattern-center-blank"></div>
@@ -810,9 +808,6 @@ function siren_get_browsers($ua){
       $icon = 'ie';
     }elseif (preg_match('#Edge/([a-zA-Z0-9.]+)#i', $ua, $matches)){
     $title = 'Edge '. $matches[1];
-        $icon = 'edge';
-  }elseif (preg_match('#Edg/([a-zA-Z0-9.]+)#i', $ua, $matches)){
-    $title = 'Edge Dev (Chromium) '. $matches[1];
         $icon = 'edge';
   }elseif (preg_match('#360([a-zA-Z0-9.]+)#i', $ua, $matches)) {
     $title = '360 Browser '. $matches[1];

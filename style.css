@@ -693,15 +693,15 @@ a:hover {
 
 .loadvideo,
 .video-play {
-    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAABAlBMVEUAAABfTlZeTVVdS1ReTVVeTVVfTlZfTlZfTlZfTlZfTlZeTVVfTlZfTlZfTlZfTlZfTlZfTlZfTlZfTlZfTlZfTlZfTlZfTlZfTlbw7+Py8eVeTVW9q52akI/u7OHi4NWUgn1qWmHm5Nm+rJ7e29Hr6d7k4tjU0MiJfX9vYGVoWF/g3tSqop+/rZ5jUlrp59yCdXjRzcXIw72RhYbb2s/Y18zNyMHGwLq9t7G5qJqCcnN9b3J8a2x4aGzJxL22pJiViori4dbV0smhl5ayoJWdk5KejIWLf4GId3WxqaalnJq4ppmkkoqYhoGPfHl0ZGjJxb7CvLa1sKq4p5qpl45iU1lqIFriAAAAGXRSTlMA2On8+9+SZjcqGOrFv6akhoE1QTrVMBfpaHUHFAAAAftJREFUOMuNU+dy4jAQtk0PnbST1pFiYxuDOTC99wC55JLr7/8qJ0suhMzN5fuhGe1+23elCJlUQVbicUUupjLSe6STiRi0GvV6owWxRDJ9pr4oZUGzm8uaYdS6TVsDpXxxqr/KgbbrmBhjhNhjdvYa5CqR/lIGd4gw0jcbE3nAaOiCfBnay7CmmMnbus4IguL0QK748XOw1jE6A9Z7kBd5lMDl9sR6y3CmUOL1ZbUhtx/P9n1OJD6jq2W9apOwE4K76ePsC4tFnTbyJZBk/UtoHSy+99Wvc/cHQcIDIbijJTJSKmabyCd8rk5eFuua+FKKiB1LSQXYWSFBVasPr4sn6qeCm1CQ5NYIoSDEaqVW1d9Td2zyqHjZkiWlUcMh4flZZU4mh/lxyAm1hiLF6waKQghUV/ffRp6ZUY//g/AaEUQIEhEm6uSw6A1JEEJudTFq05AweTjMwyS7LMkiNLmHsMzHRZOKtL0yi2eN+vWyuNuKL+u3yRp13mp7RHBAEK1mw9oTcjosjmhYUlppjC0x7qe+UIfjVvhyl8E1uMKj6Xq0MDMoByvXCz2324HeYit3K3FUZOg5b5ZSt/TtEa5vTtZ+OqLWgBoDixq0T+n25xyur6QQlTzU192BtRk4/b4zcL7bfyB/8+70juL0lt7pfSrffvB4/3v+fwF0OGfEMV9avwAAAABJRU5ErkJggg==")
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E %3Cpath fill='%2387CEFA' d='M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm115.7 272l-176 101c-15.8 8.8-35.7-2.5-35.7-21V152c0-18.4 19.8-29.8 35.7-21l176 107c16.4 9.2 16.4 32.9 0 42z'%3E%3C/path%3E %3C/svg%3E");
 }
 
 .video-pause {
-    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAtFBMVEUAAABdTFRfTlZfTlZeTVVeTVVfTlZfTlZfTlZfTlZfTlZfTlZeTVVfTlZfTlZfTlZfTlZeTVVfTlZfTlbw7+Pf3NN6a26xn5ReTVXy8eW+rJ7p59zj4ddqWmHr6t7d2tDt7ODg3tTm5NrU0Mi9q52Sh4iJfX9vYGVoWF9jUlqqop+mlIvIw73RzcXY183JxL2UiYrMx8C3pZiflZSDdXh/cnXGwbuqmI+aj4+Pg4WyrKismpAMEQlmAAAAFHRSTlMA/Ng36d+lkmYqwRjqhoFAM+jGF+k1jLEAAAG4SURBVDjLjVNpd4IwEIQIHlSttkE2EoIBuSx42/P//69my6W0fe18YN9jJ7PJ7qzWYjTsE0PX56Q/HGnf0RuYOmRpkqQZ6Oag10nfTcbgxZtd6Pthvok9MKZ3N8cfwDsVgjFGqfqI4uSBdSVyT+B8oCqJEJwLRg9nIPfNeQJ7yehqVRKCQCgdGQGZVfUfYB8w6tqcXoEFEVjlPSZwliiPAtcMeYHJV4Gxd8C8ayu4baQs98Z40QGcKOajhULk1hH/vcJA9c9Mn1HcXjw5ztPCriMSCs8caUM95iXBWa8dJDjLpYpKU6xifaj1YcNoSTgerwkKbAN9jWQ7Rm8V1seXirDLiGakYUnAk11CmBqanvi0IXRKUD/R/ybMsUTAedghNCVIlqs5BG5NqC9L1fBYnpH6mawt8eGUBM6peiY2SnRfsawUBDZqZHoF+7nVDFvdGdberWI7LK1n/D5u48uX08owleEaw9gXmJaWsyAKaFBmhFvn+RtYj41pI4mZFitqv6FpW9tfnjnfSnvLpS99zov3Bdq+wcyCZJ9vFcf2fbmVeZyBNftt9Xa4evPp47+Xt7v+xu36fwLwPlAPnsX7kwAAAABJRU5ErkJggg==")
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E %3Cpath fill='%2387CEFA' d='M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm-16 328c0 8.8-7.2 16-16 16h-48c-8.8 0-16-7.2-16-16V176c0-8.8 7.2-16 16-16h48c8.8 0 16 7.2 16 16v160zm112 0c0 8.8-7.2 16-16 16h-48c-8.8 0-16-7.2-16-16V176c0-8.8 7.2-16 16-16h48c8.8 0 16 7.2 16 16v160z'%3E%3C/path%3E %3C/svg%3E")
 }
 
 #video-add {
-    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAA1VBMVEUAAABdTFRfTlZeTVVfTlZfTlZfTlZfTlZeTVVeTVVeTVVfTlZfTlZfTlZfTlZfTlZfTlZfTlZfTlZfTlZfTlZfTlbw7+Py8eXe29Gxn5R5am1eTVV7bG/u7eHo59xqWmHs69/e3NLp6Nzm5NrU0MiTh4iKfYBdTFRvYGXj4dfh4NXJw721o5amlItoWF9jUlrZ183RzcXg39Srop+smpDW08rOysObkZF2ZWjMx8DJxL6poJ6VioqPhIWDdXl/cXXa2c+/urO7qZyglpXFwLrAurVhU1mthJULAAAAFnRSTlMA/NjpN6WSGerf3sW/hoFnZUAyLCkX3DU3JQAAAeNJREFUOMuNU3l/2jAMzUEoN5TS2ImTOBc5KYQApeVs123f/yPNaky8MXboD8f56Vl6kp4kYQ9DTVFlWVW00UT63RrNtkwW8ySZL4jcaTau3Hf9FqHRKg8xDvN9RGN1cPfL825MP5YuQkjX2eEut5R0fwpyr5DTq82c3Gwne7eIcl+/V8ghA7cABH4xJcqY5++SQ8D9wlAwJb2KRz8+1e8djP0LojzH/c8ELfqKdDsIbOafmubUuSBy2gKiTfJhQ1qHndh8ejJxTWUbN1n/2nTJEwBgbViYhUshHlrS9oM0lCNXrwGWwQBQBcTT3UgeShpZoZq5BwAPsWZV/yuiScoiR5w/9p5NwzCfPcxrQflCkdR5yADA37Is82U2e4FLVQsK56okJ8Aa+BvMZl9m6zX7Qi2+i3Ai/wXgVgBIYdu6f53C5ymApJ5l9p9JamTPIvBJhCaUKcreszJHolG2vwFA3Wpo1EiadKDVolECAK3uTNiw4i3PcHtYUkOFcVfmw7h9fg++UfVTl4P4VN4QjLux4sFFcsciTd1ryR1J77EWbbRxBCBgYOQdQbRC9uevaVpkXpFmXhkWgfd+BtnXNu6R5JBv0qzw3t7KotxF3+Pe+Mbq7WD1dquIEnXw+J/L+8/1/wFBDFpLMe2O2wAAAABJRU5ErkJggg==");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E %3Cpath fill='%2387CEFA' d='M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm144 276c0 6.6-5.4 12-12 12h-92v92c0 6.6-5.4 12-12 12h-56c-6.6 0-12-5.4-12-12v-92h-92c-6.6 0-12-5.4-12-12v-56c0-6.6 5.4-12 12-12h92v-92c0-6.6 5.4-12 12-12h56c6.6 0 12 5.4 12 12v92h92c6.6 0 12 5.4 12 12v56z'%3E%3C/path%3E %3C/svg%3E");
     bottom: 45px;
     display: none
 }
@@ -996,7 +996,7 @@ a:hover {
 .yya {
     position: fixed;
     left: 0;
-    background: rgba(255, 255, 255, .6);
+    background: rgba(255, 255, 255, .8);
     box-shadow: 0 1px 40px -8px rgba(0, 0, 0, .5);
 }
 
@@ -1027,13 +1027,9 @@ a:hover {
 }
 
 .site-title a {
-    color: #464646;
-    font-weight: 400
+    padding-left: 35px;
 }
 
-.site-title a:hover {
-    color: orange
-}
 
 .site-title img {
     height: 40px;
@@ -1043,7 +1039,7 @@ a:hover {
     -moz-transition: color .2s ease-out, border .2s ease-out, opacity .2s ease-out;
     transition: color .2s ease-out, border .2s ease-out, opacity .2s ease-out
 }
-
+.site-title 
 .site-title img:hover {
     opacity: 1
 }
@@ -1145,6 +1141,23 @@ a:hover {
 
 .site-top ul li a:hover:after {
     max-width: 100%
+}
+
+@media(max-width:1200px) {
+    .site-top .lower nav{
+        right: calc(-150px - 100%);
+        position: absolute;
+        float: right;
+        animation: searchbox .2s;
+        min-width: 860px;
+        z-index: -1;
+    }
+    .site-top .lower nav.navbar {
+        right: calc(-50px - 100%);
+    }
+    .site-top .lower nav.navbar ul {
+        background: #fff;
+    }
 }
 
 #show-nav {
@@ -1313,7 +1326,8 @@ a:hover {
     border-radius: 50%;
     padding: 2px;
     border: 1px solid #DADADA;
-    position: relative
+    position: relative;
+    object-fit: cover
 }
 
 .feature :hover .overlay i {
@@ -1449,6 +1463,7 @@ i.iconfont.hotpost {
 }
 
 .post-list-thumb {
+    will-change: transform;
     float: left;
     width: 100%;
     height: 300px;
@@ -1465,7 +1480,7 @@ i.iconfont.hotpost {
 }
 @media (max-width:860px) {
     .post-list-thumb {
-        margin: 0;
+        margin: 10px 0 10px;
         height: auto
     }
 }
@@ -1843,7 +1858,7 @@ h1.page-title.mb- {
     opacity: 1
 }
 
-.faa-float.animated, .faa-float.animated-hover:hover, .faa-parent.animated-hover:hover>.faa-float {
+.faa-float.animated, .top_none:hover, .faa-parent.animated-hover:hover>.faa-float {
     -webkit-animation: float 2s linear infinite; 
     animation: float 2s linear infinite;
 }
@@ -1921,7 +1936,6 @@ h1.page-title.mb- {
 }
 
 #moblieGoTop {
-    display: none;
     position: fixed;
     bottom: 10px;
     right: 10px;
@@ -1937,7 +1951,8 @@ h1.page-title.mb- {
     border-radius: 10px;
     border-radius: 12px;
     box-shadow: 0 0 2px 0 rgba(0, 0, 0, .12), 0 2px 2px 0 rgba(0, 0, 0, .24);
-    transition: box-shadow .2s ease
+    transform: scale(0);
+    transition:transform .3s
 }
 
 #moblieGoTop:hover {
@@ -3495,7 +3510,7 @@ a.page-numbers {
     padding: 21px 21px 20px;
     color: #535a63;
     border: 0;
-    background: #FFF
+    background: rgba(0, 0, 0, .0)
 }
 
 .comment-respond input {
@@ -3522,10 +3537,7 @@ a.page-numbers {
     width: 100%;
     height: 180px;
     margin-bottom: 10px;
-    color: #535a63;
-    background-color: rgba(255,255,255,.35);
-    backdrop-filter: blur(7px);
-    -webkit-backdrop-filter: blur(7px);
+    color: black;
 }
 
 .comment-respond textarea {
@@ -3537,7 +3549,10 @@ a.page-numbers {
 }
 
 .comment-textarea {
-	position: relative
+    position: relative;
+    background-color: rgba(255,255,255,.35);
+    backdrop-filter: blur(7px);
+    -webkit-backdrop-filter: blur(7px);
 }
 
 .commentbody:placeholder-shown::placeholder {
@@ -3910,20 +3925,14 @@ li.feature-2 {
     height: 550px;
     margin: 0;
     padding: 0;
-    background-position: top center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-size: cover;
     z-index: -1
 }
 
 @media (max-width:860px) {
     #centerbg {
-        height: 300px;
-        background-attachment: scroll
+        height: 500px;
     }
-    #video-container,
-    .focusinfo {
+    #video-container {
         display: none
     }
 }
@@ -4770,6 +4779,12 @@ i.iconfont.js-toggle-search.iconsearch {
     margin-bottom: 0;
     margin-top: 0;
     padding: 0
+}
+
+.wp-smiley {
+    height: 2em !important;
+    max-height: 2em !important;
+    vertical-align: bottom;
 }
 
 embed,
@@ -7511,6 +7526,11 @@ a.toc-link {
 }
 
 @media (max-width:860px) {
+    .wp-smiley {
+        height:20px !important;
+        max-height:20px !important;
+        vertical-align:middle
+    }
     .bili-container,
     .tieba-container {
         padding-left: 0
@@ -7566,7 +7586,7 @@ a.toc-link {
     -khtml-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
-    user-select: none
+    user-select: none;
 }
 
 .scrollbar {
@@ -8266,7 +8286,7 @@ td.hljs-ln-numbers {
 }
 
 .aplayer {
-    background: rgba(255, 255, 255, .3);
+    background: rgba(255, 255, 255, .3) !important;
     font-family: 'Noto Serif CJK SC', 'Noto Serif CJK', 'Source Han Serif SC', 'Source Han Serif', source-han-serif-sc, 'PT Serif', 'SongTi SC', 'MicroSoft Yahei', Georgia, serif
 }
 
@@ -8349,11 +8369,27 @@ button.aplayer-icon{
     background:none!important;
 }
 .aplayer .aplayer-list ol li.aplayer-list-light {
-    background: #f8f8f8
+    background: rgba(255,255,255,.4) !important;
 }
-
+.aplayer .aplayer-list ol li:hover {
+    background: rgba(255, 255, 255, 0.69) !important;
+}
+.aplayer .aplayer-info .aplayer-controller .aplayer-time .aplayer-icon path{
+    fill: #000 !important;
+}
+.aplayer .aplayer-list ol li .aplayer-list-author {
+    color: #4e4e4e !important;
+}
+.aplayer.aplayer-fixed .aplayer-list {
+    border: 1px solid rgba(255,255,255,.1) !important;
+}
+.aplayer .aplayer-info .aplayer-music .aplayer-author {
+    color: #4e4e4e !important;
+}
+.aplayer .aplayer-info .aplayer-controller .aplayer-time {
+    color: #00fff3 !important;
+}
 #aplayer-float {
-    background: rgba(255, 255, 255, 1);
     margin: 0
 }
 
@@ -8589,10 +8625,10 @@ svg.top_none,svg.search {
     height:30px;
     fill:#666;
 }
-svg.top_none:hover {
-   -webkit-transition: fill .5s ease-out;
+.top_none:hover {
+   -webkit-transition: all .5s ease-out;
    animation: wrench 2.5s ease infinite;
-   transition: fill .5s ease-out;
+   transition: all .5s ease-out;
    }
 
 svg.wangyiyun {
@@ -8724,3 +8760,43 @@ p.comment-form-cookies-consent {
     border:none!important;
     box-shadow:none!important
 }
+
+.sitelogo {
+    height: 30px;
+    transform: translateY(10px);
+    animation:logofill 40s infinite;
+}
+
+.site-title:hover .sitelogo-de{
+    animation: sitede 5s linear infinite;
+}
+.sitelogo-de {
+    transform-origin: 31% 60%;
+}
+@-webkit-keyframes sitede {
+    0%{
+      transform: rotate(0deg);
+      -ms-transform: rotate(0deg);
+      -webkit-transform: rotate(0deg);
+    }
+    100%{
+      transform: rotate(-360deg);
+      -ms-transform: rotate(-360deg);
+      -webkit-transform: rotate(-360deg);
+    }
+}
+@keyframes logofill{
+    0%{fill:#000000;}
+    25%{fill:rgb(218, 79, 37);}
+    50%{fill:rgb(53, 153, 179);}
+    75%{fill:#16a085;}
+    100% {fill:#000000;}}
+
+    .bili-container img{
+        width: 32px;
+        height: 32px;
+        margin: 7px;
+    }
+    
+    .contents span img {
+        height: 30px;

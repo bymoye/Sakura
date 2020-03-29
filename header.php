@@ -35,6 +35,7 @@ bloginfo( 'name' );$site_description = get_bloginfo( 'description', 'display' );
 if ( $site_description && ( is_home() || is_front_page() ) ) echo " - $site_description";if ( $paged >= 2 || $page >= 2 ) echo ' - ' . sprintf( __( 'page %s ','sakura'), max( $paged, $page ) );/*第 %s 页*/?>
 </title>
 <?php
+	$site_url = $_SERVER['SERVER_NAME'];
 if (akina_option('akina_meta') == true) {
 	$keywords = '';
 	$description = '';
@@ -94,7 +95,11 @@ window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}
 					<div class="site-branding">
 						<?php if (akina_option('akina_logo')){ ?>
 						<div class="site-title">
-							<a href="<?php bloginfo('url');?>" ><svg><use xlink:href="<?php echo akina_option('akina_logo'); ?>"/></svg></a>
+							<a href="<?php bloginfo('url');?>" ><img src="<?php echo akina_option('akina_logo'); ?>"></a>
+						</div>
+						<?php }elseif($site_url == 'localhost' or $site_url == 'nmxc.ltd'){ ?>
+							<div class="site-title">
+							<a href="<?php bloginfo('url');?>" class="sitelogo"></a>
 						</div>
 						<?php }else{ ?>
 						<span class="site-title">

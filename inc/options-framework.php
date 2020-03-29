@@ -43,7 +43,7 @@ function optionsframework_rolescheck () {
 add_action( 'init', 'optionsframework_load_sanitization' );
 
 function optionsframework_load_sanitization() {
-	require_once dirname( __FILE__ ) . '/options-sanitize.php';
+	require_once __DIR__ . '/options-sanitize.php';
 }
 
 /*
@@ -59,8 +59,8 @@ function optionsframework_load_sanitization() {
 function optionsframework_init() {
 
 	// Include the required files
-	require_once dirname( __FILE__ ) . '/options-interface.php';
-	require_once dirname( __FILE__ ) . '/options-media-uploader.php';
+	require_once __DIR__ . '/options-interface.php';
+	require_once __DIR__ . '/options-media-uploader.php';
 
 	// Optionally Loads the options file from the theme
 	$location = apply_filters( 'options_framework_location', array( 'options.php' ) );

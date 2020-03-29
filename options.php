@@ -160,16 +160,16 @@ function optionsframework_options() {
 		);
 		
 	$options[] = array(
-		'name' => __('logo', 'sakura'),
-		'desc' => __('仅支持SVG#引入', 'sakura'),/*最佳高度尺寸40px。*/
-		'id' => 'akina_logo',
-		'type' => 'text');
+			'name' => __('logo', 'sakura'),
+			'desc' => __('The best height size is 40px。', 'sakura'), /*最佳高度尺寸40px。*/
+			'id' => 'akina_logo',
+			'type' => 'upload');
 	
 	$options[] = array(
 		'name' => __('Favicon', 'sakura'),
 		'desc' => __('It is the small logo on the browser tab, fill in the url', 'sakura'),/*就是浏览器标签栏上那个小 logo，填写url*/
 		'id' => 'favicon_link',
-		'std' => '/wp-content/themes/Sakura/images/favicon.ico',
+		'std' => get_template_directory_uri().'/images/favicon.ico',
 		'type' => 'text');
 
 	$options[] = array(
@@ -883,13 +883,6 @@ function optionsframework_options() {
 	$options[] = array(
 		'name' => __('CDN', 'sakura'),
 		'type' => 'heading' );
-        
-	$options[] = array(
-		'name' => __('Images CDN', 'sakura'),/*图片库*/
-		'desc' => __('Note: Fill in the format http(s)://your CDN domain name/. <br>In other words, the original path is http://your.domain/wp-content/uploads/2018/05/xx.png and the picture will load from http://your CDN domain/2018/05/xx.png', 'sakura'),/*注意：填写格式为 http(s)://你的CDN域名/。<br>也就是说，原路径为 http://your.domain/wp-content/uploads/2018/05/xx.png 的图片将从 http://你的CDN域名/2018/05/xx.png 加载*/
-		'id' => 'qiniu_cdn',
-		'std' => '',
-		'type' => 'text');  
         
     $options[] = array(
 		'name' => __('Use the front-end library locally (lib.js、lib.css)', 'sakura'),/*本地调用前端库（lib.js、lib.css）*/

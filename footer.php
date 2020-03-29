@@ -12,6 +12,7 @@
 ?>
 	</div><!-- #content -->
 	<?php 
+		$site_url = $_SERVER['SERVER_NAME'];
 		if(akina_option('general_disqus_plugin_support')){
 			get_template_part('layouts/duoshuo');
 		}else{
@@ -47,7 +48,9 @@
 		</div>
 		<div class="site-branding">
 			<?php if (akina_option('akina_logo')){ ?>
-			<div class="site-title"><a href="<?php bloginfo('url');?>" ><svg><use xlink:href="<?php echo akina_option('akina_logo'); ?>"/></svg></a></div>
+			<div class="site-title"><a href="<?php bloginfo('url');?>"><img src="<?php echo akina_option('akina_logo'); ?>"></a></div>
+			<?php }elseif ($site_url == "localhost" or $site_url == "nmxc.ltd"){ ?>
+				<div class="site-title"><a href="<?php bloginfo('url'); ?>" class="sitelogo"></a></div>
 			<?php }else{ ?>
 			<h1 class="site-title"><a href="<?php bloginfo('url');?>" ><?php bloginfo('name');?></a></h1>
 			<?php } ?>
@@ -68,7 +71,7 @@
 		<?php wp_nav_menu( array( 'depth' => 2, 'theme_location' => 'primary', 'container' => false ) ); ?>
 	</div><!-- m-nav-center end -->
 	<a class="cd-top faa-float animated "></a>
-	<button id="moblieGoTop" title="Go to top"><svg class="backtop" aria-hidden="true"><use xlink:href="#backtop"/></svg></button>
+	<button onclick="topFunction(10)" id="moblieGoTop" title="Go to top"><svg class="backtop" aria-hidden="true"><use xlink:href="#backtop"/></svg></button>
 	<!-- search start -->
 	<form class="js-search search-form search-form--modal" method="get" action="<?php echo home_url(); ?>" role="search">
 		<div class="search-form__inner">

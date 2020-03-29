@@ -1,5 +1,5 @@
 <?php 
-$img_array = glob("gallery/*.{gif,jpg,png}",GLOB_BRACE); 
+$img_array = glob("gallery/*.{gif,jpg,png,webp}",GLOB_BRACE); 
 
 $img = array_rand($img_array); 
 
