@@ -23,10 +23,6 @@
 	<footer id="colophon" class="site-footer" role="contentinfo">
 		<div class="site-info" theme-info="Sakura v<?php echo SAKURA_VERSION; ?>">
 			<div class="footertext">
-				<!--<div class="img-preload">
-					<img src="https://cdn.jsdelivr.net/gh/moezx/cdn@3.1.9/img/Sakura/images/wordpress-rotating-ball-o.svg">
-					<img src="https://cdn.jsdelivr.net/gh/moezx/cdn@3.1.9/img/Sakura/images/disqus-preloader.svg">
-				</div>-->
 				<p style="color: #666666;"><?php echo akina_option('footer_info', ''); ?></p>
 			</div>
 			<div class="footer-device">
@@ -71,7 +67,7 @@
 		<?php wp_nav_menu( array( 'depth' => 2, 'theme_location' => 'primary', 'container' => false ) ); ?>
 	</div><!-- m-nav-center end -->
 	<a class="cd-top faa-float animated "></a>
-	<button onclick="topFunction(10)" id="moblieGoTop" title="Go to top"><svg class="backtop" aria-hidden="true"><use xlink:href="#backtop"/></svg></button>
+	<button id="moblieGoTop" title="Go to top"><svg class="backtop" aria-hidden="true"><use xlink:href="#backtop"/></svg></button>
 	<!-- search start -->
 	<form class="js-search search-form search-form--modal" method="get" action="<?php echo home_url(); ?>" role="search">
 		<div class="search-form__inner">
@@ -88,13 +84,18 @@
 			<div class="micro">
 				<p class="micro mb-"><?php _e('Want to find something?', 'sakura') /*想要找点什么呢*/?></p>
 				<svg class="searchz icon-search" viewBox="0 0 40 40" style="position: absolute;width: 35px; bottom: 15px;left: 16px; fill: #ddd;stroke:#ddd ;stroke-miterlimit:10;stroke-width:40px;";><use xlink:href="#search"/></svg>
-				<input class="text-input" type="search" name="s" placeholder="<?php _e('Search', 'sakura') ?>" required>
+				<input class="text-input" type="search" name="s" placeholder="<?php _e('Search', 'sakura') ?>" required />
 			</div>
 		<?php } ?>
 		</div>
 		<div class="search_close"></div>
 	</form>
 	<!-- search end -->
+	<?php if(akina_option('google_analytics_id', '')):?>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=<?php echo akina_option('google_analytics_id', ''); ?>"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','<?php echo akina_option('google_analytics_id', ''); ?>');</script>
+<?php endif; ?>
 <?php wp_footer(); ?>
 <?php if(akina_option('site_statistics')){ ?>
 <div class="site-statistics">
@@ -111,14 +112,14 @@
 	<div class="show-hide-wrap"><button class="show-hide"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 32 32"><path d="M22 16l-10.105-10.6-1.895 1.987 8.211 8.613-8.211 8.612 1.895 1.988 8.211-8.613z"></path></svg></button></div>
     </aside>
 <?php endif; ?>
-<?php if (akina_option('playlist_id', '')): ?>
+<?php if (akina_option('aplayer_server') != 'off'): ?>
     <div id="aplayer-float" style="z-index: 100;"
 	    class="aplayer"
-        data-id="<?php echo akina_option('playlist_id', ''); ?>"
-        data-server="netease"
+        data-id="<?php echo akina_option('aplayer_playlistid', ''); ?>"
+        data-server="<?php echo akina_option('aplayer_server'); ?>"
         data-type="playlist"
         data-fixed="true"
-        data-theme="<?php echo akina_option('theme_skin')?>>">
+        data-theme="<?php echo akina_option('theme_skin')?>">
     </div>
 <?php endif; ?>
 </body>

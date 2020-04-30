@@ -16,6 +16,7 @@ mashiro_global.ini = new function () {
         coverVideoIni();
         scrollBar();
         iconsvg();
+        load_bangumi();
     }
     this.pjax = function () { // pjax reload functions (pjax 重载函数)
         pjaxInit();
@@ -23,8 +24,10 @@ mashiro_global.ini = new function () {
         copy_code_block();
         coverVideoIni();
         iconsvg();
+        load_bangumi();
     }
 }
+
 
 function setCookie(name, value, days) {
     var expires = "";
@@ -75,14 +78,21 @@ function post_list_show_animation() {
 
         function callback(entries) {
             entries.forEach((article) => {
-                if (article.target.classList.contains("post-list-show")) {
+                if (!window.IntersectionObserver) {
                     article.target.style.willChange = 'auto';
-                    io.unobserve(article.target)
-                } else {
-                    if (article.isIntersecting) {
+                    if( article.target.classList.contains("post-list-show") === false){
                         article.target.classList.add("post-list-show");
+                    }
+                } else {
+                    if (article.target.classList.contains("post-list-show")) {
                         article.target.style.willChange = 'auto';
                         io.unobserve(article.target)
+                    } else {
+                        if (article.isIntersecting) {
+                            article.target.classList.add("post-list-show");
+                            article.target.style.willChange = 'auto';
+                            io.unobserve(article.target)
+                        }
                     }
                 }
             })
@@ -93,30 +103,6 @@ function post_list_show_animation() {
     }
 }
 
-
-function social_share_limit(){
-    var num = 1;
-
-    while($(".top-social li").length>13){
-        $(".top-social li")[num].remove();
-        num++;
-    }
-    if(document.body.clientWidth<860){
-        num = 1;
-        while($(".top-social li").length>10){
-            $(".top-social li")[num].remove();
-            num++;
-        }
-    }
-    if(document.body.clientWidth<425){
-        num = 1;
-        while($(".top-social li").length>6){
-            $(".top-social li")[num].remove();
-            num++;
-        }
-    }
-}
-social_share_limit();
 
 function code_highlight_style() {
     function gen_top_bar(i) {
@@ -573,9 +559,9 @@ function grin(tag, type, before, after) {
     } else if (type == "Img") {
         tag = '[img]' + tag + '[/img]';
     } else if (type == "Math") {
-        tag = ' smprintf(' + tag + ') ';
+        tag = ' {{' + tag + '}} ';
     } else if (type == "tieba") {
-        tag = ' tbprintf(' + tag + ') ';
+        tag = ' ::' + tag + ':: ';
     } else {
         tag = ' :' + tag + ': ';
     }
@@ -692,7 +678,7 @@ if (mashiro_option.float_player_on) {
                         }
                     });
                 }
-                var b = 'https://api.i-meto.com/meting/api?server=:server&type=:type&id=:id&r=:r';
+                var b = mashiro_option.meting_api_url + '?server=:server&type=:type&id=:id&_wpnonce=' + Poi.nonce;
                 'undefined' != typeof meting_api && (b = meting_api);
                 for (var f = 0; f < aplayers.length; f++) try {
                     aplayers[f].destroy()
@@ -705,7 +691,7 @@ if (mashiro_option.float_player_on) {
                             f = d.dataset.id;
                         if (f) {
                             var g = d.dataset.api || b;
-                            g = g.replace(':server', d.dataset.server), g = g.replace(':type', d.dataset.type), g = g.replace(':id', d.dataset.id), g = g.replace(':auth', d.dataset.auth), g = g.replace(':r', Math.random());
+                            g = g.replace(':server', d.dataset.server), g = g.replace(':type', d.dataset.type), g = g.replace(':id', d.dataset.id);
                             var h = new XMLHttpRequest;
                             h.onreadystatechange = function () {
                                 if (4 === h.readyState && (200 <= h.status && 300 > h.status || 304 === h.status)) {
@@ -873,11 +859,34 @@ setTimeout(function () {
     activate_widget();
 }, 100);
 
+function load_bangumi() {
+    if ($("section").hasClass("bangumi")) {
+        $('body').on('click', '#bangumi-pagination a', function () {
+            $("#bangumi-pagination a").addClass("loading").text("");
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', this.href + "&_wpnonce=" + Poi.nonce, true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    var html = JSON.parse(xhr.responseText);
+                    $("#bangumi-pagination").remove();
+                    $(".row").append(html);
+                }else{
+                    $("#bangumi-pagination a").removeClass("loading").html('<i class="fa fa-exclamation-triangle" aria-hidden="true"></i> ERROR ');
+                }
+            };
+            xhr.send();
+            return false;
+        });
+    }
+}
+
 mashiro_global.ini.normalize();
 loadCSS(mashiro_option.jsdelivr_css_src);
 loadCSS(mashiro_option.entry_content_theme_src);
 //loadCSS("https://at.alicdn.com/t/font_679578_qyt5qzzavdo39pb9.css");
-//loadCSS("https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.css");
+loadCSS("https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.css");
+
+
 
 (function webpackUniversalModuleDefinition(b, a) {
     if (typeof exports === "object" && typeof module === "object") {
@@ -1266,7 +1275,7 @@ var home = location.href,
                 $('html').css('overflow-y', 'hidden');
                 if (mashiro_option.live_search) {
                     var QueryStorage = [];
-                    search_a(Poi.api + "sakura/v1/cache_search/json");
+                    search_a(Poi.api + "sakura/v1/cache_search/json?_wpnonce=" + Poi.nonce);
 
                     var otxt = addComment.I("search-input"),
                         list = addComment.I("PostlistBox"),
@@ -1473,7 +1482,7 @@ var home = location.href,
                             var tempScrollTop = $(window).scrollTop();
                             $(window).scrollTop(tempScrollTop);
                             $body.animate({
-                                scrollTop: tempScrollTop + 300
+                                scrollTop: tempScrollTop + 100
                             }, 666)
                         } else {
                             $("#pagination").html("<span>很高兴你翻到这里，但是真的没有了...</span>"); 
@@ -1637,10 +1646,49 @@ var home = location.href,
             POWERMODE.shake = false;
             document.body.addEventListener('input', POWERMODE)
         },
+        FDT: function () {
+            header = $(".pattern-header");
+            function sleep(ms) {
+                return new Promise(resolve => setTimeout(resolve, ms));
+            }
+            async function headerdown() {
+                var reg = /blur\((.*?)px\) saturate\((.*?)\)/g;
+                header = $(".pattern-header");
+                var str = header.css("backdrop-filter");
+                var blur = str.replace(reg,'$1');
+                for (var i = blur ; i >= 5; i--) {
+                    if(header.css("top")=="150px"){
+                        header.css({ "backdrop-filter": "blur(" + i + "px) saturate(100%)" });
+                    }else{
+                        return;
+                    }
+                    await sleep(20); 
+                }
+            }
+            async function headerup() {
+                var reg = /blur\((.*?)px\) saturate\((.*?)\)/g;
+                header = $(".pattern-header");
+                var str = header.css("backdrop-filter");
+                var blur = str.replace(reg,'$1');
+                for (var i = blur ; i <= 15; i++) {
+                    if(header.css("top")=="0px"){
+                    header.css({ "backdrop-filter": "blur(" + i + "px) saturate(90%)" });
+                    }else{
+                        return;
+                    }
+                    await sleep(20);
+                }
+            }
+            $(".pattern-center").hover(function(){
+                    header.stop(true, false).animate({top:"50%"},500,function(){headerdown();}).animate({top:"50%"},500,function(){headerdown();});
+                },function(){
+                    header.stop(true, false).animate({top:"0"},500,function(){headerup()}).animate({top:"0"},500,function(){headerup()});
+                });
+        },
         GT: function () {
             var cwidth = document.body.clientWidth,
                 cheight = window.innerHeight,
-                pc_to_top = document.querySelector(".cd-top"),
+                pc_to_top = document.querySelector(".cd-top"),  
                 mb_to_top = document.querySelector("#moblieGoTop");
 
             $(window).scroll(function() {
@@ -1671,6 +1719,9 @@ var home = location.href,
             pc_to_top.onclick = function() {
                 topFunction(10);
             }
+            mb_to_top.onclick = function() {
+                topFunction(10);
+            }
         }
     }
 
@@ -1678,7 +1729,7 @@ var home = location.href,
         var d = document.body.scrollTop ? document.body : document.documentElement;
         var c = d.scrollTop;
         var b = function() {
-            c = c + (0 - c) / (a || 2);
+            c = c + (0 - c) / (a || 5);
             if (c < 1) {
                 d.scrollTop = 0;
                 return
@@ -1698,6 +1749,7 @@ $(function () {
     Siren.XCP();
     Siren.CE();
     Siren.MN();
+    Siren.FDT();
     Siren.IA();
     Siren.LV();
     if (Poi.pjax) {
@@ -1716,6 +1768,7 @@ $(function () {
             Siren.MNH();
         }).on('pjax:complete', function () {
             Siren.AH();
+            Siren.FDT();
             Siren.PE();
             Siren.CE();
             if (mashiro_option.NProgressON) NProgress.done();
@@ -1751,6 +1804,7 @@ $(function () {
         });
         window.addEventListener('popstate', function (e) {
             Siren.AH();
+            Siren.FDT();
             Siren.PE();
             Siren.CE();
             timeSeriesReload(true);
@@ -1782,6 +1836,7 @@ $(function () {
     console.log("%c Mashiro %c", "background:#24272A; color:#ffffff", "", "https://2heng.xin/");
     console.log("%c Github %c", "background:#24272A; color:#ffffff", "", "https://github.com/mashirozx");
 });
+
 var isWebkit = navigator.userAgent.toLowerCase().indexOf('webkit') > -1,
     isOpera = navigator.userAgent.toLowerCase().indexOf('opera') > -1,
     isIe = navigator.userAgent.toLowerCase().indexOf('msie') > -1;
@@ -1801,3 +1856,23 @@ if ((isWebkit || isOpera || isIe) && document.getElementById && window.addEventL
         }
     }, false);
 }
+
+function social_share_limit(){
+if ($(".top-social").length > 0 || $(".top-social_v2").length > 0){
+    $(".top-social").length > 0 ? a = $(".top-social li") : a = $(".top-social_v2 li");
+    for (var i=a.length-1;i>=11;i--){
+        a[i].remove();
+    }
+    if(document.body.clientWidth<=860){
+        for (var i=a.length-1;i>=10;i--){
+            a[i].remove();
+        }
+    }
+    if(document.body.clientWidth<=425){
+        for (var i=a.length-1;i>=5;i--){
+            a[i].remove();
+        }
+    }
+}
+}
+social_share_limit();

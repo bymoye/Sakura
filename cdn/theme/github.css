@@ -868,6 +868,8 @@
 
 .entry-content pre .hljs-ln-code .hljs-ln-line {
     margin-left: 22px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
 }
 
 .entry-content pre .hljs-ln-code .hljs-ln-line:hover {

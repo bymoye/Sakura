@@ -275,7 +275,7 @@ function optionsframework_options() {
 		'std' => 'type_2',
 		'type' => 'select',
 		'options' => array(
-			'type_1' => __('预加载函数', 'sakura'),
+			'type_1' => __('随机图函数(外部)', 'sakura'),
 			'type_2' => __('内置原图随机图','sakura'),
 		)
 	);
@@ -442,19 +442,6 @@ function optionsframework_options() {
  		'id' => 'cover_img',
  		'std' => '',
  		'type' => 'text');
-	
-	$options[] = array(
-		'name' => __('Background image filter', 'sakura'),/*背景图滤镜*/
-		'id' => 'focus_img_filter',
-		'std' => "filter-nothing",
-		'type' => "radio",
-		'options' => array(
-			'filter-nothing' => __('Nothing', 'sakura'),/*无*/
-			'filter-undertint' => __('Undertint', 'sakura'),/*浅色*/
-			'filter-dim' => __('Dim', 'sakura'),/*暗淡*/
-			'filter-grid' => __('Grid', 'sakura'),/*网格*/
-			'filter-dot' => __('Dot', 'sakura')/*点点*/
-		));
 
     $options[] = array(
 		'name' => __('Whether to turn on the top-feature', 'sakura'),/*是否开启聚焦*/
@@ -924,11 +911,33 @@ function optionsframework_options() {
 
 	$options[] = array(
 		'name' => __('Footer float music player', 'sakura'),/*页脚悬浮播放器*/
-		'desc' => __('If you don\'t need the player just leave it blank.Fill in the "song list" ID of Netease Cloud Music, eg: https://music.163.com/#/playlist?id=2288037900 The ID is 2288037900', 'sakura'),/*如果不需要播放器留空即可。填写网易云音乐的「歌单」ID，eg：https://music.163.com/#/playlist?id=2288037900的ID是2288037900*/
-		'id' => 'playlist_id',
+        'desc' => __('Choose which platform you\'ll use.', 'sakura'),
+        'id' => 'aplayer_server',
+        'std' => "netease",
+        'type' => "select",
+        'options' => array(
+            'netease' => __('Netease Cloud Music (default)', 'sakura'),
+            'xiami' => __('Xiami Music', 'sakura'),
+            'kugou' => __('KuGou Music', 'sakura'),
+            'baidu' => __('Baidu Music', 'sakura'),
+            'tencent' => __('QQ Music (may fail) ', 'sakura'),
+            'off' => __('Off', 'sakura'),
+        ));
+
+    $options[] = array(
+        'name' => __('Song list ID', 'sakura'),
+        'desc' => __('Fill in the "song list" ID, eg: https://music.163.com/#/playlist?id=2288037900 The ID is 2288037900', 'sakura'),
+        'id' => 'aplayer_playlistid',
 		'std' => '2288037900',
 		'type' => 'text');
-        
+	
+	$options[] = array(
+		'name' => __('Netease Cloud Music cookie', 'sakura'),
+		'desc' => __('For Netease Cloud Music, fill in your vip account\'s cookies if you want to play special tracks.<b>If you don\'t know what does mean, left it blank.</b>', 'sakura'),
+		'id' => 'aplayer_cookie',
+		'std' => '',
+		'type' => 'textarea');
+	
 	$options[] = array(
 		'name' => __('Version Control', 'sakura'),/*版本控制*/
 		'desc' => __('Used to update frontend cookies and browser caches, any string can be used', 'sakura'),/*用于更新前端 cookie 及浏览器缓存，可使用任意字符串*/
@@ -970,6 +979,20 @@ function optionsframework_options() {
 		'id' => 'notice_title',
 		'std' => '',
 		'type' => 'text');
+
+    $options[] = array(
+        'name' => __('Bilibili UID', 'sakura'), /*bilibiliUID*/
+        'desc' => __('Fill in your UID, eg.https://space.bilibili.com/13972644/, only fill in with the number part.', 'sakura'),
+        'id' => 'bilibili_id',
+        'std' => '13972644',
+        'type' => 'text');
+
+    $options[] = array(
+        'name' => __('Bilibili Cookie', 'sakura'), /*Bilibili Cookie*/
+        'desc' => __('Fill in your Cookies, go to your bilibili homepage, you can get cookies in brownser network pannel with pressing F12. If left this blank, you\'ll not get the progress.', 'sakura'),
+        'id' => 'bilibili_cookie',
+        'std' => 'LIVE_BUVID=',
+        'type' => 'textarea');
 
 	$options[] = array(
 		'name' => __('The categories of articles that don\'t not show on homepage', 'sakura'),/*首页不显示的分类文章*/

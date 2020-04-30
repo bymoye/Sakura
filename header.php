@@ -11,20 +11,6 @@
 ?>
 <?php header('X-Frame-Options: SAMEORIGIN'); ?>
 <!DOCTYPE html>
-<!-- 
-Theme by Mashiro
-                      /^--^\     /^--^\     /^--^\
-                      \____/     \____/     \____/
-                     /      \   /      \   /      \
-                    |        | |        | |        |
-                     \__  __/   \__  __/   \__  __/
-|^|^|^|^|^|^|^|^|^|^|^|^\ \^|^|^|^/ /^|^|^|^|^\ \^|^|^|^|^|^|^|^|^|^|^|^|
-| | | | | | | | | | | | |\ \| | |/ /| | | | | | \ \ | | | | | | | | | | |
-########################/ /######\ \###########/ /#######################
-| | | | | | | | | | | | \/| | | | \/| | | | | |\/ | | | | | | | | | | | |
-|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|
-
--->
 <html <?php language_attributes(); ?>>
 <head>
 <meta charset="<?php bloginfo( 'charset' ); ?>">
@@ -63,29 +49,18 @@ if (akina_option('akina_meta') == true) {
 <meta name="keywords" content="<?php echo $keywords; ?>" />
 <?php } ?>
 <link rel="shortcut icon" href="<?php echo akina_option('favicon_link', ''); ?>"/> 
+<meta name="theme-color" content="<?php echo akina_option('theme_skin', ''); ?>">
 <meta http-equiv="x-dns-prefetch-control" content="on">
 <?php wp_head(); ?>
-<script type="text/javascript">
-if (!!window.ActiveXObject || "ActiveXObject" in window) { //is IE?
-  alert('朋友，IE浏览器未适配哦~\n如果是 360、QQ 等双核浏览器，请关闭 IE 模式！');
-}
-</script>
-<?php if(akina_option('google_analytics_id', '')):?>
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=<?php echo akina_option('google_analytics_id', ''); ?>"></script>
-<script>
-window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','<?php echo akina_option('google_analytics_id', ''); ?>');
-</script>
-<?php endif; ?>
+<script type="text/javascript">if (!!window.ActiveXObject || "ActiveXObject" in window) {alert('朋友，IE浏览器未适配哦~\n如果是 360、QQ 等双核浏览器，请关闭 IE 模式！');}</script>
 </head>
 <body <?php body_class(); ?>>
     <div class="scrollbar" id="bar"></div>
 	<section id="main-container">
 		<?php 
 		if(!akina_option('head_focus')){ 
-		$filter = akina_option('focus_img_filter');
 		?>
-		<div class="headertop <?php echo $filter; ?>">
+		<div class="headertop">
 			<?php get_template_part('layouts/imgbox'); ?>
 		</div>	
 		<?php } ?>

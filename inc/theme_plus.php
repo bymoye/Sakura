@@ -402,7 +402,7 @@ function the_video_headPattern_hls(){
       </video>
     </div>
     
-    <style>.pattern-center::before,.pattern-center-sakura::before{display:none}</style>
+
     <header class="pattern-header <?php if(is_single()){echo $header;} ?>"><?php echo $t; ?></header>
   </div>
   <?php else :
@@ -469,7 +469,7 @@ function the_video_headPattern_normal(){
         </video>
     </div>
     
-    <style>.pattern-center::before,.pattern-center-sakura::before{display:none}</style>
+
     <header class="pattern-header <?php if(is_single()){echo $header;} ?>"><?php echo $t; ?></header>
   </div>
   <?php else :

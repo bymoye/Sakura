@@ -1,4 +1,14 @@
 <?php
+/**
+ * Classes
+ */
+include_once('classes/Aplayer.php');
+include_once('classes/Bilibili.php');
+include_once('classes/Cache.php');
+include_once('classes/Images.php');
+
+use Sakura\API\Images;
+use Sakura\API\Cache;
 
 /**
  * Router
@@ -11,6 +21,14 @@ add_action('rest_api_init', function () {
     register_rest_route('sakura/v1', '/cache_search/json', array(
         'methods' => 'GET',
         'callback' => 'cache_search_json',
+    ));
+    register_rest_route('sakura/v1', '/bangumi/bilibili', array(
+        'methods' => 'POST',
+        'callback' => 'bgm_bilibili',
+    ));
+    register_rest_route('sakura/v1', '/meting/aplayer', array(
+        'methods' => 'GET',
+        'callback' => 'meting_aplayer',
     ));
 });
 
@@ -41,18 +59,19 @@ function upload_image(WP_REST_Request $request) {
         return $result;
     }
 
+    $images = new \Sakura\API\Images();
     switch (akina_option("img_upload_api")) {
         case 'imgur':
             $image = file_get_contents($_FILES["cmt_img_file"]["tmp_name"]);
-            $API_Request = Imgur_API($image);
+            $API_Request = $images->Imgur_API($image);
             break;
         case 'smms':
             $image = $_FILES;
-            $API_Request = SMMS_API($image);
+            $API_Request = $images->SMMS_API($image);
             break;
         case 'chevereto':
             $image = file_get_contents($_FILES["cmt_img_file"]["tmp_name"]);
-            $API_Request = Chevereto_API($image);
+            $API_Request = $images->Chevereto_API($image);
             break;
     }
 
@@ -61,190 +80,76 @@ function upload_image(WP_REST_Request $request) {
     return $result;
 }
 
-/**
- * Chevereto upload interface
- */
-function Chevereto_API($image) {
-    $upload_url = akina_option('cheverto_url').'/api/1/upload';
-    $args = array(
-        'body' => array(
-            'source' => base64_encode($image),
-            'key' => akina_option('chevereto_api_key')
-        )
-    );
-
-    $response = wp_remote_post($upload_url, $args);
-    $reply = json_decode($response["body"]);
-
-    if ($reply->status_txt == 'OK' && $reply->status_code == 200) {
-        $status = 200;
-        $success = true;
-        $message = "success";
-        $link = $reply->image->image->url;
-        $proxy = akina_option('cmt_image_proxy') . $link;
-    } else {
-        $status = $reply->status_code;
-        $success = false;
-        $message = $reply->error->message;
-        $link = 'https://view.moezx.cc/images/2019/10/28/default_d_h_large.gif';
-        $proxy = akina_option('cmt_image_proxy') . $link;
-    }
-    $output = array(
-        'status' => $status,
-        'success' => $success,
-        'message' => $message,
-        'link' => $link,
-        'proxy' => $proxy,
-    );
-    return $output;
-}
-
-/**
- * Imgur upload interface
- */
-function Imgur_API($image) {
-    $client_id = akina_option('imgur_client_id');
-    $upload_url = akina_option('imgur_upload_image_proxy');
-    $args = array(
-        'headers' => array(
-            'Authorization' => 'Client-ID ' . $client_id
-        ),
-        'body' => array(
-            'image' => base64_encode($image)
-        )
-    );
-
-    $response = wp_remote_post($upload_url, $args);
-    $reply = json_decode($response["body"]);
-
-    if ($reply->success && $reply->status == 200) {
-        $status = 200;
-        $success = true;
-        $message = "success";
-        $link = $reply->data->link;
-        $proxy = akina_option('cmt_image_proxy') . $link;
-    } else {
-        $status = $reply->status;
-        $success = false;
-        $message = $reply->data->error;
-        $link = 'https://view.moezx.cc/images/2019/10/28/default_d_h_large.gif';
-        $proxy = akina_option('cmt_image_proxy') . $link;
-    }
-    $output = array(
-        'status' => $status,
-        'success' => $success,
-        'message' => $message,
-        'link' => $link,
-        'proxy' => $proxy,
-    );
-    return $output;
-}
-
-/**
- * smms upload interface
- */
-function SMMS_API($image) {
-    $client_id = akina_option('smms_client_id');
-    $upload_url = "https://sm.ms/api/v2/upload";
-    $filename = $image['cmt_img_file']['name'];
-    $filedata = $image['cmt_img_file']['tmp_name'];
-    $Boundary = wp_generate_password();
-    $bits = file_get_contents($filedata);
-
-    $args = array(
-        "headers" => "Content-Type: multipart/form-data; boundary=$Boundary\r\n\r\nAuthorization: Basic $client_id\r\n\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.97",
-        "body" => "--$Boundary\r\nContent-Disposition: form-data; name=\"smfile\"; filename=\"$filename\"\r\n\r\n$bits\r\n\r\n--$Boundary--"
-    );
-
-    $response = wp_remote_post($upload_url, $args);
-    $reply = json_decode($response["body"]);
-
-    if ($reply->success && $reply->code == 'success') {
-        $status = 200;
-        $success = true;
-        $message = $reply->message;
-        $link = $reply->data->url;
-        $proxy = akina_option('cmt_image_proxy') . $link;
-    } else if (preg_match("/Image upload repeated limit/i", $reply->message, $matches)) {
-        $status = 200; // sm.ms 接口不规范，建议检测到重复的情况下返回标准化的 code，并单独把 url 放进一个字段
-        $success = true;
-        $message = $reply->message;
-        $link = str_replace('Image upload repeated limit, this image exists at: ', '', $reply->message);
-        $proxy = akina_option('cmt_image_proxy') . $link;
-    } else {
-        $status = 400;
-        $success = false;
-        $message = $reply->message;
-        $link = 'https://view.moezx.cc/images/2019/10/28/default_d_h_large.gif';
-        $proxy = akina_option('cmt_image_proxy') . $link;
-    }
-    $output = array(
-        'status' => $status,
-        'success' => $success,
-        'message' => $message,
-        'link' => $link,
-        'proxy' => $proxy,
-    );
-    return $output;
-}
-
 /*
  * 定制实时搜索 rest api
  * @rest api接口路径：https://sakura.2heng.xin/wp-json/sakura/v1/cache_search/json
  * @可在cache_search_json()函数末尾通过设置 HTTP header 控制 json 缓存时间
  */
 function cache_search_json() {
-    global $more;
-    $vowels = array("[", "{", "]", "}", "<", ">", "\r\n", "\r", "\n", "-", "'", '"', '`', " ", ":", ";", '\\', "  ", "toc");
-    $regex = <<<EOS
-/<\/?[a-zA-Z]+("[^"]*"|'[^']*'|[^'">])*>|begin[\S\s]*\/begin|hermit[\S\s]*\/hermit|img[\S\s]*\/img|{{.*?}}|:.*?:/m
-EOS;
-    $more = 1;
-
-    $posts = new WP_Query('posts_per_page=-1&post_status=publish&post_type=post');
-    while ($posts->have_posts()): $posts->the_post();
-    $output .= '{"type":"post","link":"' . get_permalink() . '","title":' . json_encode(get_the_title()) . ',"comments":"' . get_comments_number('0', '1', '%') . '","text":' . json_encode(str_replace($vowels, " ", preg_replace($regex, ' ', apply_filters( 'the_content', get_the_content())))) . '},';
-    endwhile;
-    wp_reset_postdata();
-
-    $pages = new WP_Query('posts_per_page=-1&post_status=publish&post_type=page');
-    while ($pages->have_posts()): $pages->the_post();
-        $output .= '{"type":"page","link":"' . get_permalink() . '","title":' . json_encode(get_the_title()) . ',"comments":"' . get_comments_number('0', '1', '%') . '","text":' . json_encode(str_replace($vowels, " ", preg_replace($regex, ' ', apply_filters( 'the_content', get_the_content())))) . '},';
-    endwhile;
-    wp_reset_postdata();
-
-    $tags = get_tags();
-    foreach ($tags as $tag) {
-        $output .= '{"type":"tag","link":"' . get_term_link($tag) . '","title":' . json_encode($tag->name) . ',"comments":"","text":""},';
+    if (!check_ajax_referer('wp_rest', '_wpnonce', false)) {
+        $output = array(
+            'status' => 403,
+            'success' => false,
+            'message' => 'Unauthorized client.'
+        );
+        $result = new WP_REST_Response($output, 403);
+    } else {
+        $output = Cache::search_json();
+        $result = new WP_REST_Response($output, 200);
     }
-
-    $categories = get_categories();
-    foreach ($categories as $category) {
-        $output .= '{"type":"category","link":"' . get_term_link($category) . '","title":' . json_encode($category->name) . ',"comments":"","text":""},';
-    }
-    if (akina_option('live_search_comment')) {
-        $comments = get_comments();
-        foreach ($comments as $comment) {
-            $is_private = get_comment_meta($comment->comment_ID, '_private', true);
-            if ($is_private) {
-                $output .= '{"type":"comment","link":"' . get_comment_link($comment) . '","title":' . json_encode(get_the_title($comment->comment_post_ID)) . ',"comments":"","text":' . json_encode($comment->comment_author . "：" . __("The comment is private", "sakura") /*该评论为私密评论*/) . '},';
-                continue;
-            } else {
-                $output .= '{"type":"comment","link":"' . get_comment_link($comment) . '","title":' . json_encode(get_the_title($comment->comment_post_ID)) . ',"comments":"","text":' . json_encode(str_replace($vowels, " ", preg_replace($regex, " ", $comment->comment_author . "：" . $comment->comment_content))) . '},';
-            }
-        }
-    }
-
-    $output = substr($output, 0, strlen($output) - 1);
-
-    $data = '[' . $output . ']';
-    $result = new WP_REST_Response(json_decode($data), 200);
     $result->set_headers(
         array(
             'Content-Type' => 'application/json',
-            'Cache-Control' => 'max-age=3600'// json 缓存控制
+            'Cache-Control' => 'max-age=3600', // json 缓存控制
         )
     );
-
     return $result;
 }
+
+function bgm_bilibili() {
+    if (!check_ajax_referer('wp_rest', '_wpnonce', false)) {
+        $output = array(
+            'status' => 403,
+            'success' => false,
+            'message' => 'Unauthorized client.'
+        );
+        $response = new WP_REST_Response($output, 403);
+    } else {
+        $page = $_GET["page"] ?: 2;
+        $bgm = new \Sakura\API\Bilibili();
+        $html = preg_replace("/\s+|\n+|\r/", ' ', $bgm->get_bgm_items($page));
+        $response = new WP_REST_Response($html, 200);
+    }
+    return $response;
+}
+
+function meting_aplayer() {
+    $type = $_GET['type'];
+    $id = $_GET['id'];
+    $wpnonce = $_GET['_wpnonce'];
+    $meting_pnonce = $_GET['meting_pnonce'];
+    if ((isset($wpnonce) && !check_ajax_referer('wp_rest', $wpnonce, false)) || (isset($nonce) && !wp_verify_nonce($nonce, $type . '#:' . $id))) {
+        $output = array(
+            'status' => 403,
+            'success' => false,
+            'message' => 'Unauthorized client.'
+        );
+        $response = new WP_REST_Response($output, 403);
+    } else {
+        $Meting_API = new \Sakura\API\Aplayer();
+        $data = $Meting_API->get_data($type, $id);
+        if ($type === 'playlist') {
+            $response = new WP_REST_Response($data, 200);
+            $response->set_headers(array('cache-control' => 'max-age=3600'));
+        } elseif ($type === 'lyric') {
+            $response = new WP_REST_Response();
+            $response->set_headers(array('cache-control' => 'max-age=3600'));
+            echo $data;
+        } else {
+            $response = new WP_REST_Response();
+            $response->set_status(301);
+            $response->header('Location', $data);
+        }
+    }
+    return $response;
+} 

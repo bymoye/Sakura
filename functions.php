@@ -89,7 +89,6 @@ function akina_setup() {
     remove_action('wp_head', 'index_rel_link');
     remove_action('wp_head', 'start_post_rel_link', 10, 0);
     remove_action('wp_head', 'wp_generator');
-	remove_action( 'wp_head', 'wp_generator' ); //隐藏wordpress版本
     remove_filter('the_content', 'wptexturize'); //取消标点符号转义
     
 	//remove_action('rest_api_init', 'wp_oembed_register_route');
@@ -194,7 +193,7 @@ function sakura_scripts() {
 	$code_lamp = 'close';
 	//if(wp_is_mobile()) $auto_height = 'fixed'; //拦截移动端
     version_compare( $GLOBALS['wp_version'], '5.1', '>=' ) ? $reply_link_version = 'new' : $reply_link_version = 'old';
-	wp_localize_script( 'app', 'Poi' , array(
+	wp_localize_script('app', 'Poi' , array(
 		'pjax' => akina_option('poi_pjax'),
 		'movies' => $movies,
 		'windowheight' => $auto_height,
@@ -524,7 +523,11 @@ function specs_zan(){
     die;
 }
 
-
+function is_webp(){
+    $webp = strpos($_SERVER['HTTP_ACCEPT'], 'image/webp');
+    $webp === false ? $webp=0 : $webp=1;
+    return $webp;
+}
 /*
  * 友情链接
  */
@@ -712,7 +715,7 @@ function custom_login() {
 	//echo '<link rel="stylesheet" type="text/css" href="' . get_bloginfo('template_directory') . '/inc/login.css" />'."\n";
 	echo '<link rel="stylesheet" type="text/css" href="'.get_template_directory_uri().'/inc/login.css?'.SAKURA_VERSION.'" />'."\n";
 	//echo '<script type="text/javascript" src="'.get_bloginfo('template_directory').'/js/jquery.min.js"></script>'."\n";
-	echo '<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/jquery/jquery@1.8.2/jquery.min.js"></script>'."\n";
+	echo '<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/jquery/jquery@1.9.0/jquery.min.js"></script>' . "\n";
 }
 
 add_action('login_head', 'custom_login');
@@ -989,7 +992,7 @@ if ( !get_option('use_smilies'))
       // 选择面版
       $return_smiles = $return_smiles . '<span title="'.$tieba_Name.'" onclick="grin('."'".$tieba_Name."'".',type = \'tieba\')"><img src="https://cdn.jsdelivr.net/gh/bymoye/cdn@1.2/sakura/images/smilies/'. $tiebaimgdir .'icon_'. $tieba_Name . $smiliesgs.'" /></span>';
       // 正文转换
-      $wpsmiliestrans['tbprintf(' . $tieba_Name . ')'] = '<span title="'. $tieba_Name .'" onclick="grin('."'". $tieba_Name ."'".',type = \'tieba\')"><img src="https://cdn.jsdelivr.net/gh/bymoye/cdn@1.2/sakura/images/smilies/'.$tiebaimgdir.'icon_'. $tieba_Name .$smiliesgs.'" /></span>';
+      $wpsmiliestrans['::' . $tieba_Name . '::'] = '<span title="'. $tieba_Name .'" onclick="grin('."'". $tieba_Name ."'".',type = \'tieba\')"><img src="https://cdn.jsdelivr.net/gh/bymoye/cdn@1.2/sakura/images/smilies/'.$tiebaimgdir.'icon_'. $tieba_Name .$smiliesgs.'" /></span>';
       }
       return $return_smiles;
   }
@@ -1069,7 +1072,7 @@ function push_bili_smilies(){
     // 选择面版
     $return_smiles = $return_smiles . '<span title="'.$smilies_Name.'" onclick="grin('."'".$smilies_Name."'".',type = \'Math\')"><img src="https://cdn.jsdelivr.net/gh/bymoye/cdn@1.2/sakura/images/smilies/'. $biliimgdir .'emoji_'. $smilies_Name . $smiliesgs.'" /></span>';
     // 正文转换
-    $bilismiliestrans['smprintf(' . $smilies_Name . ')'] = '<span title="'. $smilies_Name .'" onclick="grin('."'". $smilies_Name ."'".',type = \'Math\')"><img src="https://cdn.jsdelivr.net/gh/bymoye/cdn@1.2/sakura/images/smilies/'.$biliimgdir.'emoji_'. $smilies_Name .$smiliesgs.'" /></span>';
+    $bilismiliestrans['{{' . $smilies_Name . '}}'] = '<span title="'. $smilies_Name .'" onclick="grin('."'". $smilies_Name ."'".',type = \'Math\')"><img src="https://cdn.jsdelivr.net/gh/bymoye/cdn@1.2/sakura/images/smilies/'.$biliimgdir.'emoji_'. $smilies_Name .$smiliesgs.'" /></span>';
     }
     return $return_smiles;
 }
@@ -1578,7 +1581,7 @@ function change_avatar($avatar){
 }
 
 function get_random_image_url(){
-    $randomurl_file = get_template_directory() .'/inc/random_url';
+    $randomurl_file = get_template_directory() .'/inc/random_url.Dat';
     $randomurl_list = file($randomurl_file);
     $k = array_rand($randomurl_list);
     $html = explode(",",$randomurl_list[$k]);
@@ -1766,8 +1769,5 @@ if ( !function_exists( 'disable_embeds_init' ) ) :
     register_deactivation_hook(__FILE__, 'disable_embeds_flush_rewrite_rules');
 endif;
 
-function is_webp(){
-    $webp = strpos($_SERVER['HTTP_ACCEPT'], 'image/webp');
-    $webp === false ? $webp=0 : $webp=1;
-    return $webp;
-}
+
+remove_action( 'wp_head', 'rest_output_link_wp_head', 10 );
