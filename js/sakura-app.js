@@ -1652,35 +1652,37 @@ var home = location.href,
                 return new Promise(resolve => setTimeout(resolve, ms));
             }
             async function headerdown() {
-                var reg = /blur\((.*?)px\) saturate\((.*?)\)/g;
-                header = $(".pattern-header");
-                var str = header.css("backdrop-filter");
-                var blur = str.replace(reg,'$1');
-                for (var i = blur ; i >= 5; i--) {
-                    if(header.css("top")=="150px"){
-                        header.css({ "backdrop-filter": "blur(" + i + "px) saturate(100%)" });
-                    }else{
-                        return;
+                if(header.length>0){
+                    var reg = /blur\((.*?)px\) saturate\((.*?)\)/g;
+                    var str = header.css("backdrop-filter");
+                    var blur = str.replace(reg,'$1');
+                    for (var i = blur ; i >= 5; i--) {
+                        if(header.css("top")=="150px"){
+                            header.css({ "backdrop-filter": "blur(" + i + "px) saturate(100%);" });
+                        }else{
+                            return;
+                        }
+                        await sleep(20); 
                     }
-                    await sleep(20); 
                 }
             }
             async function headerup() {
-                var reg = /blur\((.*?)px\) saturate\((.*?)\)/g;
-                header = $(".pattern-header");
-                var str = header.css("backdrop-filter");
-                var blur = str.replace(reg,'$1');
-                for (var i = blur ; i <= 15; i++) {
-                    if(header.css("top")=="0px"){
-                    header.css({ "backdrop-filter": "blur(" + i + "px) saturate(90%)" });
-                    }else{
-                        return;
-                    }
-                    await sleep(20);
+                if(header.length>0){
+                    var reg = /blur\((.*?)px\) saturate\((.*?)\)/g;
+                    var str = header.css("backdrop-filter");
+                    var blur = str.replace(reg,'$1');
+                    for (var i = blur ; i <= 15; i++) {
+                        if(header.css("top")=="0px"){
+                            header.css({ "backdrop-filter": "blur(" + i + "px) saturate(90%);" });
+                        }else{
+                            return;
+                        }
+                        await sleep(20);
                 }
             }
+            }
             $(".pattern-center").hover(function(){
-                    header.stop(true, false).animate({top:"50%"},500,function(){headerdown();}).animate({top:"50%"},500,function(){headerdown();});
+                    header.stop(true, false).animate({top:"60%"},500,function(){headerdown();}).animate({top:"60%"},500,function(){headerdown();});
                 },function(){
                     header.stop(true, false).animate({top:"0"},500,function(){headerup()}).animate({top:"0"},500,function(){headerup()});
                 });

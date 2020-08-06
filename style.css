@@ -764,7 +764,14 @@ a:hover {
     z-index: 1;
     bottom: 0;
     backdrop-filter: blur(15px) saturate(60%);
+    background-color: rgba(0, 0, 0, 0.376);
+    transition:background-color .5s;
 }
+
+.pattern-center:hover header.pattern-header {
+    background-color:rgba(0,0,0,0);
+}
+
 
 .pattern-center h1.cat-title,
 .pattern-center h1.entry-title {
@@ -862,6 +869,9 @@ a:hover {
     }
     .pattern-center-blank {
         padding-top: 0
+    }
+    .pattern-center h1.cat-title, .pattern-center h1.entry-title{
+        padding-top: 30%;
     }
 }
 
@@ -1379,7 +1389,8 @@ i.iconfont.hotpost {
     -webkit-transition: .6s all ease;
     -moz-transition: .6s all linear;
     -o-transition: .6s all ease;
-    -ms-transition: .6s all ease
+    -ms-transition: .6s all ease;
+    background-color: rgba(255, 255, 255, .8);
 }
 
 .info-meta span {
@@ -3146,7 +3157,8 @@ a.page-numbers {
     overflow: hidden;
     -webkit-transition: height 0s ease-out;
     -moz-transition: height 0s ease-out;
-    transition: height 0s ease-out
+    transition: height 0s ease-out;
+    background-color: rgba(255, 255, 255, .8);
 }
 
 .comments ul.commentwrap {
