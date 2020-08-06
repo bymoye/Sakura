@@ -1648,43 +1648,48 @@ var home = location.href,
         },
         FDT: function () {
             header = $(".pattern-header");
+            var g=0.4;
             function sleep(ms) {
                 return new Promise(resolve => setTimeout(resolve, ms));
-            }
+            };
             async function headerdown() {
-                if(header.length>0){
+                if($(".pattern-header").length>0){
                     var reg = /blur\((.*?)px\) saturate\((.*?)\)/g;
+                    header = $(".pattern-header");
                     var str = header.css("backdrop-filter");
                     var blur = str.replace(reg,'$1');
                     for (var i = blur ; i >= 5; i--) {
-                        if(header.css("top")=="150px"){
-                            header.css({ "backdrop-filter": "blur(" + i + "px) saturate(100%);" });
+                        if(header.css("top")=="180px"){
+                            g>=1?g=1:g+=0.05;
+                            header.css( "backdrop-filter", "blur(" + i + "px) saturate("+g+")");
                         }else{
                             return;
                         }
                         await sleep(20); 
                     }
                 }
-            }
+            };
             async function headerup() {
-                if(header.length>0){
+                if($(".pattern-header").length>0){
                     var reg = /blur\((.*?)px\) saturate\((.*?)\)/g;
+                    header = $(".pattern-header");
                     var str = header.css("backdrop-filter");
                     var blur = str.replace(reg,'$1');
                     for (var i = blur ; i <= 15; i++) {
                         if(header.css("top")=="0px"){
-                            header.css({ "backdrop-filter": "blur(" + i + "px) saturate(90%);" });
+                            g<=0.5?g=0.5:g-=0.05;
+                            header.css( "backdrop-filter", "blur(" + i + "px) saturate("+g+")" );
                         }else{
                             return;
                         }
                         await sleep(20);
+                    } 
                 }
-            }
-            }
+            };
             $(".pattern-center").hover(function(){
                     header.stop(true, false).animate({top:"60%"},500,function(){headerdown();}).animate({top:"60%"},500,function(){headerdown();});
                 },function(){
-                    header.stop(true, false).animate({top:"0"},500,function(){headerup()}).animate({top:"0"},500,function(){headerup()});
+                    header.stop(true, false).animate({top:"0"},500,function(){headerup();}).animate({top:"0"},500,function(){headerup();});
                 });
         },
         GT: function () {

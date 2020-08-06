@@ -763,9 +763,7 @@ a:hover {
     color: #FFF;
     z-index: 1;
     bottom: 0;
-    backdrop-filter: blur(15px) saturate(60%);
-    background-color: rgba(0, 0, 0, 0.376);
-    transition:background-color .5s;
+    backdrop-filter: blur(15px) saturate(90%);
 }
 
 .pattern-center:hover header.pattern-header {
@@ -801,6 +799,8 @@ a:hover {
     text-align: left;
     top: 0;
     backdrop-filter:blur(15px) saturate(60%);
+    background-color: rgba(0, 0, 0, 0.376);
+    transition:background-color .5s;
 }
 
 
@@ -4015,7 +4015,7 @@ li.feature-2 {
     font-size: 16px;
     color: #EAEADF;
     background: rgba(0,0,0,.5);
-    padding: 15px;
+    padding: 15px 15px 0px 15px;
     margin-top: 22px;
     letter-spacing: 0;
     line-height: 30px;
