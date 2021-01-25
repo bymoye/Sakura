@@ -12,7 +12,6 @@ if ( akina_option('theme_skin') ) { ?>
 ::-webkit-scrollbar-thumb { background: <?php echo akina_option('theme_skin'); ?> }
 .download , .navigator i:hover , .link-title , .links ul li:hover , #pagination a:hover , .comment-respond input[type='submit']:hover {border-color: <?php echo akina_option('theme_skin'); ?> }
 .entry-content a:hover , .site-info a:hover , .comment h4 a , #comments-navi a.prev , #comments-navi a.next , .comment h4 a:hover , .site-top ul li a:hover , .entry-title a:hover , #archives-temp h3 , span.page-numbers.current , .sorry li a:hover , .site-title a:hover , i.iconfont.js-toggle-search.iconsearch:hover , .comment-respond input[type='submit']:hover, blockquote:before, blockquote:after { color: <?php echo akina_option('theme_skin'); ?>; }
-#aplayer-float .aplayer-lrc-current { color: <?php echo akina_option('theme_skin'); ?> !important}
 .is-active-link::before, .commentbody:not(:placeholder-shown)~.input-label, .commentbody:focus~.input-label {
     background-color: <?php echo akina_option('theme_skin'); ?> !important
 }
@@ -21,9 +20,7 @@ if ( akina_option('theme_skin') ) { ?>
     box-shadow: 0 0 5px <?php echo akina_option('theme_skin'); ?>;
 }
 
-.aplayer-thumb,.aplayer-played,.butterBar-message{
-    background:<?php echo akina_option('theme_skin'); ?> !important
-}
+
 .insert-image-tips:hover, .insert-image-tips-hover{ 
     color: <?php echo akina_option('theme_skin'); ?>;
     border: 1px solid <?php echo akina_option('theme_skin'); ?>;
@@ -54,9 +51,6 @@ if ( akina_option('theme_skin') ) { ?>
             transition: filter .8s ease;
         }
 
-        .aplayer .aplayer-list ol::-webkit-scrollbar-thumb {
-        background-color: <?php echo akina_option('theme_skin'); ?> !important;
-    }
     .top-social_v2 svg:hover,.top-social svg:hover {
     -webkit-transition: fill .5s ease-out;
     transition: fill .5s ease-out;

@@ -38,9 +38,9 @@ mashiro_option.entry_content_theme_src = "<?php echo get_template_directory_uri(
 mashiro_option.entry_content_theme_src = "<?php echo get_template_directory_uri() ?>/cdn/theme/github.css";
 <?php } ?>
 <?php } else {if(akina_option('entry_content_theme') == "sakura"){?>
-mashiro_option.entry_content_theme_src = "https://cdn.jsdelivr.net/combine/gh/bymoye/Sakura@0.0.1/cdn/theme/sakura.min.css,npm/aplayer@1.10.1/dist/APlayer.min.css";
+mashiro_option.entry_content_theme_src = "https://cdn.jsdelivr.net/combine/gh/bymoye/Sakura@0.0.1/cdn/theme/sakura.min.css";
 <?php }elseif(akina_option('entry_content_theme') == "github") {?>
-mashiro_option.entry_content_theme_src = "https://cdn.jsdelivr.net/combine/gh/bymoye/Sakura@0.0.1/cdn/theme/github.min.css,npm/aplayer@1.10.1/dist/APlayer.min.css";
+mashiro_option.entry_content_theme_src = "https://cdn.jsdelivr.net/combine/gh/bymoye/Sakura@0.0.1/cdn/theme/github.min.css";
 <?php } ?>
 <?php } ?>
 mashiro_option.entry_content_theme = "<?php echo akina_option('entry_content_theme'); ?>";
@@ -49,10 +49,6 @@ mashiro_option.jsdelivr_css_src = "<?php echo get_template_directory_uri() ?>/cd
 <?php } else { ?>
 mashiro_option.jsdelivr_css_src = "https://cdn.jsdelivr.net/gh/bymoye/Sakura@<?php echo NMX_VERSION; ?>/cdn/css/lib.min.css";
 <?php } ?>
-<?php if (akina_option('aplayer_server') != 'off'): ?>
-mashiro_option.float_player_on = true;
-mashiro_option.meting_api_url = "<?php echo rest_url('sakura/v1/meting/aplayer');?>";
-<?php endif; ?>
 <?php
 $imgurl = DEFAULT_FEATURE_IMAGE();
 if(is_array($imgurl)){

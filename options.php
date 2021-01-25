@@ -908,35 +908,6 @@ function optionsframework_options() {
             'tag2' => 'https://img.shields.io/github/commits-since/mashirozx/Sakura/v'.SAKURA_VERSION.'.svg?style=flat-square'
         )
 	);
-
-	$options[] = array(
-		'name' => __('Footer float music player', 'sakura'),/*页脚悬浮播放器*/
-        'desc' => __('Choose which platform you\'ll use.', 'sakura'),
-        'id' => 'aplayer_server',
-        'std' => "netease",
-        'type' => "select",
-        'options' => array(
-            'netease' => __('Netease Cloud Music (default)', 'sakura'),
-            'xiami' => __('Xiami Music', 'sakura'),
-            'kugou' => __('KuGou Music', 'sakura'),
-            'baidu' => __('Baidu Music', 'sakura'),
-            'tencent' => __('QQ Music (may fail) ', 'sakura'),
-            'off' => __('Off', 'sakura'),
-        ));
-
-    $options[] = array(
-        'name' => __('Song list ID', 'sakura'),
-        'desc' => __('Fill in the "song list" ID, eg: https://music.163.com/#/playlist?id=2288037900 The ID is 2288037900', 'sakura'),
-        'id' => 'aplayer_playlistid',
-		'std' => '2288037900',
-		'type' => 'text');
-	
-	$options[] = array(
-		'name' => __('Netease Cloud Music cookie', 'sakura'),
-		'desc' => __('For Netease Cloud Music, fill in your vip account\'s cookies if you want to play special tracks.<b>If you don\'t know what does mean, left it blank.</b>', 'sakura'),
-		'id' => 'aplayer_cookie',
-		'std' => '',
-		'type' => 'textarea');
 	
 	$options[] = array(
 		'name' => __('Version Control', 'sakura'),/*版本控制*/

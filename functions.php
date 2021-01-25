@@ -876,11 +876,11 @@ function comment_mail_notify($comment_id){
         <h3>您有一条来自<a style="text-decoration: none;color: orange " target="_blank" href="' .home_url(). '/">'. get_option("blogname") .'</a>的回复</h3>
         <br>
         <p style="font-size: 14px;">您在文章《' . get_the_title($comment->comment_post_ID) . '》上发表的评论：</p>
+        <div style="border-bottom:#ddd 1px solid;border-left:#ddd 1px solid;padding-bottom:20px;background-color:#eee;margin:15px 0px;padding-left:20px;padding-right:20px;border-top:#ddd 1px solid;border-right:#ddd 1px solid;padding-top:20px">'
+        . trim(get_comment($parent_id)->comment_content) . '</div>
+        <div style="font-size: 14px;">' . trim($comment->comment_author) . ' 给您的回复如下：</p>
         <p style="border-bottom:#ddd 1px solid;border-left:#ddd 1px solid;padding-bottom:20px;background-color:#eee;margin:15px 0px;padding-left:20px;padding-right:20px;border-top:#ddd 1px solid;border-right:#ddd 1px solid;padding-top:20px">'
-        . trim(get_comment($parent_id)->comment_content) . '</p>
-        <p style="font-size: 14px;">' . trim($comment->comment_author) . ' 给您的回复如下：</p>
-        <p style="border-bottom:#ddd 1px solid;border-left:#ddd 1px solid;padding-bottom:20px;background-color:#eee;margin:15px 0px;padding-left:20px;padding-right:20px;border-top:#ddd 1px solid;border-right:#ddd 1px solid;padding-top:20px">'
-        . trim($comment->comment_content) . '</p>
+        . trim($comment->comment_content) . '</div>
 
       <div style="text-align: center;">
           <img src="https://cdn.jsdelivr.net/gh/moezx/cdn@3.1.4/img/other/hr.png" alt="hr" style="width:100%;
@@ -1587,7 +1587,7 @@ function get_random_image_url(){
     $html = explode(",",$randomurl_list[$k]);
     is_webp() == 1 ? $gs = "webp" : $gs = "jpeg";
     $md = 'https://fp1.fghrsh.net/' . $html[0] . '.jpg!q80.150p.' . $gs;
-    $th = 'https://fp1.fghrsh.net/' . $html[0] . '.jpg!q80.1200p.' . $gs;
+    $th = 'https://fp1.fghrsh.net/' . $html[0] . '.jpg!q80.300i.' . $gs;
     $webp = 'https://fp1.fghrsh.net/' . $html[0] . '.jpg!q80.' . $gs;
     return array($md,$th,$webp);
 }
@@ -1603,7 +1603,7 @@ if (akina_option('cover_cdn_options') == "type_2"){
 //防止设置置顶文章造成的图片同侧bug
 add_action( 'pre_get_posts', function($q){
     if ($q->is_home() && $q->is_main_query()){
-        $q->set('posts_per_page', 10 - sizeof(get_option( 'sticky_posts' )));
+        $q->set( 'posts_per_page', get_option('posts_per_page') - sizeof(get_option( 'sticky_posts' )) );
         if ( $q->get('paged') > 1 )
             $q->set('post__not_in', get_option( 'sticky_posts'));
     }
@@ -1650,6 +1650,7 @@ function markdown_parser($incoming_comment) {
     return $incoming_comment;
 }
 add_filter('preprocess_comment' , 'markdown_parser');
+remove_filter( 'comment_text', 'make_clickable', 9 );
 
 //保存Markdown评论
 function save_markdown_comment($comment_ID, $comment_approved) {

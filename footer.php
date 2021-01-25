@@ -29,7 +29,7 @@
 			<p style="font-family: 'Ubuntu', sans-serif;">
 					<span style="color: #b9b9b9;">
 						<?php /* 能保留下面两个链接吗？算是我一个小小的心愿吧~ */ ?>
-						Theme <a href="https://2heng.xin/theme-sakura/" target="_blank" style="color: #b9b9b9;;text-decoration: underline dotted rgba(0, 0, 0, .1);">Sakura</a> <i class="iconfont icon-sakura rotating" style="color: #ffc0cb;display:inline-block"></i> by <a href="https://2heng.xin/" target="_blank" style="color: #b9b9b9;;text-decoration: underline dotted rgba(0, 0, 0, .1);">Mashiro</a><br>
+						这是迷的匿名信 © 2018-2020 Theme <a href="https://github.com/bymoye/Sakura/" target="_blank" style="color: #b9b9b9;;text-decoration: underline dotted rgba(0, 0, 0, .1);">Sakura</a><br>
 					<a>查询了 <?php echo get_num_queries()?> 次数据库,耗时 <?php timer_stop(1) ?> 秒,消耗了 <?php echo round(memory_get_peak_usage()/1024/1024,2) ?> MB内存</a>
 				</span>
 				</p>
@@ -111,16 +111,6 @@
 	</div>
 	<div class="show-hide-wrap"><button class="show-hide"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 32 32"><path d="M22 16l-10.105-10.6-1.895 1.987 8.211 8.613-8.211 8.612 1.895 1.988 8.211-8.613z"></path></svg></button></div>
     </aside>
-<?php endif; ?>
-<?php if (akina_option('aplayer_server') != 'off'): ?>
-    <div id="aplayer-float" style="z-index: 100;"
-	    class="aplayer"
-        data-id="<?php echo akina_option('aplayer_playlistid', ''); ?>"
-        data-server="<?php echo akina_option('aplayer_server'); ?>"
-        data-type="playlist"
-        data-fixed="true"
-        data-theme="<?php echo akina_option('theme_skin')?>">
-    </div>
 <?php endif; ?>
 </body>
 </html>
