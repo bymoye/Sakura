@@ -10,7 +10,7 @@
 	if(post_password_required()){
 		return;
 	}
-
+	$robot_comments=null;
 ?>
 
 	<?php if(comments_open()): ?>

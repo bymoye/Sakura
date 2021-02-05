@@ -21,7 +21,7 @@ if ( akina_option('theme_skin') ) { ?>
 }
 
 
-.insert-image-tips:hover, .insert-image-tips-hover{ 
+.insert-image-tips-hover{ 
     color: <?php echo akina_option('theme_skin'); ?>;
     border: 1px solid <?php echo akina_option('theme_skin'); ?>;
     box-shadow: 0 0 5px <?php echo akina_option('theme_skin'); ?>;
@@ -36,20 +36,12 @@ if ( akina_option('theme_skin') ) { ?>
 }
 
 <?php if (akina_option('background_style') == 'blur') {$img = get_random_bg_url();?>
-        body::before {
-            content: '';
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            z-index: -1;
+       body {
             background-image: url('<?php echo is_array($img) ? $img[2] : $img;?>');
             background-repeat: no-repeat;
             background-position: top right;
             background-size: cover;
-            transition: filter .8s ease;
-        }
+        } 
 
     .top-social_v2 svg:hover,.top-social svg:hover {
     -webkit-transition: fill .5s ease-out;

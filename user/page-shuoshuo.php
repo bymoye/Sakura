@@ -6,9 +6,6 @@
 
 get_header();
 ?>
-<?php require_once('MkEncrypt.php'); 
- MkEncrypt('xx');
-?>
     <link rel="stylesheet" href="<?php bloginfo('template_url'); ?>/inc/css/shuoshuo.css"/>
     <section class="container">
         <div class="content-wrap">

@@ -29,7 +29,7 @@ if( $i == 1 ){
 }
 if(has_post_thumbnail()){
 	$large_image_url = wp_get_attachment_image_src( get_post_thumbnail_id($post->ID), 'large');
-	$post_img = $large_image_url[0];
+	$post_img = !empty($large_image_url) ? $large_image_url[0] : '';
 }else{
 	$post_img = DEFAULT_FEATURE_IMAGE();
 }

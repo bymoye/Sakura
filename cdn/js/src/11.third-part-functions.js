@@ -1,6 +1,6 @@
 // Gravatar
 function get_gravatar(email, size) {
-
+    if(email=='')return;
     // MD5 (Message-Digest Algorithm) by WebToolkit
     // 
 

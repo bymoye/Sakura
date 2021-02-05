@@ -236,6 +236,7 @@ require get_template_directory() . '/inc/categories-images.php';
 function convertip($ip)
 {
     error_reporting(E_ALL ^ E_NOTICE);
+    [$ip1num,$ip2num,$ipAddr1,$ipAddr2]=[null,null,null,null];
     if (!filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) === false) {
         $file_contents = file_get_contents('http://ip.taobao.com/outGetIpInfo?accessKey=alibaba-inc&ip='.$ip);
         $result = json_decode($file_contents,true);
@@ -250,6 +251,7 @@ function convertip($ip)
             return 'IP date file not exists or access denied';
         }
         $ip = explode('.', $ip);
+        if($ip[0]=='')return;
         $ipNum = intval($ip[0]) * 16777216 + intval($ip[1]) * 65536 + intval($ip[2]) * 256 + intval($ip[3]);
         $DataBegin = fread($fd, 4);
         $DataEnd = fread($fd, 4);
@@ -404,7 +406,8 @@ function convertip($ip)
  */
 if(!function_exists('akina_comment_format')){
 	function akina_comment_format($comment, $args, $depth){
-		$GLOBALS['comment'] = $comment;
+        $GLOBALS['comment'] = $comment;
+        $flag=null;
 		?>
 		<li <?php comment_class(); ?> id="comment-<?php echo esc_attr(comment_ID()); ?>">
 			<div class="contents">
@@ -1574,7 +1577,7 @@ add_filter('the_content', 'html_tag_parser'); //替换文章关键词
 // 数据库插入评论表单的qq字段 
 add_action('wp_insert_comment','sql_insert_qq_field',10,2);
 function sql_insert_qq_field($comment_ID,$commmentdata) {
-	$qq = isset($_POST['new_field_qq']) ? $_POST['new_field_qq'] : false;  
+	$qq = $_POST['new_field_qq'] ?? false;
 	update_comment_meta($comment_ID,'new_field_qq',$qq); // new_field_qq 是表单name值，也是存储在数据库里的字段名字
 }
 // 后台评论中显示qq字段
@@ -1802,3 +1805,15 @@ endif;
 
 
 remove_action( 'wp_head', 'rest_output_link_wp_head', 10 );
+
+//自定义邮箱发件人
+function new_from_name($email){
+    return akina_option('site_name');
+}
+ 
+function new_from_email($email) {
+    return 'no-reply@nmxc.ltd';
+}
+ 
+add_filter('wp_mail_from_name', 'new_from_name');
+add_filter('wp_mail_from', 'new_from_email');

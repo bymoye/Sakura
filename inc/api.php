@@ -70,7 +70,7 @@ function upload_image(WP_REST_Request $request) {
             break;
     }
 
-    $result = new WP_REST_Response($API_Request, $API_Request->status);
+    $result = new WP_REST_Response($API_Request, $API_Request['status']);
     $result->set_headers(array('Content-Type' => 'application/json'));
     return $result;
 }
