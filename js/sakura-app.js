@@ -294,37 +294,37 @@ function scrollBar() {
                 if (result == 100)
                     cached.style.background = '#5aaadb';
             let m = document.getElementsByClassName('toc-container');
-            if (m == null){
+            if (m.length != 0){
                 m[0].style.height = document.getElementsByClassName('site-content')[0].getBoundingClientRect(outerHeight)["height"]+"px";
             }
         });
 }
 
 function iconsvg() {
-    window.onload = function(){
         let iconsvg = document.getElementById('iconsvg');
         iconsvg == null ? document.getElementsByTagName('body')[0].insertAdjacentHTML('beforeend',"<div id='iconsvg' style='display:none;'></div>") : null;
         if (document.getElementById('iconsvg').children.length == 0){
             let xhr = new XMLHttpRequest();
-            let xhr_a = new XMLHttpRequest();
             xhr.open("get","https://cdn.jsdelivr.net/gh/bymoye/sakura@latest/images/icon.svg",true);
-            xhr_a.open("get","https://cdn.jsdelivr.net/gh/bymoye/sakura@1.0.0/images/nmx.svg",true);
             xhr.onreadystatechange = function() {
                 if (xhr.readyState == 4 && (xhr.status == 200 || xhr.status == 304)) {
                     document.getElementById('iconsvg').insertAdjacentHTML('afterbegin',xhr.responseText);
                 }
             }
-            xhr_a.onreadystatechange = function() {
-                if (xhr_a.readyState == 4 && (xhr_a.status == 200 || xhr_a.status == 304)) {
-                    document.getElementsByClassName('sitelogo')[0].insertAdjacentHTML('afterbegin',xhr_a.responseText);
+            xhr.send();
+        }
+        if (document.getElementsByClassName('sitelogo')[0].children.length == 0){
+            let xhr = new XMLHttpRequest();
+            xhr.open("get","https://cdn.jsdelivr.net/gh/bymoye/sakura@1.0.0/images/nmx.svg",true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4 && (xhr.status == 200 || xhr.status == 304)) {
+                    document.getElementsByClassName('sitelogo')[0].insertAdjacentHTML('afterbegin',xhr.responseText);
                 }
             }
             xhr.send();
-            xhr_a.send();
         }
         document.getElementsByClassName('openNav')[0].classList.add('exhide');
         document.getElementsByClassName('site-header')[0].classList.add('exhide');
-    }
 }
 
 
