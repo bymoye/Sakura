@@ -17,6 +17,7 @@ mashiro_global.ini = new function () {
         scrollBar();
         iconsvg();
         load_bangumi();
+        sm();
     }
     this.pjax = function () { // pjax reload functions (pjax 重载函数)
         pjaxInit();
@@ -25,6 +26,7 @@ mashiro_global.ini = new function () {
         coverVideoIni();
         iconsvg();
         load_bangumi();
+        sm();
     }
 }
 
@@ -295,13 +297,15 @@ function scrollBar() {
                     cached.style.background = '#5aaadb';
             let m = document.getElementsByClassName('toc-container');
             if (m.length != 0){
-                m[0].style.height = document.getElementsByClassName('site-content')[0].getBoundingClientRect(outerHeight)["height"]+"px";
+                let f = document.getElementsByClassName('site-content')[0].getBoundingClientRect(outerHeight)["height"]+"px";
+                m[0].style.height = f;
             }
         });
 }
 
 function iconsvg() {
         let iconsvg = document.getElementById('iconsvg');
+        let sitelogo = document.getElementsByClassName('sitelogo');
         iconsvg == null ? document.getElementsByTagName('body')[0].insertAdjacentHTML('beforeend',"<div id='iconsvg' style='display:none;'></div>") : null;
         if (document.getElementById('iconsvg').children.length == 0){
             let xhr = new XMLHttpRequest();
@@ -313,12 +317,12 @@ function iconsvg() {
             }
             xhr.send();
         }
-        if (document.getElementsByClassName('sitelogo')[0].children.length == 0){
+        if (sitelogo[0].children.length == 0){
             let xhr = new XMLHttpRequest();
             xhr.open("get","https://cdn.jsdelivr.net/gh/bymoye/sakura@1.0.0/images/nmx.svg",true);
             xhr.onreadystatechange = function() {
                 if (xhr.readyState == 4 && (xhr.status == 200 || xhr.status == 304)) {
-                    document.getElementsByClassName('sitelogo')[0].insertAdjacentHTML('afterbegin',xhr.responseText);
+                    sitelogo[0].insertAdjacentHTML('afterbegin',xhr.responseText);
                 }
             }
             xhr.send();
@@ -330,67 +334,103 @@ function iconsvg() {
 
 
 function no_right_click() {
-    $('.post-thumb img').bind('contextmenu', function (e) {
-        return false;
-    });
+    let a = document.querySelectorAll(".post-thumb img");
+    if (a.length ==0) return;
+    a.forEach(function (e){
+        e.oncontextmenu=function(){
+            return false;
+        }
+    })
 }
 no_right_click();
 
+function slideToogle(el,duration=1000,mode='',callback){
+    let dom = el;
+    dom.status = dom.status || getComputedStyle(dom,null)['display']
+    let flag = dom.status != 'none'
+    if(mode=='hide' && dom.status =="none") return;
+    if(mode=='show' && dom.status =="block") return;
+    dom.status = flag?'none':'block'
+    dom.style.transition = 'height '+duration/1000+'s';
+    dom.style.overflow = 'hidden';
+    clearTimeout(dom.tagTimer);
+    dom.tagTimer = dom.tagTimer || null
+    dom.style.display = 'block';
+    dom.tagHeight = dom.tagHeight || dom.clientHeight+'px'
+    dom.style.display = '';
+    dom.style.height = flag?dom.tagHeight:"0px"
+    setTimeout(()=>{
+        dom.style.height = flag?"0px":dom.tagHeight
+    },0)
+    dom.tagTimer = setTimeout(()=>{
+        dom.style.display = flag?'none':'block'
+        dom.style.transition = '';
+        dom.style.overflow = '';
+        dom.style.height = '';
+    },duration)
+    if(callback) callback();
+}
 
 function timeSeriesReload(flag) {
-    var cached = $('#archives');
+    let archives = document.getElementById('archives');
+    if (archives == null) return;
+    let al_li = archives.getElementsByClassName('al_mon');
     if (flag == true) {
-        cached.find('span.al_mon').click(function () {
-            $(this).next().slideToggle(400);
-            return false;
-        });
+        Array.prototype.forEach.call(al_li,(list) => {
+            list.addEventListener('click',function(){
+                slideToogle(this.nextElementSibling,500);
+                return false;
+            })
+        })
         lazyload();
     } else {
         (function () {
-            $('#al_expand_collapse,#archives span.al_mon').css({
-                cursor: "s-resize"
-            });
-            cached.find('span.al_mon').each(function () {
-                var num = $(this).next().children('li').length;
-                $(this).children('#post-num').text(num);
-            });
-            var $al_post_list = cached.find('ul.al_post_list'),
-                $al_post_list_f = cached.find('ul.al_post_list:first');
-            $al_post_list.hide(1, function () {
-                $al_post_list_f.show();
-            });
-            cached.find('span.al_mon').click(function () {
-                $(this).next().slideToggle(400);
-                return false;
-            });
-            if (document.body.clientWidth > 860) {
-                cached.find('li.al_li').mouseover(function () {
-                    $(this).children('.al_post_list').show(400);
-                    return false;
+            let al_expand_collapse = document.getElementById('al_expand_collapse');
+            al_expand_collapse.style.cursor = "s-resize";
+            Array.prototype.forEach.call(al_li,(list) => {
+                list.style.cursor="s-resize";
+                let num = list.nextElementSibling.getElementsByTagName('li').length;
+                list.querySelector('#post-num').textContent=num;
+            })
+            let al_post_list = archives.querySelectorAll('ul.al_post_list'),
+                al_post_list_f = al_post_list[0];
+            al_post_list.forEach((el) =>{
+                slideToogle(el,500,'hide',function(){
+                    slideToogle(al_post_list_f,500,'show');
                 });
-                if (false) {
-                    cached.find('li.al_li').mouseout(function () {
-                        $(this).children('.al_post_list').hide(400);
+            })
+            Array.prototype.forEach.call(al_li,(list) => {
+                list.addEventListener('click',function(){
+                    slideToogle(this.nextElementSibling,500);
+                    return false;
+                })
+            })
+            if (document.body.clientWidth > 860) {
+                al_post_list.forEach((el) =>{
+                    el.parentNode.addEventListener('mouseover',function(){
+                        slideToogle(el,500,'show');
                         return false;
-                    });
+                    })
+                })
+                if (false) {
+                    al_post_list.forEach((el) =>{
+                        el.parentNode.addEventListener('mouseover',function(){
+                            slideToogle(el,500,'hide');
+                            return false;
+                        })
+                    })
                 }
             }
-            var al_expand_collapse_click = 0;
-            $('#al_expand_collapse').click(function () {
-                if (al_expand_collapse_click == 0) {
-                    $al_post_list.each(function(index){
-                        var $this = $(this),
-                        s = setTimeout(function() {
-                            $this.show(400);
-                        }, 50 * index);
-                    });
+            let al_expand_collapse_click = 0;
+            al_expand_collapse.addEventListener('click',function(){
+                if (al_expand_collapse_click == 0){
+                    al_post_list.forEach((el)=>{
+                        slideToogle(el,500,'show');
+                    })
                     al_expand_collapse_click++;
                 } else if (al_expand_collapse_click == 1) {
-                    $al_post_list.each(function(index){
-                        var $this = $(this),
-                        h = setTimeout(function() {
-                            $this.hide(400);
-                        }, 50 * index);
+                    al_post_list.forEach((el) =>{
+                        slideToogle(el,500,'hide');
                     });
                     al_expand_collapse_click--;
                 }
@@ -402,27 +442,25 @@ timeSeriesReload();
 
 /*视频feature*/
 function coverVideo() {
-    var video = addComment.I("coverVideo");
-    var btn = addComment.I("coverVideo-btn");
+    let video = addComment.I("coverVideo");
+    let btn = addComment.I("coverVideo-btn");
 
     if (video.paused) {
         video.play();
         try {
             btn.innerHTML = '<svg class="stop" aria-hidden="true"><use xlink:href="#stop"></use></svg>';
         } catch (e) {};
-        //console.info('play:coverVideo()');
     } else {
         video.pause();
         try {
             btn.innerHTML = '<svg class="play" aria-hidden="true"><use xlink:href="#play"></use></svg>';
         } catch (e) {};
-        //console.info('pause:coverVideo()');
     }
 }
 
 function killCoverVideo() {
-    var video = addComment.I("coverVideo");
-    var btn = addComment.I("coverVideo-btn");
+    let video = addComment.I("coverVideo");
+    let btn = addComment.I("coverVideo-btn");
 
     if (video.paused) {
         //console.info('none:killCoverVideo()');
@@ -436,10 +474,11 @@ function killCoverVideo() {
 }
 
 function loadHls(){
-    var video = addComment.I('coverVideo');
-    var video_src = $('#coverVideo').attr('data-src');
+    let video = addComment.I('coverVideo');
+    let video_src = document.getElementById("coverVideo").getAttribute("data-src");
+    //let video_src = $('#coverVideo').attr('data-src');
     if (Hls.isSupported()) {
-        var hls = new Hls();
+        let hls = new Hls();
         hls.loadSource(video_src);
         hls.attachMedia(video);
         hls.on(Hls.Events.MANIFEST_PARSED, function () {
@@ -453,44 +492,57 @@ function loadHls(){
     }
 }
 
+function loadJS(url, callback) {
+  let script = document.createElement("script"),
+    fn = callback || function () {};
+  script.type = "text/javascript";
+    script.onload = function () {
+      fn();
+    };
+  script.src = url;
+  document.getElementsByTagName("head")[0].appendChild(script);
+}
+
 function coverVideoIni() {
-    if ($('video').hasClass('hls')) {
+    if (document.getElementsByTagName('video')[0].classList.contains('hls')) {
         if (mashiro_global.variables.has_hls){
             loadHls();
         }else{
-            $.getScript("https://cdn.jsdelivr.net/gh/bymoye/sakura@0.0.3/cdn/js/src/16.hls.js",function(){
+            //不保证可用 需测试
+            loadJS("https://cdn.jsdelivr.net/gh/bymoye/sakura@0.0.3/cdn/js/src/16.hls.js",function(){
                 loadHls();
                 mashiro_global.variables.has_hls = true;
-            });
+            })
         }
-        //console.info('ini:coverVideoIni()');
     }
 }
 
 function copy_code_block() {
-    $('pre code').each(function (i, block) {
-        $(block).attr({
-            id: 'hljs-' + i
-        });
-        $(this).after('<a class="copy-code" href="javascript:" data-clipboard-target="#hljs-' + i + '" title="拷贝代码"><svg class="clipboard" aria-hidden="true"><use xlink:href="#clipboard"></use></svg></a>');
+    let ele = document.querySelectorAll("pre code");
+    Array.prototype.forEach.call(ele, (i,j)=>{
+        i.setAttribute('id', 'hljs-' + j);
+        i.insertAdjacentHTML('afterend','<a class="copy-code" href="javascript:" data-clipboard-target="#hljs-' + j + '" title="拷贝代码"><svg class="clipboard" aria-hidden="true"><use xlink:href="#clipboard"></use></svg></a>');
     });
-    var clipboard = new ClipboardJS('.copy-code');
+    let clipboard = new ClipboardJS('.copy-code');
 }
 
 function tableOfContentScroll(flag) {
     if (document.body.clientWidth <= 1200) {
         return;
-    } else if ($("div").hasClass("have-toc") == false && $("div").hasClass("has-toc") == false) {
-        $(".toc-container").remove();
+    } else if (document.querySelectorAll("div.have-toc").length == 0 && document.querySelectorAll("div.has-toc").length == 0) {
+        let ele = document.getElementsByClassName("toc-container")[0];
+        if (ele!=null) ele.parentNode.removeChild(ele);
     } else {
         if (flag) {
-            var id = 1,
-                heading_fix = mashiro_option.entry_content_theme == "sakura" ? $("article").hasClass("type-post") ? $("div").hasClass("pattern-attachment-img") ? -75 : 200 : 375 : window.innerHeight / 2;
-            $(".entry-content , .links").children("h1,h2,h3,h4,h5").each(function () {
-                var hyphenated = "toc-head-" + id;
-                this.id = hyphenated;
-                id++;
-            });
+            let id = 1,
+                heading_fix = mashiro_option.entry_content_theme == "sakura" ? document.querySelectorAll("article.type-post").length != 0 ? document.querySelectorAll("div.pattern-attachment-img").length != 0 ? -75 : 200 : 375 : window.innerHeight / 2;
+                document.querySelectorAll('.entry-content,.links').forEach(function (e){
+                    e.querySelectorAll('h1,h2,h3,h4,h5').forEach(function(i){
+                        var hyphenated = "toc-head-" + id;
+                        i.id = hyphenated;
+                        id++;
+                    })
+                })
             tocbot.init({
                 tocSelector: '.toc',
                 contentSelector: ['.entry-content', '.links'],
@@ -506,7 +558,10 @@ var pjaxInit = function () {
     no_right_click();
     click_to_view_image();
     original_emoji_click();
-    $("p").remove(".head-copyright");
+    Array.prototype.forEach.call(document.getElementsByTagName('p'),(list)=>{
+        list.classList.remove("head-copyright");
+    });
+    //$("p").remove(".head-copyright");
     try {
         code_highlight_style();
     } catch (e) {};
@@ -514,85 +569,97 @@ var pjaxInit = function () {
         getqqinfo();
     } catch (e) {};
     lazyload();
-    $('.iconflat').css('width', '50px').css('height', '50px');
-    $('.openNav').css('height', '50px');
+    let iconflat = document.getElementsByClassName("iconflat");
+    if(iconflat.length != 0){
+        iconflat[0].style.width ='50px';
+        iconflat[0].style.height = '50px';
+    }
+    let openNav = document.getElementsByClassName("openNav");
+    if(openNav.length != 0){
+        openNav[0].style.height = '50px';
+    }
+    //$('.openNav').css('height', '50px');
     smileBoxToggle();
     timeSeriesReload();
     add_copyright();
     tableOfContentScroll(flag = true);
 }
-$(document).on("click", ".sm", function () {
-    var msg = "您真的要设为私密吗？";
-    if (confirm(msg) == true) {
-        $(this).commentPrivate();
-    } else {
-        alert("已取消");
-    }
-});
-$.fn.commentPrivate = function () {
-    if ($(this).hasClass('private_now')) {
-        alert('您之前已设过私密评论');
-        return false;
-    } else {
-        $(this).addClass('private_now');
-        var idp = $(this).data('idp'),
-            actionp = $(this).data('actionp'),
-            rateHolderp = $(this).children('.has_set_private');
-        var ajax_data = {
-            action: "siren_private",
-            p_id: idp,
-            p_action: actionp
-        };
-        $.post("/wp-admin/admin-ajax.php", ajax_data, function (data) {
-            $(rateHolderp).html(data);
-        });
-        return false;
-    }
-};
+
+let sm=function(){
+    let sm = document.getElementsByClassName('sm');
+    Array.prototype.forEach.call(sm,(list) => {
+        list.addEventListener('click',function(){
+            let msg = "您真的要设为私密吗？";
+            if (confirm(msg) == true) {
+                    if (list.classList.contains('private_now')){
+                        alert('您之前已设过私密评论');
+                        return false;
+                    } else {
+                        list.classList.add('private_now');
+                        let idp = list.getAttribute("data-idp"),
+                            actionp = list.getAttribute("data-actionp"),
+                            rateHolderp = list.getElementsByClassName('has_set_private')[0];
+                        let ajax_data ="action=siren_private&p_id="+idp+"&p_action="+actionp;
+                        let request = new XMLHttpRequest();
+                        request.onreadystatechange = function() {
+                            if (this.readyState == 4 && this.status == 200) {
+                              rateHolderp.innerHTML = request.responseText+' <svg class="lock" aria-hidden="true"><use xlink:href="#lock"></use></svg>';
+                            }
+                          };
+                        request.open('POST', '/wp-admin/admin-ajax.php', true);
+                        request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                        request.send(ajax_data);
+                        return false;
+                    }
+            } else {
+                alert("已取消");
+            }
+        })
+    })
+}
 
 POWERMODE.colorful = true;
 POWERMODE.shake = false;
 document.body.addEventListener('input', POWERMODE);
 
 function motionSwitch(ele) {
-    var motionEles = [".bili", ".menhera", ".tieba"];
-    for (var i in motionEles) {
-        $(motionEles[i] + '-bar').removeClass("on-hover");
-        $(motionEles[i] + '-container').css("display", "none");
+    let motionEles = [".bili", ".menhera", ".tieba"];
+    for (let i in motionEles) {
+        document.querySelector(motionEles[i] + '-bar').classList.remove('on-hover');
+        document.querySelector(motionEles[i] + '-container').style.display = 'none';
     }
-    $(ele + '-bar').addClass("on-hover");
-    $(ele + '-container').css("display", "block");
+    document.querySelector(ele + '-bar').classList.add("on-hover");
+    document.querySelector(ele + '-container').style.display = 'block';
 }
-$('.comt-addsmilies').click(function () {
-    $('.comt-smilies').toggle();
-})
-$('.comt-smilies a').click(function () {
-    $(this).parent().hide();
-})
-
+let ready = function(fn){
+    if(document.addEventListener){
+        document.addEventListener('DOMContentLoaded',function(){
+            document.removeEventListener('DOMContentLoaded',arguments.callee,false);
+            try{fn();}catch(e){}
+        },false);
+    }
+}
 function smileBoxToggle() {
-    $(document).ready(function () {
-        $("#emotion-toggle").click(function () {
-            $(".emotion-toggle-off").toggle(0);
-            $(".emotion-toggle-on").toggle(0);
-            $(".emotion-box").toggle(160);
-        });
-    });
+    ready(function(){
+        document.getElementById("emotion-toggle").addEventListener('click',function(){
+            let emotion_toggle_off = document.querySelector('.emotion-toggle-off'),
+                emotion_toggle_on = document.querySelector('.emotion-toggle-on'),
+                emotion_box = document.querySelector('.emotion-box');
+            emotion_toggle_off.classList.toggle("emotion-hide");
+            emotion_toggle_on.classList.toggle("emotion-show");
+            emotion_box.classList.toggle("emotion-box-show");
+    })})
 }
 smileBoxToggle();
 
 function grin(tag, type, before, after) {
-    var myField;
-    if (type == "custom") {
-        tag = before + tag + after;
-    } else if (type == "Img") {
-        tag = '[img]' + tag + '[/img]';
-    } else if (type == "Math") {
-        tag = ' {{' + tag + '}} ';
-    } else if (type == "tieba") {
-        tag = ' ::' + tag + ':: ';
-    } else {
-        tag = ' :' + tag + ': ';
+    let myField;
+    switch(type){
+        case "custom": tag = before + tag +after;break;
+        case "Img": tag = '[img]' + tag +'[/img]';break;
+        case "Math": tag = ' {{' + tag + '}} ';break;
+        case "tieba": tag = ' ::' + tag + ':: ';break;
+        default: tag = ' :' + tag + ': ';
     }
     if (addComment.I('comment') && addComment.I('comment').type == 'textarea') {
         myField = addComment.I('comment');
@@ -605,9 +672,9 @@ function grin(tag, type, before, after) {
         sel.text = tag;
         myField.focus();
     } else if (myField.selectionStart || myField.selectionStart == '0') {
-        var startPos = myField.selectionStart;
-        var endPos = myField.selectionEnd;
-        var cursorPos = endPos;
+        let startPos = myField.selectionStart;
+        let endPos = myField.selectionEnd;
+        let cursorPos = endPos;
         myField.value = myField.value.substring(0, startPos) + tag + myField.value.substring(endPos, myField.value.length);
         cursorPos += tag.length;
         myField.focus();
@@ -629,8 +696,8 @@ function add_copyright() {
 
     function setClipboardText(event) {
         event.preventDefault();
-        var htmlData = "# 商业转载请联系作者获得授权，非商业转载请注明出处。<br>" + "# For commercial use, please contact the author for authorization. For non-commercial use, please indicate the source.<br>" + "# 协议(License)：署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0)<br>" + "# 作者(Author)：" + mashiro_option.author_name + "<br>" + "# 链接(URL)：" + window.location.href + "<br>" + "# 来源(Source)：" + mashiro_option.site_name + "<br><br>" + window.getSelection().toString().replace(/\r\n/g, "<br>");;
-        var textData = "# 商业转载请联系作者获得授权，非商业转载请注明出处。\n" + "# For commercial use, please contact the author for authorization. For non-commercial use, please indicate the source.\n" + "# 协议(License)：署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0)\n" + "# 作者(Author)：" + mashiro_option.author_name + "\n" + "# 链接(URL)：" + window.location.href + "\n" + "# 来源(Source)：" + mashiro_option.site_name + "\n\n" + window.getSelection().toString().replace(/\r\n/g, "\n");
+        let htmlData = "# 商业转载请联系作者获得授权，非商业转载请注明出处。<br>" + "# For commercial use, please contact the author for authorization. For non-commercial use, please indicate the source.<br>" + "# 协议(License)：署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0)<br>" + "# 作者(Author)：" + mashiro_option.author_name + "<br>" + "# 链接(URL)：" + window.location.href + "<br>" + "# 来源(Source)：" + mashiro_option.site_name + "<br><br>" + window.getSelection().toString().replace(/\r\n/g, "<br>");;
+        let textData = "# 商业转载请联系作者获得授权，非商业转载请注明出处。\n" + "# For commercial use, please contact the author for authorization. For non-commercial use, please indicate the source.\n" + "# 协议(License)：署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0)\n" + "# 作者(Author)：" + mashiro_option.author_name + "\n" + "# 链接(URL)：" + window.location.href + "\n" + "# 来源(Source)：" + mashiro_option.site_name + "\n\n" + window.getSelection().toString().replace(/\r\n/g, "\n");
         if (event.clipboardData) {
             event.clipboardData.setData("text/html", htmlData);
             event.clipboardData.setData("text/plain", textData);
@@ -640,7 +707,7 @@ function add_copyright() {
     }
 }
 add_copyright();
-$(function () {
+ready(function () {
     getqqinfo();
 });
 
@@ -1476,13 +1543,6 @@ $(function () {
             if (Poi.codelamp == 'open') {
                 self.Prism.highlightAll(event)
             };
-            if ($('.ds-thread').length > 0) {
-                if (typeof DUOSHUO !== 'undefined') {
-                    DUOSHUO.EmbedThread('.ds-thread');
-                } else {
-                    $.getScript("//static.duoshuo.com/embed.js");
-                }
-            }
         }).on('pjax:end', function() {
             if (window.gtag){
                 gtag('config', Poi.google_analytics_id, {
@@ -1506,6 +1566,7 @@ $(function () {
             Siren.FDT();
             Siren.PE();
             Siren.CE();
+            sm();
             timeSeriesReload(true);
             post_list_show_animation();
         }, false);

@@ -6752,7 +6752,7 @@ li>ol {
 
 .art-content #archives .al_mon,
 .art-content #archives .al_mon_list .al_post_list {
-    display: block
+    display: block;
 }
 
 .art-content #archives .al_mon_list:before {
@@ -6765,6 +6765,7 @@ li>ol {
     content: "";
     top: 0
 }
+
 
 .art .art-content .al_mon_list .al_post_list>li:before,
 .art-content #archives .al_mon_list .al_mon:before {
@@ -6895,14 +6896,12 @@ a.toc-link {
 .emotion-box {
     display: -webkit-box;
     display: -ms-flexbox;
-    display: flex;
     -webkit-box-orient: horizontal;
     -webkit-box-direction: normal;
     -ms-flex-direction: row;
     flex-direction: row;
     -ms-flex-wrap: wrap;
     flex-wrap: wrap;
-    display: none
 }
 
 .emotion-inline {
@@ -8360,4 +8359,20 @@ p.comment-form-cookies-consent {
         background-color: rgba(0, 0, 0, .1);
         /* will-change: ; */
         transition: backdrop-filter .8s cubic-bezier(0.9, 0.6, 0.79, 1.07) .1s;
+    }
+
+    .emotion-box {
+        transition: all .5s;
+        overflow: hidden;
+        height: 0px;
+    }
+    
+    .emotion-box-show {
+        height:153px !important;
+    }
+    .emotion-show{
+        display:inline;
+    }
+    .emotion-hide{
+        display:none;
     }

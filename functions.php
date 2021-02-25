@@ -236,7 +236,6 @@ require get_template_directory() . '/inc/categories-images.php';
 function convertip($ip)
 {
     error_reporting(E_ALL ^ E_NOTICE);
-    [$ip1num,$ip2num,$ipAddr1,$ipAddr2]=[null,null,null,null];
     if (!filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) === false) {
         $file_contents = file_get_contents('http://ip.taobao.com/outGetIpInfo?accessKey=alibaba-inc&ip='.$ip);
         $result = json_decode($file_contents,true);
@@ -267,6 +266,7 @@ function convertip($ip)
 
         $ipAllNum = ($ipend - $ipbegin) / 7 + 1;
         $BeginNum = 0;
+        $ip1num = $ip2num = $ipAddr1 = $ipAddr2 = '';
         $EndNum = $ipAllNum;
         while ($ip1num > $ipNum || $ip2num < $ipNum) {
             $Middle = intval(($EndNum + $BeginNum) / 2);
@@ -407,7 +407,6 @@ function convertip($ip)
 if(!function_exists('akina_comment_format')){
 	function akina_comment_format($comment, $args, $depth){
         $GLOBALS['comment'] = $comment;
-        $flag=null;
 		?>
 		<li <?php comment_class(); ?> id="comment-<?php echo esc_attr(comment_ID()); ?>">
 			<div class="contents">
@@ -427,7 +426,9 @@ if(!function_exists('akina_comment_format')){
     									<?php if (current_user_can('manage_options') and (wp_is_mobile() == false) ) {
                                             $comment_ID = $comment->comment_ID;
                                             $i_private = get_comment_meta($comment_ID, '_private', true);
-                                            $flag .= ' <svg class="lock" aria-hidden="true"><use xlink:href="#xuehua"></use></svg> <a href="javascript:;" data-actionp="set_private" data-idp="' . get_comment_id() . '" id="sp" class="sm" style="color:rgba(0,0,0,.35)">'.__("Private", "sakura").': <span class="has_set_private">';
+                                            $flag = '';
+                                            $class = !empty($i_private)? 'private_now' : null;
+                                            $flag .= ' <svg class="lock" aria-hidden="true"><use xlink:href="#xuehua"></use></svg> <a href="javascript:;" data-actionp="set_private" data-idp="' . get_comment_id() . '" id="sp" class="sm '.$class.'" style="color:rgba(0,0,0,.35)">'.__("Private", "sakura").': <span class="has_set_private">';
                                             if (!empty($i_private)) {
                                                 $flag .= __("Yes", "sakura").' <svg class="lock" aria-hidden="true"><use xlink:href="#lock"></use></svg>';
                                             } else {

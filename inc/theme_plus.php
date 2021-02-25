@@ -15,6 +15,7 @@ show_admin_bar(false);
  * 视频
  */
 function bgvideo(){
+  $dis = '';
   if(!akina_option('focus_amv') || akina_option('focus_height')) $dis = 'display:none;';
   $html = '<div id="video-container" style="'.$dis.'">'; 
   $html .= '<video id="bgvideo" class="video" video-name="" src="" width="auto" preload="auto"></video>';
