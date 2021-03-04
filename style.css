@@ -8123,7 +8123,7 @@ p.comment-form-cookies-consent {
     transition: fill .5s;
 }
 
-.sitelogo {
+.sitelogo_svg {
     height: 30px;
     transform: translateY(10px);
     animation:logofill 40s infinite;

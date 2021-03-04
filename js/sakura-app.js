@@ -309,7 +309,8 @@ function iconsvg() {
         iconsvg == null ? document.getElementsByTagName('body')[0].insertAdjacentHTML('beforeend',"<div id='iconsvg' style='display:none;'></div>") : null;
         if (document.getElementById('iconsvg').children.length == 0){
             let xhr = new XMLHttpRequest();
-            xhr.open("get","https://cdn.jsdelivr.net/gh/bymoye/sakura@latest/images/icon.svg",true);
+            //xhr.open("get","https://cdn.jsdelivr.net/gh/bymoye/sakura@latest/images/icon.svg",true);
+            xhr.open("get","https://cdn.jsdelivr.net/gh/bymoye/sakura@1.0.5.1/images/icon.svg",true);
             xhr.onreadystatechange = function() {
                 if (xhr.readyState == 4 && (xhr.status == 200 || xhr.status == 304)) {
                     document.getElementById('iconsvg').insertAdjacentHTML('afterbegin',xhr.responseText);
@@ -322,7 +323,8 @@ function iconsvg() {
             xhr.open("get","https://cdn.jsdelivr.net/gh/bymoye/sakura@1.0.0/images/nmx.svg",true);
             xhr.onreadystatechange = function() {
                 if (xhr.readyState == 4 && (xhr.status == 200 || xhr.status == 304)) {
-                    sitelogo[0].insertAdjacentHTML('afterbegin',xhr.responseText);
+                    for(let a=0;a<2;a++)
+                    sitelogo[a].insertAdjacentHTML('afterbegin',xhr.responseText);
                 }
             }
             xhr.send();
@@ -908,19 +910,25 @@ mashiro_global.ini.normalize();
 loadCSS(mashiro_option.jsdelivr_css_src);
 loadCSS(mashiro_option.entry_content_theme_src);
 
-var home = location.href,
-    s = $('#bgvideo')[0],
+let home = location.href,
+    s = document.getElementById("bgvideo"),
+    //s = $('#bgvideo')[0],
     Siren = {
         MN: function () {
-            $('.iconflat').on('click', function () {
-                $('body').toggleClass('navOpen');
-                $('#main-container,#mo-nav,.openNav').toggleClass('open');
+            document.getElementsByClassName("iconflat")[0].addEventListener("click",function(){
+                document.body.classList.toggle("navOpen");
+                document.getElementById("main-container").classList.toggle("open");
+                document.getElementById("mo-nav").classList.toggle("open");
+                document.getElementsByClassName("openNav")[0].classList.toggle("open");
+                //$('#main-container,#mo-nav,.openNav').toggleClass('open');
             });
         },
         MNH: function () {
-            if ($('body').hasClass('navOpen')) {
-                $('body').toggleClass('navOpen');
-                $('#main-container,#mo-nav,.openNav').toggleClass('open');
+            if (document.body.classList.contains("navOpen")){
+                document.body.classList.toggle("navOpen");
+                document.getElementById("main-container").classList.toggle("open");
+                document.getElementById("mo-nav").classList.toggle("open");
+                document.getElementsByClassName("openNav")[0].classList.toggle("open");
             }
         },
         splay: function () {
