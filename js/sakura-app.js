@@ -721,7 +721,6 @@ function getqqinfo() {
         qq_check = document.getElementsByClassName("qq-check")[0],
         gravatar_check = document.getElementsByClassName("gravatar-check")[0],
         user_avatar_img = document.querySelector("div.comment-user-avatar img");
-        cached = $('input');
     if (!getCookie('user_qq') && !getCookie('user_qq_email') && !getCookie('user_author')) {
         qq.value = author.value = email.value = url.value = "";
     }
@@ -857,12 +856,18 @@ function mail_me() {
 }
 
 function activate_widget(){
+    let secondary = document.getElementById("secondary");
     if (document.body.clientWidth > 860) {
-        $('.show-hide').on('click', function() {
-            $("#secondary").toggleClass("active")
+        try{
+            let show_hide = document.getElementsByClassName("show-hide")[0];
+            show_hide.addEventListener("click",function(){
+                secondary.classList.toggle("active");
         });
+        }catch(e){}
     }else{
-        $("#secondary").remove();
+        try{
+            secondary.parentNode.removeChild(secondary);
+        }catch(e){}
     }
 }
 setTimeout(function () {
@@ -870,30 +875,38 @@ setTimeout(function () {
 }, 100);
 
 function load_bangumi() {
-    if ($("section").hasClass("bangumi")) {
-        $('body').on('click', '#bangumi-pagination a', function () {
-            $("#bangumi-pagination a").addClass("loading").text("");
-            var xhr = new XMLHttpRequest();
-            xhr.open('POST', this.href + "&_wpnonce=" + Poi.nonce, true);
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState == 4 && xhr.status == 200) {
-                    var html = JSON.parse(xhr.responseText);
-                    $("#bangumi-pagination").remove();
-                    $(".row").append(html);
-                }else{
-                    $("#bangumi-pagination a").removeClass("loading").html('<i class="fa fa-exclamation-triangle" aria-hidden="true"></i> ERROR ');
-                }
-            };
-            xhr.send();
-            return false;
-        });
-    }
+    let section = document.getElementsByTagName("section");
+    Array.prototype.forEach.call(section, (sec) => {
+        if (sec.classList.contains("bangumi")) {
+           document.addEventListener('click', function (event) {
+               var target = event.target;
+               if (target.classList.contains("bangumi-next")) {
+                   let bgpa = document.querySelector("#bangumi-pagination a");
+                   bgpa.classList.add("loading");
+                   bgpa.textContent="";
+                    let xhr = new XMLHttpRequest();
+                    xhr.open('POST', target.href + "&_wpnonce=" + Poi.nonce, true);
+                    xhr.onreadystatechange = function () {
+                        if (xhr.readyState == 4 && xhr.status == 200) {
+                            let html = JSON.parse(xhr.responseText),
+                                bfan = document.getElementById("bangumi-pagination"),
+                                row = document.getElementsByClassName("row")[0];
+                            bfan.parentNode.removeChild(bfan);
+                            row.insertAdjacentHTML('beforeend',html);
+                        } else {
+                            bgpa.classList.remove("loading");
+                            bgpa.innerHTML = "<svg class='fire' aria-hidden='true'><use xlink:href='#exclamation-triangle'></use></svg> ERROR ";
+                        }
+                    };
+                    xhr.send();
+            }});
+        }
+    })
 }
 
 mashiro_global.ini.normalize();
 loadCSS(mashiro_option.jsdelivr_css_src);
 loadCSS(mashiro_option.entry_content_theme_src);
-//loadCSS("https://at.alicdn.com/t/font_679578_qyt5qzzavdo39pb9.css");
 
 var home = location.href,
     s = $('#bgvideo')[0],
