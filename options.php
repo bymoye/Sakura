@@ -1070,9 +1070,9 @@ function optionsframework_options() {
         
     $options[] = array(
 		'name' => __('Enable baguetteBox', 'sakura'),/*启用 baguetteBox*/
-		'desc' => __('Default off，<a href="https://github.com/mashirozx/Sakura/wiki/Fancybox">please read wiki</a>', 'sakura'),/*默认禁用，<a href="https://github.com/mashirozx/Sakura/wiki/Fancybox">请阅读说明</a>*/
+		'desc' => __('Default on，<a href="https://github.com/mashirozx/Sakura/wiki/Fancybox">please read wiki</a>', 'sakura'),/*默认禁用，<a href="https://github.com/mashirozx/Sakura/wiki/Fancybox">请阅读说明</a>*/
 		'id' => 'image_viewer',
-		'std' => '0',
+		'std' => '1',
 		'type' => 'checkbox');	
         
     $options[] = array(

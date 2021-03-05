@@ -70,7 +70,7 @@ function imgError(ele, type) {
 }
 
 function post_list_show_animation() {
-    if (document.getElementsByTagName('article')[0].classList.contains("post-list-thumb")) {
+    if (document.getElementsByTagName('article').length > 0 && document.getElementsByTagName('article')[0].classList.contains("post-list-thumb")) {
         let options = {
             root: null,
             threshold: [0.4]
@@ -1041,56 +1041,65 @@ let home = location.href,
             }
         },
         PE: function () {
-            if ($('.headertop').length > 0) {
-                if ($('h1.main-title').length > 0) {
-                    $('.blank').css({
-                        "padding-top": "0px"
-                    });
-                    $('.headertop').css({
-                        "height": "auto"
-                    }).show();
+            if (document.getElementsByClassName("headertop").length > 0){
+               if (document.getElementsByClassName("main-title").length > 0 ){
+                   try{
+                    document.getElementsByClassName("blank")[0].style.paddingTop = "0px";
+                   }catch(e){}
+                    document.getElementsByClassName("headertop")[0].style.height = "auto";
+                    document.getElementsByClassName("headertop")[0].style.display = "";
                     if (Poi.movies.live == 'open') Siren.liveplay();
                 } else {
-                    $('.blank').css({
-                        "padding-top": "75px"
-                    });
-                    $('.headertop').css({
-                        "height": "0px"
-                    }).hide();
+                    try{
+                        document.getElementsByClassName("blank")[0].style.paddingTop = "75px";
+                    }catch(e){}
+                        document.getElementsByClassName("headertop")[0].style.height = "0px";
+                        document.getElementsByClassName("headertop")[0].style.display = "none";
                     Siren.livepause();
                 }
             }
         },
         CE: function () {
-            $('.comments-hidden').show();
-            $('.comments-main').hide();
-            $('.comments-hidden').click(function () {
-                $('.comments-main').slideDown(500);
-                $('.comments-hidden').hide();
+            let comments_hidden = document.getElementsByClassName("comments-hidden")[0];
+            let comments_main = document.getElementsByClassName("comments-main")[0];
+            try{
+            comments_hidden.style.display = "block";
+            comments_main.style.display = "none";
+            comments_hidden.addEventListener("click",function(){
+                slideToogle(comments_main,500,'show');
+                comments_hidden.style.display = "none";
             });
-            $('.archives').hide();
-            $('.archives:first').show();
-            $('#archives-temp h3').click(function () {
-                $(this).next().slideToggle('fast');
-                return false;
-            });
+            }catch(e){}
+            let archives = document.getElementsByClassName("archives");
+            if(archives.length > 0){
+                Array.prototype.forEach.call(archives,(list) => {
+                    list.style.display = "none";
+                })
+                archives[0].style.display = "";
+                let h3 = document.getElementById("archives-temp").getElementsByTagName("h3");
+                Array.prototype.forEach.call(h3,(a) => {
+                    a.addEventListener("click",function(){
+                    slideToogle(a.nextElementSibling,300);
+                    return false;                
+                })
+                })
+            }
             if (mashiro_option.baguetteBoxON) {
                 baguetteBox.run('.entry-content', {
                     captions: function (element) {
                         return element.getElementsByTagName('img')[0].alt;
-                    },
-                    ignoreClass: 'fancybox',
+                    }
                 });
             }
-            $('.js-toggle-search').on('click', function () {
-                $('.js-toggle-search').toggleClass('is-active');
-                $('.js-search').toggleClass('is-visible');
-                $('html').css('overflow-y', 'hidden');
+            document.getElementsByClassName("js-toggle-search")[0].addEventListener("click",function(){
+                document.getElementsByClassName("js-toggle-search")[0].classList.toggle("is-active");
+                document.getElementsByClassName("js-search")[0].classList.toggle("is-visible");
+                document.getElementsByTagName("html")[0].style.overflowY = "hidden";
                 if (mashiro_option.live_search) {
-                    var QueryStorage = [];
+                    let QueryStorage = [];
                     search_a(Poi.api + "sakura/v1/cache_search/json?_wpnonce=" + Poi.nonce);
 
-                    var otxt = addComment.I("search-input"),
+                    let otxt = addComment.I("search-input"),
                         list = addComment.I("PostlistBox"),
                         Record = list.innerHTML,
                         searchFlag = null;
@@ -1110,7 +1119,7 @@ let home = location.href,
                             query(QueryStorage, $("#search-input").val(), Record);
                             div_href();
                         } else {
-                            var _xhr = new XMLHttpRequest();
+                            let _xhr = new XMLHttpRequest();
                             _xhr.open("GET", val, true)
                             _xhr.send();
                             _xhr.onreadystatechange = function () {
@@ -1129,7 +1138,7 @@ let home = location.href,
                     if (!Object.values) Object.values = function (obj) {
                         if (obj !== Object(obj))
                             throw new TypeError('Object.values called on a non-object');
-                        var val = [],
+                        let val = [],
                             key;
                         for (key in obj) {
                             if (Object.prototype.hasOwnProperty.call(obj, key)) {
@@ -1150,18 +1159,20 @@ let home = location.href,
                     }
 
                     function div_href() {
-                        $(".ins-selectable").each(function () {
-                            $(this).click(function () {
-                                $("#Ty").attr('href', $(this).attr('href'));
-                                $("#Ty").click();
-                                $(".search_close").click();
-                            });
-                        });
+                        let ins_selectable = document.getElementsByClassName("ins-selectable");
+
+                        Array.prototype.forEach.call(ins_selectable,(a) => {
+                            a.addEventListener("click",function(){
+                                document.getElementById("Ty").setAttribute("href" , this.getAttribute("href"));
+                                document.getElementById("Ty").click();
+                                document.getElementsByClassName("search_close")[0].click();
+                            })
+                        })
                     }
 
                     function search_result(keyword, link, fa, title, iconfont, comments, text) {
                         if (keyword) {
-                            var s = keyword.trim().split(" "),
+                            let s = keyword.trim().split(" "),
                                 a = title.indexOf(s[s.length - 1]),
                                 b = text.indexOf(s[s.length - 1]);
                             title = a < 60 ? title.slice(0, 80) : title.slice(a - 30, a + 30);
@@ -1173,7 +1184,7 @@ let home = location.href,
                     }
 
                     function query(B, A, z) {
-                        var x, v, s, y = "",
+                        let x, v, s, y = "",
                             w = "",
                             u = "",
                             r = "",
@@ -1201,49 +1212,58 @@ let home = location.href,
                                     break;
                                 case "comment":
                                     F = F + search_result(A, H.link, "comment", H.title, "none1", "", H.text);
-                                    break
+                                    break;
                             }
                         }
                         w && (y = y + G + "文章" + E + w + D), u && (y = y + G + "页面" + E + u + D), r && (y = y + G + "分类" + E + r + D), p && (y = y + G + "标签" + E + p + D), F && (y = y + G + "评论" + E + F + D), s = addComment.I("PostlistBox"), s.innerHTML = y
                     }
                 }
             });
-            $('.search_close').on('click', function () {
-                if ($('.js-search').hasClass('is-visible')) {
-                    $('.js-toggle-search').toggleClass('is-active');
-                    $('.js-search').toggleClass('is-visible');
-                    $('html').css('overflow-y', 'unset');
+            try{
+            document.getElementsByClassName("search_close")[0].addEventListener("click",function(){
+                let js_search = document.getElementsByClassName("js-search")[0];
+                if (js_search.classList.contains("is-visible")){
+                    document.getElementsByClassName("js-toggle-search")[0].classList.toggle("is-active");
+                    js_search.classList.toggle("is-visible");
+                    document.getElementsByTagName("html")[0].style.overflowY = "unset";
                 }
             });
-            $('#show-nav').on('click', function () {
-                if ($('#show-nav').hasClass('showNav')) {
-                    $('#show-nav').removeClass('showNav').addClass('hideNav');
-                    $('.site-top .lower nav').addClass('navbar');
+            }catch(e){}
+            try{
+                let show_Nav = document.getElementById("show-nav");
+                show_Nav.addEventListener("click",function(){
+                if (show_Nav.classList.contains("showNav")){
+                    show_Nav.classList.remove("showNav");
+                    show_Nav.classList.add("hideNav");
+                    document.querySelector(".site-top .lower nav").classList.add("navbar");
                 } else {
-                    $('#show-nav').removeClass('hideNav').addClass('showNav');
-                    $('.site-top .lower nav').removeClass('navbar');
+                    show_Nav.classList.remove("hideNav");
+                    show_Nav.classList.add("showNav");
+                    document.querySelector(".site-top .lower nav").classList.remove("navbar");
                 }
             });
-            $("#loading").click(function () {
-                $("#loading").fadeOut(500);
+            document.getElementById("loading").addEventListener("click",function(){
+                let loading = document.getElementById("loading");
+                loading.classList.add("hide");
+                loading.classList.remove("show");
             });
+        }catch(e){}
         },
         NH: function() {
-            var h1 = 0,
+            let h1 = 0,
             b1 = 0,
             t = window.innerHeight / 4,
             i = document.documentElement.scrollTop || window.pageYOffset,
-           // $bodyblur = $("<style></style>"),
             style = document.createElement("style");
             style.type = "text/css";
             style.innerHTML = "body::before{backdrop-filter:blur(5px)}";
             800 > document.body.clientWidth && (window.document.head.appendChild(style));
-            $(window).scroll(function() {
-                var s = document.documentElement.scrollTop || window.pageYOffset,
+            window.addEventListener("scroll",function(){
+                let s = document.documentElement.scrollTop || window.pageYOffset,
                 cWidth = document.body.clientWidth,
                 cached = document.getElementsByClassName("site-header")[0],
-                n = document.getElementsByClassName("openNav")[0],
-                b = document.getElementsByTagName("body")[0];
+                n = document.getElementsByClassName("openNav")[0];
+                s == 0 &&　(cached.classList.remove('exbit'),n.classList.remove('exbit'));
                 s == h1 && (cached.classList.remove('yya'),n.classList.remove('yya')),
                 s > h1 && (cached.classList.add('yya'),n.classList.add('yya')),
                 s > t && (cached.classList.add('exbit'),n.classList.add('exbit'),
@@ -1255,13 +1275,14 @@ let home = location.href,
         },
         XLS: function () {
             $body = (window.opera) ? (document.compatMode == "CSS1Compat" ? $('html') : $('body')) : $('html,body');
-            var load_post_timer;
-            var intersectionObserver = new IntersectionObserver(function (entries) {
+            let load_post_timer;
+            let intersectionObserver = new IntersectionObserver(function (entries) {
                 if (entries[0].intersectionRatio <= 0) return;
-                var page_next = $('#pagination a').attr("href");
-                var load_key = addComment.I("add_post_time");
+                    let pagination = document.querySelector("#pagination a"),
+                        page_next = pagination != null ? pagination.getAttribute("href") : undefined;
+                let load_key = addComment.I("add_post_time");
                 if (page_next != undefined && load_key) {
-                    var load_time = addComment.I("add_post_time").title;
+                    let load_time = addComment.I("add_post_time").title;
                     if (load_time != "233") {
                         console.log("%c 自动加载时倒计时 %c", "background:#9a9da2; color:#ffffff; border-radius:4px;", "", "", load_time);
                         load_post_timer = setTimeout(function () {
@@ -1273,38 +1294,78 @@ let home = location.href,
             intersectionObserver.observe(
                 document.querySelector('.footer-device')
             );
-            $('body').on('click', '#pagination a', function () {
-                clearTimeout(load_post_timer);
-                load_post();
-                return false;
+            //try{
+            //let pagination = document.getElementById("pagination");
+            document.body.addEventListener('click', function(e){
+                [].forEach.call(document.body.querySelectorAll('#pagination a'), function(item){
+                    if(e.target == item){
+                        e.preventDefault();
+                        clearTimeout(load_post_timer);
+                        load_post();
+                    }
+                });
             });
-
+            // pagination.onclick = function(ev){
+            //     let _ev = ev || window.event;
+            //     let target = _ev.target || ev.srcElement;
+            //     if(target.nodeName.toLowerCase() == 'a'){
+            //         _ev.preventDefault();
+            //         clearTimeout(load_post_timer);
+            //         load_post();
+            //     }
+            // }}catch(e){}
             function load_post() {
-                $('#pagination a').addClass("loading").text("");
-                $.ajax({
-                    type: "POST",
-                    url: $('#pagination a').attr("href") + "#main",
-                    success: function (data) {
-                        result = $(data).find("#main .post");
-                        nextHref = $(data).find("#pagination a").attr("href");
-                        $("#main").append(result.fadeIn(500));
-                        $("#pagination a").removeClass("loading").text("Previous");
-                        $('#add_post span').removeClass("loading").text("");
+                let pagination = document.querySelector("#pagination a");
+                pagination.classList.add("loading");
+                pagination.innerHTML = "";
+                let _xhr = new XMLHttpRequest();
+                _xhr.open("GET", pagination.getAttribute("href") + "#main", true);
+                _xhr.responseType = "document";
+                _xhr.onreadystatechange = function () {
+                    if (_xhr.readyState == 4 && _xhr.status == 200) {
+                        json = _xhr.response;
+                        result = json.querySelectorAll("#main .post");
+                        nextHref = json.querySelector("#pagination a") !=null ? json.querySelector("#pagination a").getAttribute("href") : undefined;
+                        result.forEach(i=>document.getElementById("main").insertAdjacentHTML('beforeend',i.outerHTML));
+                        document.querySelector("#pagination a").classList.remove("loading");
+                        document.querySelector("#pagination a").innerHTML = "Previous";
+                        document.querySelector("#add_post span").classList.remove("loading");
+                        document.querySelector("#add_post span").innerHTML = "";
                         lazyload();
                         post_list_show_animation();
                         if (nextHref != undefined) {
-                            $("#pagination a").attr("href", nextHref);
-                            //加载完成上滑
-                            var tempScrollTop = $(window).scrollTop();
-                            $(window).scrollTop(tempScrollTop);
-                            $body.animate({
-                                scrollTop: tempScrollTop + 100
-                            }, 666)
-                        } else {
-                            $("#pagination").html("<span>很高兴你翻到这里，但是真的没有了...</span>"); 
+                        document.querySelector("#pagination a").setAttribute("href",nextHref);
+                        }else{
+                            document.getElementById("pagination").innerHTML = "<span>很高兴你翻到这里，但是真的没有了...</span>";
                         }
                     }
-                });
+                }
+                _xhr.send();
+                // $.ajax({
+                //     type: "POST",
+                //     url: $('#pagination a').attr("href") + "#main",
+                //     success: function (data) {
+                //         console.log(data);
+                //         result = $(data).find("#main .post");
+                //         nextHref = $(data).find("#pagination a").attr("href");
+                //         $("#main").append(result.fadeIn(500));
+                //         $("#pagination a").removeClass("loading").text("Previous");
+                //         $('#add_post span').removeClass("loading").text("");
+                //         lazyload();
+                //         post_list_show_animation();
+                //         if (nextHref != undefined) {
+                //             $("#pagination a").attr("href", nextHref);
+                //             //加载完成上滑
+                //             var tempScrollTop = $(window).scrollTop();
+                //             $(window).scrollTop(tempScrollTop);
+                //             $body.animate({
+                //                 scrollTop: tempScrollTop + 100
+                //             }, 666)
+                //         } else {
+                //             $("#pagination").html("<span>很高兴你翻到这里，但是真的没有了...</span>"); 
+                //         }
+                //     }
+                // });
                 return false;
             }
         },
@@ -1571,6 +1632,7 @@ $(function () {
             Siren.FDT();
             Siren.PE();
             Siren.CE();
+            //Siren.XLS();
             if (mashiro_option.NProgressON) NProgress.done();
             mashiro_global.ini.pjax();
             $("#loading").fadeOut(500);
@@ -1600,6 +1662,7 @@ $(function () {
             Siren.FDT();
             Siren.PE();
             Siren.CE();
+            //Siren.XLS();
             sm();
             timeSeriesReload(true);
             post_list_show_animation();
