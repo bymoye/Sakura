@@ -169,8 +169,7 @@ if (Poi.reply_link_version == 'new') {
 function attach_image() {
     let cached = document.getElementsByClassName("insert-image-tips")[0];
     let upload_img = document.getElementById('upload-img-file');
-    if(upload_img==null)return;
-    upload_img.addEventListener("change",(function () {
+    upload_img?.addEventListener("change",(function () {
         if (this.files.length > 10) {
             addComment.createButterbar("每次上传上限为10张.<br>10 files max per request.");
             return 0;
@@ -349,11 +348,11 @@ no_right_click();
 
 function slideToogle(el,duration=1000,mode='',callback){
     let dom = el;
-    dom.status = dom.status || getComputedStyle(dom,null)['display']
-    let flag = dom.status != 'none'
-    if(mode=='hide' && dom.status =="none") return;
-    if(mode=='show' && dom.status =="block") return;
-    dom.status = flag?'none':'block'
+    dom.status = dom.status || getComputedStyle(dom,null)['display'];
+    let flag = dom.status != 'none';   // dom.status = none flag = 0
+    if (flag == 1 && mode == "show") return;
+    if (flag == 0 && mode == "hide") return;
+    dom.status = flag?'none':'block';
     dom.style.transition = 'height '+duration/1000+'s';
     dom.style.overflow = 'hidden';
     clearTimeout(dom.tagTimer);
@@ -370,6 +369,7 @@ function slideToogle(el,duration=1000,mode='',callback){
         dom.style.transition = '';
         dom.style.overflow = '';
         dom.style.height = '';
+        dom.status = dom.tagHeight = null;
     },duration)
     if(callback) callback();
 }
@@ -479,7 +479,6 @@ function killCoverVideo() {
 function loadHls(){
     let video = addComment.I('coverVideo');
     let video_src = document.getElementById("coverVideo").getAttribute("data-src");
-    //let video_src = $('#coverVideo').attr('data-src');
     if (Hls.isSupported()) {
         let hls = new Hls();
         hls.loadSource(video_src);
@@ -564,7 +563,6 @@ var pjaxInit = function () {
     Array.prototype.forEach.call(document.getElementsByTagName('p'),(list)=>{
         list.classList.remove("head-copyright");
     });
-    //$("p").remove(".head-copyright");
     try {
         code_highlight_style();
     } catch (e) {};
@@ -581,7 +579,6 @@ var pjaxInit = function () {
     if(openNav.length != 0){
         openNav[0].style.height = '50px';
     }
-    //$('.openNav').css('height', '50px');
     smileBoxToggle();
     timeSeriesReload();
     add_copyright();
@@ -624,7 +621,7 @@ let sm=function(){
 POWERMODE.colorful = true;
 POWERMODE.shake = false;
 document.body.addEventListener('input', POWERMODE);
-
+var naz = 0;
 function motionSwitch(ele) {
     let motionEles = [".bili", ".menhera", ".tieba"];
     for (let i in motionEles) {
@@ -1071,22 +1068,22 @@ let home = location.href,
         CE: function () {
             let comments_hidden = document.getElementsByClassName("comments-hidden")[0];
             let comments_main = document.getElementsByClassName("comments-main")[0];
-            try{
-            comments_hidden.style.display = "block";
-            comments_main.style.display = "none";
-            comments_hidden.addEventListener("click",function(){
-                slideToogle(comments_main,500,'show');
-                comments_hidden.style.display = "none";
-            });
-            }catch(e){}
+            if (comments_hidden){
+                comments_hidden.style.display = "block";
+                comments_main.style.display = "none";
+                comments_hidden.addEventListener("click",function(){
+                    slideToogle(comments_main,500,'show');
+                    comments_hidden.style.display = "none";
+                });
+            }
             let archives = document.getElementsByClassName("archives");
             if(archives.length > 0){
-                Array.prototype.forEach.call(archives,(list) => {
+                Array.from(archives,(list) => {
                     list.style.display = "none";
                 })
                 archives[0].style.display = "";
                 let h3 = document.getElementById("archives-temp").getElementsByTagName("h3");
-                Array.prototype.forEach.call(h3,(a) => {
+                Array.from(h3,(a) => {
                     a.addEventListener("click",function(){
                     slideToogle(a.nextElementSibling,300);
                     return false;
@@ -1125,7 +1122,7 @@ let home = location.href,
                     function search_a(val) {
                         if (sessionStorage.getItem('search') != null) {
                             QueryStorage = JSON.parse(sessionStorage.getItem('search'));
-                            query(QueryStorage, $("#search-input").val(), Record);
+                            query(QueryStorage, document.getElementById("search-input").value, Record);
                             div_href();
                         } else {
                             let _xhr = new XMLHttpRequest();
@@ -1283,8 +1280,7 @@ let home = location.href,
             })
         },
         XLS: function () {
-            $body = (window.opera) ? (document.compatMode == "CSS1Compat" ? $('html') : $('body')) : $('html,body');
-            let load_post_timer;
+            var load_post_timer;
             let intersectionObserver = new IntersectionObserver(function (entries) {
                 if (entries[0].intersectionRatio <= 0) return;
                     let pagination = document.querySelector("#pagination a"),
@@ -1303,16 +1299,20 @@ let home = location.href,
             intersectionObserver.observe(
                 document.querySelector('.footer-device')
             );
-            document.body.addEventListener('click', function(e){
-                    if(e.target == document.querySelector("#pagination a")){
-                        e.preventDefault();
-                        e.stopPropagation();
-                        clearTimeout(load_post_timer);
-                        load_post();
-                    }
-                });
+            document.body.removeEventListener("click",this.ZV);
+            document.body.addEventListener("click",this.ZV);
+            document.body.addEventListener("click", function(e){
+                if(e.target == document.querySelector("#pagination a")){
+                    e.preventDefault();
+                    e.stopPropagation();
+                    clearTimeout(load_post_timer);
+                    this.XLS.load_post();
+                }
+            })
+            document.body.addEventListener('click', this.ZV);
             function load_post() {
                 let pagination = document.querySelector("#pagination a");
+                if (pagination != null){
                 pagination.classList.add("loading");
                 pagination.innerHTML = "";
                 let _xhr = new XMLHttpRequest();
@@ -1322,7 +1322,7 @@ let home = location.href,
                     if (_xhr.readyState == 4 && _xhr.status == 200) {
                         let json = _xhr.response,
                         result = json.querySelectorAll("#main .post"),
-                        nextHref = json.querySelector("#pagination a") !=null ? json.querySelector("#pagination a").getAttribute("href") : undefined;
+                        nextHref = json.querySelector("#pagination a")?.getAttribute("href");
                         result.forEach(i=>document.getElementById("main").insertAdjacentHTML('beforeend',i.outerHTML));
                         document.querySelector("#pagination a").classList.remove("loading");
                         document.querySelector("#pagination a").innerHTML = "Previous";
@@ -1331,6 +1331,13 @@ let home = location.href,
                         lazyload();
                         post_list_show_animation();
                         if (nextHref != undefined) {
+                            let respond = document.getElementById("respond");
+                            let tempScrollTop = document.documentElement.scrollTop;
+                            window.scrollTo({top:tempScrollTop});
+                            window.scrollTo({ 
+                                top: tempScollTop + 100, 
+                                behavior: "smooth" 
+                            });
                         document.querySelector("#pagination a").setAttribute("href",nextHref);
                         }else{
                             document.getElementById("pagination").innerHTML = "<span>很高兴你翻到这里，但是真的没有了...</span>";
@@ -1338,23 +1345,29 @@ let home = location.href,
                     }
                 }
                 _xhr.send();
+                }
                 return false;
+            }
+        },
+        ZV: function(e) {
+            if(e.target.classList.contains("comment-at")){
+                e.preventDefault();
+                e.stopPropagation();
+                window.scrollTo({ 
+                    top: document.querySelector(e.target.hash).offsetTop - 100, 
+                    behavior: "smooth" 
+                });
             }
         },
         XCS: function () {
             let __cancel = document.getElementById("cancel-comment-reply-link"),
-                __cancel_text = __cancel.textContent,
+                __cancel_text = __cancel?.textContent,
                 __list = "commentwrap";
             document.body.addEventListener('submit', function(e){
                 if(e.target == document.querySelector("form#commentform.comment-form")){
                     e.preventDefault();
                     e.stopPropagation();
                 let from_Data = document.querySelector("form#commentform.comment-form");
-                console.log(e.target);
-                console.log(from_Data);
-                console.log(serialize(from_Data));
-                console.log($(from_Data).serialize());
-                console.log(jQuery(from_Data).attr('method'));
                 let xhr = new XMLHttpRequest();
                 xhr.open('POST', Poi.ajaxurl, true);
                 xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
@@ -1407,17 +1420,17 @@ let home = location.href,
                         t.createButterbar(xhr.responseText);
                     }
                 };
-                xhr.send(serialize(from_Data)+"&action=ajax_comment");
+                xhr.send(serialize(from_Data) + "&action=ajax_comment");
             }});
             addComment = {
                 moveForm: function (commId, parentId, respondId) {
-                    var t = this,
+                    let t = this,
                         div, comm = t.I(commId),
                         respond = t.I(respondId),
                         cancel = t.I('cancel-comment-reply-link'),
                         parent = t.I('comment_parent'),
                         post = t.I('comment_post_ID');
-                    __cancel.text(__cancel_text);
+                    __cancel.textContent = __cancel_text;
                     t.respondId = respondId;
                     if (!t.I('wp-temp-form-div')) {
                         div = document.createElement('div');
@@ -1425,13 +1438,15 @@ let home = location.href,
                         div.style.display = 'none';
                         respond.parentNode.insertBefore(div, respond)
                     }!comm ? (temp = t.I('wp-temp-form-div'), t.I('comment_parent').value = '0', temp.parentNode.insertBefore(respond, temp), temp.parentNode.removeChild(temp)) : comm.parentNode.insertBefore(respond, comm.nextSibling);
-                    jQuery("body").animate({
-                        scrollTop: jQuery('#respond').offset().top - 180
-                    }, 400);
+                    let _respond = document.getElementById("respond");
+                    window.scrollTo({ 
+                        top: _respond.getBoundingClientRect().top + window.pageYOffset - _respond.clientTop - 100, 
+                        behavior: "smooth" 
+                    });
                     parent.value = parentId;
                     cancel.style.display = '';
                     cancel.onclick = function () {
-                        var t = addComment,
+                        let t = addComment,
                             temp = t.I('wp-temp-form-div'),
                             respond = t.I(t.respondId);
                         t.I('comment_parent').value = '0';
@@ -1452,56 +1467,77 @@ let home = location.href,
                     return document.getElementById(e);
                 },
                 clearButterbar: function (e) {
-                    if (jQuery(".butterBar").length > 0) {
-                        jQuery(".butterBar").remove();
+                    let butterBar = document.getElementsByClassName("butterBar");
+                    if (butterBar.length > 0){
+                        Array.from(butterBar,(a)=>{
+                            a.parentNode.removeChild(a);
+                        })
                     }
                 },
                 createButterbar: function (message, showtime) {
-                    var t = this;
+                    let t = this;
                     t.clearButterbar();
                     jQuery("body").append('<div class="butterBar butterBar--center"><p class="butterBar-message">' + message + '</p></div>');
+                    let butterBar = ()=>{
+                        let _butterBar = document.getElementsByClassName("butterBar");
+                        if (_butterBar.length = 0)return;
+                        Array.prototype.forEach.call(_butterBar,(a)=>{
+                            a.parentNode.removeChild(a);
+                        })
+                    }
                     if (showtime > 0) {
-                        setTimeout("jQuery('.butterBar').remove()", showtime);
+                        setTimeout(()=>{butterBar()}, showtime);
                     } else {
-                        setTimeout("jQuery('.butterBar').remove()", 6000);
+                        setTimeout(()=>{butterBar()}, 6000);
                     }
                 }
             };
         },
         XCP: function () {
             $body = (window.opera) ? (document.compatMode == "CSS1Compat" ? $('html') : $('body')) : $('html,body');
-            $('body').on('click', '#comments-navi a', function (e) {
+              document.body.addEventListener('click', function(e){
+                  if(e.target.parentNode == document.getElementById("comments-navi") && e.target.nodeName == "A"){
+            //$('body').on('click', '#comments-navi a', function (e) {
                 e.preventDefault();
-                var path = $(this)[0].pathname;
-                $.ajax({
-                    type: "GET",
-                    url: $(this).attr('href'),
-                    beforeSend: function () {
-                        $('#comments-navi').remove();
-                        $('ul.commentwrap').remove();
-                        $('#loading-comments').slideDown();
-                        $body.animate({
-                            scrollTop: $('#comments-list-title').offset().top - 65
-                        }, 800);
-                    },
-                    dataType: "html",
-                    success: function (out) {
-                        result = $(out).find('ul.commentwrap');
-                        nextlink = $(out).find('#comments-navi');
-                        $('#loading-comments').slideUp('fast');
-                        $('#loading-comments').after(result.fadeIn(500));
-                        $('ul.commentwrap').after(nextlink);
-                        lazyload();
-                        if (window.gtag) {
-                            gtag('config', Poi.google_analytics_id, {
-                                'page_path': path
+                let _this = e.target,
+                    path = _this.pathname,
+                    _xhr = new XMLHttpRequest();
+                    _xhr.open("GET", _this.getAttribute('href'), true);
+                    _xhr.responseType = "document";
+                    _xhr.onloadstart = ()=>{
+                        let comments_navi = document.getElementById("comments-navi"),
+                            commentwrap   = document.querySelector("ul.commentwrap"),
+                            loading_comments = document.getElementById("loading-comments"),
+                            comments_list = document.getElementById("comments-list-title");
+                            comments_navi.parentNode.removeChild(comments_navi);
+                            commentwrap.parentNode.removeChild(commentwrap);
+                            slideToogle(loading_comments,500,"show");
+                            window.scrollTo({ 
+                                top: comments_list.getBoundingClientRect().top + window.pageYOffset - comments_list.clientTop - 65, 
+                                behavior: "smooth" 
                             });
-                        }
-                        code_highlight_style();
-                        click_to_view_image();
                     }
-                });
-            });
+                    _xhr.onreadystatechange = function () {
+                        if (_xhr.readyState == 4 && _xhr.status == 200) {
+                            let json = _xhr.response,
+                                result = json.querySelector("ul.commentwrap"),
+                                nextlink = json.getElementById("comments-navi"),
+                                loading_comments = document.getElementById("loading-comments");
+                                slideToogle(loading_comments,200,"hide");
+                                document.getElementById("loading-comments").insertAdjacentHTML('afterend',result.outerHTML);
+                                document.querySelector("ul.commentwrap").insertAdjacentHTML('afterend',nextlink.outerHTML);
+                                lazyload();
+                                if (window.gtag) {
+                                    gtag('config', Poi.google_analytics_id, {
+                                        'page_path': path
+                                    });
+                                }
+                                code_highlight_style();
+                                click_to_view_image();
+                        }
+                    }
+                    _xhr.send();
+            }});
         },
         IA: function () {
             POWERMODE.colorful = true;
@@ -1509,50 +1545,51 @@ let home = location.href,
             document.body.addEventListener('input', POWERMODE)
         },
         FDT: function () {
-            header = $(".pattern-header");
-            var g=0.4;
-            function sleep(ms) {
-                return new Promise(resolve => setTimeout(resolve, ms));
-            };
-            async function headerdown() {
-                if($(".pattern-header").length>0){
-                    var reg = /blur\((.*?)px\) saturate\((.*?)\)/g;
-                    header = $(".pattern-header");
-                    var str = header.css("backdrop-filter");
-                    var blur = str.replace(reg,'$1');
-                    for (var i = blur ; i >= 5; i--) {
-                        if(header.css("top")=="180px"){
-                            g>=1?g=1:g+=0.05;
-                            header.css( "backdrop-filter", "blur(" + i + "px) saturate("+g+")");
-                        }else{
-                            return;
+            let _header = document.getElementsByClassName("pattern-header");
+            if (_header.length == 0) return;
+            let _center = document.getElementsByClassName("pattern-center"),
+                str, _blur,
+                g = 0.4,
+                reg = /blur\((.*?)px\) saturate\((.*?)\)/g,
+                i = 0,
+                last_time = Date.now(),
+                _headertoggle = () => {
+                    let nowTime = Date.now(),
+                        top = _header[0].style.top,
+                        e = requestAnimationFrame(_headertoggle);
+                    if (nowTime - last_time > 50) {
+                        last_time = nowTime;
+                        if (top == "0px") {
+                            g <= 0.5 ? g = 0.5 : g -= 0.05;
+                            _header[0].style.backdropFilter = "blur(" + i++ + "px) saturate(" + g + ")";
+                        } else if (top == "60%") {
+                            g >= 1 ? g = 1 : g += 0.05;
+                            _header[0].style.backdropFilter = "blur(" + i-- + "px) saturate(" + g + ")";
                         }
-                        await sleep(20); 
+                    }
+                    if (i >= 16 || i <= 4) {
+                        cancelAnimationFrame(e);
                     }
                 }
-            };
-            async function headerup() {
-                if($(".pattern-header").length>0){
-                    var reg = /blur\((.*?)px\) saturate\((.*?)\)/g;
-                    header = $(".pattern-header");
-                    var str = header.css("backdrop-filter");
-                    var blur = str.replace(reg,'$1');
-                    for (var i = blur ; i <= 15; i++) {
-                        if(header.css("top")=="0px"){
-                            g<=0.5?g=0.5:g-=0.05;
-                            header.css( "backdrop-filter", "blur(" + i + "px) saturate("+g+")" );
-                        }else{
-                            return;
-                        }
-                        await sleep(20);
-                    } 
+
+            _center[0]?.addEventListener("mouseover", function () {
+                _header[0].style.top = "60%";
+            });
+            _center[0]?.addEventListener("mouseleave", function () {
+                _header[0].style.top = "0px";
+            });
+            _header[0].ontransitionend = function (e) {
+                e.stopPropagation();
+                if (e.target === this) {
+                    let top = _header[0].style.top;
+                    str = getComputedStyle(_header[0])?.backdropFilter;
+                    _blur = str?.replace(reg, '$1');
+                    if (top == "0px" || top == "60%") {
+                        i = _blur;
+                        _headertoggle();
+                    }
                 }
-            };
-            $(".pattern-center").hover(function(){
-                    header.stop(true, false).animate({top:"60%"},500,function(){headerdown();}).animate({top:"60%"},500,function(){headerdown();});
-                },function(){
-                    header.stop(true, false).animate({top:"0"},500,function(){headerup();}).animate({top:"0"},500,function(){headerup();});
-                });
+            }
         },
         GT: function () {
             let mb_to_top = document.getElementById("GoTop");
@@ -1572,17 +1609,17 @@ let home = location.href,
     }
 
     function topFunction(a) {
-        let d = document.body.scrollTop ? document.body : document.documentElement;
-        let c = d.scrollTop;
-        let b = function() {
-            c = c + (0 - c) / (a || 5);
-            if (c < 1) {
-                d.scrollTop = 0;
-                return
-            }
-            d.scrollTop = c;
-            requestAnimationFrame(b)
-        };
+        let d = document.body.scrollTop ? document.body : document.documentElement,
+            c = d.scrollTop,
+            b = function () {
+                c = c + (0 - c) / (a || 5);
+                if (c < 1) {
+                    d.scrollTop = 0;
+                    return
+                }
+                d.scrollTop = c;
+                requestAnimationFrame(b)
+            };
         b()
     }
 $(function () {
@@ -1653,39 +1690,17 @@ $(function () {
             post_list_show_animation();
         }, false);
     }
-    $.fn.postLike = function () {
-        if ($(this).hasClass('done')) {
-            return false;
-        } else {
-            $(this).addClass('done');
-            var id = $(this).data("id"),
-                action = $(this).data('action'),
-                rateHolder = $(this).children('.count');
-            var ajax_data = {
-                action: "specs_zan",
-                um_id: id,
-                um_action: action
-            };
-            $.post(Poi.ajaxurl, ajax_data, function (data) {
-                $(rateHolder).html(data);
-            });
-            return false;
-        }
-    };
-    $(document).on("click", ".specsZan", function () {
-        $(this).postLike();
-    });
     console.log("%c 迷与迷 %c", "background:#2196F3; color:#ffffff", "", "https://nmxc.ltd");
     console.log("%c Theme %c", "background:#2196F3; color:#ffffff", "", "https://github.com/bymoye/Sakura");
     console.log("%c 原作者 %c", "background:#2196F3; color:#ffffff", "", "https://github.com/mashirozx/Sakura/");
 });
 
-var isWebkit = navigator.userAgent.toLowerCase().indexOf('webkit') > -1,
+let isWebkit = navigator.userAgent.toLowerCase().indexOf('webkit') > -1,
     isOpera = navigator.userAgent.toLowerCase().indexOf('opera') > -1,
     isIe = navigator.userAgent.toLowerCase().indexOf('msie') > -1;
 if ((isWebkit || isOpera || isIe) && document.getElementById && window.addEventListener) {
     window.addEventListener('hashchange', function () {
-        var id = location.hash.substring(1),
+        let id = location.hash.substring(1),
             element;
         if (!(/^[A-z0-9_-]+$/.test(id))) {
             return;
@@ -1701,19 +1716,21 @@ if ((isWebkit || isOpera || isIe) && document.getElementById && window.addEventL
 }
 
 function social_share_limit(){
-if ($(".top-social").length > 0 || $(".top-social_v2").length > 0){
-    $(".top-social").length > 0 ? a = $(".top-social li") : a = $(".top-social_v2 li");
-    for (var i=a.length-1;i>=11;i--){
-        a[i].remove();
+    let top_social = document.getElementsByClassName("top-social"),
+        top_social_v2 = document.getElementsByClassName("top-social_v2");
+if (top_social.length > 0 || top_social_v2.length > 0){
+    top_social.length > 0 ? a = top_social[0].getElementsByTagName("li") : a = top_social_v2[0].getElementsByTagName("li");
+    for (let i=a.length-1;i>=11;i--){
+        a[i].parentNode.removeChild(a[i]);
     }
     if(document.body.clientWidth<=860){
-        for (var i=a.length-1;i>=10;i--){
-            a[i].remove();
+        for (let i=a.length-1;i>=10;i--){
+            a[i].parentNode.removeChild(a[i]);
         }
     }
     if(document.body.clientWidth<=425){
-        for (var i=a.length-1;i>=5;i--){
-            a[i].remove();
+        for (let i=a.length-1;i>=5;i--){
+            a[i].parentNode.removeChild(a[i]);
         }
     }
 }

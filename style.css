@@ -799,7 +799,7 @@ a:hover {
     top: 0;
     backdrop-filter:blur(15px) saturate(60%);
     background-color: rgba(0, 0, 0, 0.376);
-    transition:background-color .5s;
+    transition:top .5s cubic-bezier(0.4, 0, 1, 1),background-color .5s;
 }
 
 
@@ -2493,7 +2493,6 @@ h1.page-title.mb- {
 }
 
 #loading-comments {
-    display: none;
     max-width: 860px;
     margin: 0 auto;
     height: 40px;
@@ -8379,6 +8378,7 @@ p.comment-form-cookies-consent {
 
     .show {
         opacity: 1;
+        transition: opacity 500ms;
       }
     .hide {
         opacity: 0;
