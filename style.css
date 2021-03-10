@@ -729,7 +729,8 @@ a:hover {
     top: 0;
     left: 0;
     width: 100%;
-    overflow: hidden
+    overflow: hidden;
+    
 }
 
 
@@ -763,6 +764,8 @@ a:hover {
     z-index: 1;
     bottom: 0;
     backdrop-filter: blur(15px) saturate(90%);
+    
+    transition: top .5s cubic-bezier(0.4, 0, 1, 1),background-color .5s;
 }
 
 .pattern-center:hover header.pattern-header {
@@ -799,7 +802,6 @@ a:hover {
     top: 0;
     backdrop-filter:blur(15px) saturate(60%);
     background-color: rgba(0, 0, 0, 0.376);
-    transition:top .5s cubic-bezier(0.4, 0, 1, 1),background-color .5s;
 }
 
 
