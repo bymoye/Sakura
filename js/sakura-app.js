@@ -1477,7 +1477,8 @@ let home = location.href,
                 createButterbar: function (message, showtime) {
                     let t = this;
                     t.clearButterbar();
-                    jQuery("body").append('<div class="butterBar butterBar--center"><p class="butterBar-message">' + message + '</p></div>');
+                    document.body.insertAdjacentHTML('beforeend','<div class="butterBar butterBar--center"><p class="butterBar-message">' + message + '</p></div>');
+                    //jQuery("body").append('<div class="butterBar butterBar--center"><p class="butterBar-message">' + message + '</p></div>');
                     let butterBar = ()=>{
                         let _butterBar = document.getElementsByClassName("butterBar");
                         if (_butterBar.length = 0)return;
@@ -1494,10 +1495,8 @@ let home = location.href,
             };
         },
         XCP: function () {
-            $body = (window.opera) ? (document.compatMode == "CSS1Compat" ? $('html') : $('body')) : $('html,body');
               document.body.addEventListener('click', function(e){
                   if(e.target.parentNode == document.getElementById("comments-navi") && e.target.nodeName == "A"){
-            //$('body').on('click', '#comments-navi a', function (e) {
                 e.preventDefault();
                 let _this = e.target,
                     path = _this.pathname,
@@ -1675,7 +1674,13 @@ ready(function () {
             //Siren.XLS();
             if (mashiro_option.NProgressON) NProgress.done();
             mashiro_global.ini.pjax();
-            $("#loading").fadeOut(500);
+            let loading = document.getElementById("loading");
+            if(loading.length > 0){
+                loading.classList.add("hide");
+                loading.classList.remove("show");
+
+            }
+           // $("#loading").fadeOut(500);
             if (Poi.codelamp == 'open') {
                 self.Prism.highlightAll(event)
             };
