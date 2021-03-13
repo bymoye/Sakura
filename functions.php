@@ -413,7 +413,7 @@ if(!function_exists('akina_comment_format')){
 				<div class="comment-arrow">
 					<div class="main shadow">
 						<div class="profile">
-							<a href="<?php comment_author_url(); ?>" target="_blank" rel="nofollow"><?php echo str_replace( 'src=', 'src="https://cdn.jsdelivr.net/gh/moezx/cdn@3.0.2/img/svg/loader/trans.ajax-spinner-preloader.svg" onerror="imgError(this,1)" data-src=', get_avatar( $comment->comment_author_email, '80', '', get_comment_author(), array( 'class' => array( 'lazyload' ) ) ) ); ?></a>
+							<a href="<?php comment_author_url(); ?>" target="_blank" rel="nofollow"><?php echo str_replace( 'src=', 'src="https://cdn.jsdelivr.net/gh/moezx/cdn@3.0.2/img/svg/loader/trans.ajax-spinner-preloader.svg" onerror="imgError(this,1)" data-src=', get_avatar( $comment->comment_author_email, '80', '', get_comment_author(), array( 'class' => array('lazyload')))); ?></a>
 						</div>
 						<div class="commentinfo">
 							<section class="commeta">
@@ -1305,7 +1305,7 @@ add_filter('site_url',  'wpadmin_filter', 10, 3);
 function admin_ini() {
   wp_enqueue_style('admin-styles-fix-icon', get_site_url() . '/wp-includes/css/dashicons.css');
   wp_enqueue_style('cus-styles-fit', get_template_directory_uri() . '/inc/css/dashboard-fix.css');
-  wp_enqueue_script( 'lazyload', 'https://cdn.jsdelivr.net/npm/lazyload@2.0.0-beta.2/lazyload.min.js' );
+  wp_enqueue_script( 'lazyload', 'https://cdn.jsdelivr.net/npm/lazyload@2.0.0-rc.2/lazyload.min.js' );
 }
 add_action('admin_enqueue_scripts', 'admin_ini');
 

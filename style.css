@@ -2503,7 +2503,8 @@ h1.page-title.mb- {
     background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='xMidYMid' class='lds-disqus'%3E%3Cpath fill='none' d='M82 50a32 32 0 1 1-58.467-17.987l-1.817-10.297 10.297 1.817A32 32 0 0 1 82 50' stroke-width='5' stroke='%23ff727d'/%3E%3Ccircle cx='50' cy='50' fill='none' stroke-linecap='round' r='20' stroke-width='5' stroke='%23ff727d' stroke-dasharray='31.41592653589793 31.41592653589793' transform='rotate(96 50 50)'%3E%3CanimateTransform attributeName='transform' type='rotate' calcMode='linear' values='0 50 50;360 50 50' keyTimes='0;1' dur='1s' begin='0s' repeatCount='indefinite'/%3E%3C/circle%3E%3C/svg%3E");
     background-position: center;
     background-repeat: no-repeat;
-    background-size: auto 100%
+    background-size: auto 100%;
+    display:none;
 }
 
 h3#comments-list-title {
