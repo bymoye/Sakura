@@ -34,12 +34,7 @@ function z_add_style() {
 
 // 添加在添加窗体中的图像字段
 function z_add_texonomy_field() {
-	if (get_bloginfo('version') >= 3.5) // worpdress 最低版本3.5
 		wp_enqueue_media();
-	else {
-		wp_enqueue_style('thickbox');
-		wp_enqueue_script('thickbox');
-	}
 	
 	echo '<div class="form-field">
 		<label for="taxonomy_image">' . __('category/tag image', 'sakura') /*分类/标签图像*/. '</label>
@@ -51,13 +46,7 @@ function z_add_texonomy_field() {
 
 // 在编辑窗体中添加图像字段
 function z_edit_texonomy_field($taxonomy) {
-	if (get_bloginfo('version') >= 3.5)
 		wp_enqueue_media();
-	else {
-		wp_enqueue_style('thickbox');
-		wp_enqueue_script('thickbox');
-	}
-	
 	if (z_taxonomy_image_url( $taxonomy->term_id, NULL, TRUE ) == Z_IMAGE_PLACEHOLDER) 
 		$image_url = "";
 	else
@@ -74,21 +63,38 @@ function z_edit_texonomy_field($taxonomy) {
 // 上传图像
 function z_script() {
 	return '<script type="text/javascript">
+	// var ready=function(fn){
+	// 	if (typeof fn !== \'function\') return;
+	// 	if (document.readyState===\'complete\') {
+	// 		return fn();
+	// 	}
+	// 	document.addEventListener(\'DOMContentLoaded\', fn, false);
+	// };
+	// ready(()=>{
+	// 	let upload_button,
+	// 		upload_image_button;
+		
+		
+	// })
 	    jQuery(document).ready(function($) {
-			var wordpress_ver = "'.get_bloginfo("version").'", upload_button;
+			var  upload_button;
 			$(".z_upload_image_button").click(function(event) {
 				upload_button = $(this);
 				var frame;
-				if (wordpress_ver >= "3.5") {
 					event.preventDefault();
 					if (frame) {
 						frame.open();
 						return;
 					}
 					frame = wp.media();
-					frame.on( "select", function() {
+					console.log(frame);
+					//frame.el.addEventListener("select",function(){
+					// 	)
+					  frame.on( "select", function() {
+						console.log(typeof (this));
 						// Grab the selected attachment.
 						var attachment = frame.state().get("selection").first();
+						console.log(attachment);
 						frame.close();
 						if (upload_button.parent().prev().children().hasClass("tax_list")) {
 							upload_button.parent().prev().children().val(attachment.attributes.url);
@@ -98,11 +104,6 @@ function z_script() {
 							$("#taxonomy_image").val(attachment.attributes.url);
 					});
 					frame.open();
-				}
-				else {
-					tb_show("", "media-upload.php?type=image&amp;TB_iframe=true");
-					return false;
-				}
 			});
 			
 			$(".z_remove_image_button").click(function() {
@@ -112,19 +113,6 @@ function z_script() {
 				$(".inline-edit-col :input[name=\'taxonomy_image\']").val("");
 				return false;
 			});
-			
-			if (wordpress_ver < "3.5") {
-				window.send_to_editor = function(html) {
-					imgurl = $("img",html).attr("src");
-					if (upload_button.parent().prev().children().hasClass("tax_list")) {
-						upload_button.parent().prev().children().val(imgurl);
-						upload_button.parent().prev().prev().children().attr("src", imgurl);
-					}
-					else
-						$("#taxonomy_image").val(imgurl);
-					tb_remove();
-				}
-			}
 			
 			$(".editinline").click(function() {	
 			    var tax_id = $(this).parents("tr").attr("id").substr(4);
@@ -147,7 +135,7 @@ add_action('edit_term','z_save_taxonomy_image');
 add_action('create_term','z_save_taxonomy_image');
 function z_save_taxonomy_image($term_id) {
     if(isset($_POST['taxonomy_image']))
-        update_option('z_taxonomy_image'.$term_id, $_POST['taxonomy_image'], NULL);
+        update_option('z_taxonomy_image'.$term_id, $_POST['taxonomy_image']);
 }
 
 // 附件地址
@@ -204,6 +192,8 @@ function z_quick_edit_custom_box($column_name, $screen, $name) {
 
 /**
  * 添加类别管理
+ * @param $columns
+ * @return array
  */
 function z_taxonomy_columns( $columns ) {
 	$new_columns = array();
@@ -217,6 +207,10 @@ function z_taxonomy_columns( $columns ) {
 
 /**
  * 图像列表
+ * @param $columns
+ * @param $column
+ * @param $id
+ * @return mixed|string
  */
 function z_taxonomy_column( $columns, $column, $id ) {
 	if ( $column == 'thumb' )

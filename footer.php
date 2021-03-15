@@ -66,13 +66,13 @@
 		</div>
 		<?php wp_nav_menu( array( 'depth' => 2, 'theme_location' => 'primary', 'container' => false ) ); ?>
 	</div><!-- m-nav-center end -->
-	<button id="GoTop" title="Go to top"><svg class="backtop" aria-hidden="true"><use xlink:href="#backtop"/></svg></button>
+	<button id="GoTop" title="Go to top"><svg class="backtop" aria-hidden="true"><use xlink:href="#svg_backtop"/></svg></button>
 	<!-- search start -->
 	<form class="js-search search-form search-form--modal" method="get" action="<?php echo home_url(); ?>" role="search">
 		<div class="search-form__inner">
 		<?php if(akina_option('live_search')){ ?>
 			<div class="micro">
-			<svg class="searchz icon-search" viewBox="0 0 40 40" style="position: absolute;width: 35px; bottom: 15px;left: 16px; fill: #ddd;stroke:#ddd ;stroke-miterlimit:10;stroke-width:40px;";><use xlink:href="#search"/></svg>
+			<svg class="searchz icon-search" viewBox="0 0 40 40" style="position: absolute;width: 35px; bottom: 15px;left: 16px; fill: #ddd;stroke:#ddd ;stroke-miterlimit:10;stroke-width:40px;";><use xlink:href="#svg_search"/></svg>
 				<input id="search-input" class="text-input" type="search" name="s" placeholder="<?php _e('Want to find something?', 'sakura') /*想要找点什么呢*/?>" required>
 			</div>
 			<div class="ins-section-wrapper">
@@ -82,7 +82,7 @@
 		<?php }else{ ?>
 			<div class="micro">
 				<p class="micro mb-"><?php _e('Want to find something?', 'sakura') /*想要找点什么呢*/?></p>
-				<svg class="searchz icon-search" viewBox="0 0 40 40" style="position: absolute;width: 35px; bottom: 15px;left: 16px; fill: #ddd;stroke:#ddd ;stroke-miterlimit:10;stroke-width:40px;";><use xlink:href="#search"/></svg>
+				<svg class="searchz icon-search" viewBox="0 0 40 40" style="position: absolute;width: 35px; bottom: 15px;left: 16px; fill: #ddd;stroke:#ddd ;stroke-miterlimit:10;stroke-width:40px;";><use xlink:href="#svg_search"/></svg>
 				<input class="text-input" type="search" name="s" placeholder="<?php _e('Search', 'sakura') ?>" required />
 			</div>
 		<?php } ?>

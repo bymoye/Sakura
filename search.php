@@ -38,7 +38,7 @@ get_header(); ?>
 		 <div class="search-box">
 		<!-- search start -->
 		<form class="s-search">
-		<svg class="search icon-search" viewBox="0 0 40 40" style="position: absolute;width: 24px; bottom: 8px;left: 12px; fill: #ddd;";><use xlink:href="#search"></use></svg>
+		<svg class="search icon-search" viewBox="0 0 40 40" style="position: absolute;width: 24px; bottom: 8px;left: 12px; fill: #ddd;";><use xlink:href="#svg_search"></use></svg>
 			<input class="text-input" type="search" name="s" placeholder="<?php _e('Search...', 'sakura') ?>" required>	
 		</form>
 		<!-- search end -->

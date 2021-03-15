@@ -29,6 +29,8 @@ add_action('rest_api_init', function () {
 
 /**
  * Image uploader response
+ * @param WP_REST_Request $request
+ * @return WP_REST_Response
  */
 function upload_image(WP_REST_Request $request) {
     // see: https://developer.wordpress.org/rest-api/requests/

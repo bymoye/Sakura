@@ -10,8 +10,7 @@ header("Content-type: text/css; charset: UTF-8");
 #header('Access-Control-Allow-Origin: *');
 
 function _get($str){
-    $val = !empty($_GET[$str]) ? $_GET[$str] : null;
-    return $val;
+    return !empty($_GET[$str]) ? $_GET[$str] : null;
 }
 
 if(_get('color_1')==NULL) {

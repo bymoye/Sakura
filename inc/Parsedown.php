@@ -450,7 +450,7 @@ class Parsedown
                 );
             }
 
-            $Block = array(
+            return array(
                 'char' => $Line['text'][0],
                 'element' => array(
                     'name' => 'pre',
@@ -458,8 +458,6 @@ class Parsedown
                     'text' => $Element,
                 ),
             );
-
-            return $Block;
         }
     }
 
@@ -521,15 +519,13 @@ class Parsedown
 
             $text = trim($Line['text'], '# ');
 
-            $Block = array(
+            return array(
                 'element' => array(
                     'name' => 'h' . min(6, $level),
                     'text' => $text,
                     'handler' => 'line',
                 ),
             );
-
-            return $Block;
         }
     }
 
@@ -656,15 +652,13 @@ class Parsedown
     {
         if (preg_match('/^>[ ]?(.*)/', $Line['text'], $matches))
         {
-            $Block = array(
+            return array(
                 'element' => array(
                     'name' => 'blockquote',
                     'handler' => 'lines',
                     'text' => (array) $matches[1],
                 ),
             );
-
-            return $Block;
         }
     }
 
@@ -699,13 +693,11 @@ class Parsedown
     {
         if (preg_match('/^(['.$Line['text'][0].'])([ ]*\1){2,}[ ]*$/', $Line['text']))
         {
-            $Block = array(
+            return array(
                 'element' => array(
                     'name' => 'hr'
                 ),
             );
-
-            return $Block;
         }
     }
 
@@ -839,11 +831,9 @@ class Parsedown
 
             $this->DefinitionData['Reference'][$id] = $Data;
 
-            $Block = array(
+            return array(
                 'hidden' => true,
             );
-
-            return $Block;
         }
     }
 
@@ -1013,15 +1003,13 @@ class Parsedown
 
     protected function paragraph($Line)
     {
-        $Block = array(
+        return array(
             'element' => array(
                 'name' => 'p',
                 'text' => $Line['text'],
                 'handler' => 'line',
             ),
         );
-
-        return $Block;
     }
 
     #
@@ -1411,7 +1399,7 @@ class Parsedown
         {
             $url = $matches[0][0];
 
-            $Inline = array(
+            return array(
                 'extent' => strlen($matches[0][0]),
                 'position' => $matches[0][1],
                 'element' => array(
@@ -1422,8 +1410,6 @@ class Parsedown
                     ),
                 ),
             );
-
-            return $Inline;
         }
     }
 
@@ -1577,9 +1563,7 @@ class Parsedown
 
     function parse($text)
     {
-        $markup = $this->text($text);
-
-        return $markup;
+        return $this->text($text);
     }
 
     protected function sanitiseElement(array $Element)
@@ -1636,7 +1620,7 @@ class Parsedown
 
     protected static function escape($text, $allowQuotes = false)
     {
-        return htmlspecialchars($text, $allowQuotes ? ENT_NOQUOTES : ENT_QUOTES, 'UTF-8');
+        return htmlspecialchars($text, $allowQuotes ? ENT_NOQUOTES : ENT_QUOTES);
     }
 
     protected static function striAtStart($string, $needle)

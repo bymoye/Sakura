@@ -232,9 +232,9 @@ if(akina_option('exlogin_url')){
 // 登陆跳转
 function Exuser_center(){ ?>
   <script language='javascript' type='text/javascript'> 
-    var secs = 5; //倒计时的秒数 
-    var URL;
-    var TYPE; 
+    let secs = 5; //倒计时的秒数
+    let URL;
+    let TYPE;
     function gopage(url,type){ 
         URL = url; 
         if(type == 1){
@@ -242,7 +242,7 @@ function Exuser_center(){ ?>
         }else{
           TYPE = <?php _e('home','sakura')/*主页*/?>;
         }
-        for(var i=secs;i>=0;i--){ 
+        for(let i=secs;i>=0;i--){
             window.setTimeout('doUpdate(' + i + ')', (secs-i) * 1000); 
         } 
     } 
@@ -371,7 +371,7 @@ function the_video_headPattern_hls(){
     } else {
         $edit_this_post_link = '';
     }
-    $t .= the_title( '<h1 class="entry-title">', '<button id="coverVideo-btn" class=".constant-width-to-height-ratio" onclick="coverVideo()"><svg class="stop" aria-hidden="true"><use xlink:href="#stop"/></svg></button></h1>', false);
+    $t .= the_title( '<h1 class="entry-title">', '<button id="coverVideo-btn" class=".constant-width-to-height-ratio" onclick="coverVideo()"><svg class="stop" aria-hidden="true"><use xlink:href="#svg_stop"/></svg></button></h1>', false);
     $t .= '<p class="entry-census"><span><a href="'. esc_url(get_author_posts_url(get_the_author_meta('ID'),get_the_author_meta( 'user_nicename' ))) .'"><img src="'. get_avatar_url( get_the_author_meta('ID'), 64 )/*$ava*/ .'"></a></span><span><a href="'. esc_url(get_author_posts_url(get_the_author_meta('ID'),get_the_author_meta( 'user_nicename' ))) .'">'. get_the_author() .'</a></span><span class="bull">·</span>'. poi_time_since(get_post_time('U', true),false,true) .'<span class="bull">·</span>'. get_post_views(get_the_ID()) .' '._n("View","Views",get_post_views(get_the_ID()),"sakura")/*次阅读*/.$edit_this_post_link.'</p>';
     endwhile; endif;
   }elseif(is_page()){
@@ -438,7 +438,7 @@ function the_video_headPattern_normal(){
     } else {
         $edit_this_post_link = '';
     }
-    $t .= the_title( '<h1 class="entry-title">', '<button id="coverVideo-btn" class=".constant-width-to-height-ratio" onclick="coverVideo()"><svg class="stop" aria-hidden="true"><use xlink:href="#stop"/></svg></button></h1>', false);
+    $t .= the_title( '<h1 class="entry-title">', '<button id="coverVideo-btn" class=".constant-width-to-height-ratio" onclick="coverVideo()"><svg class="stop" aria-hidden="true"><use xlink:href="#svg_stop"/></svg></button></h1>', false);
     $t .= '<p class="entry-census"><span><a href="'. esc_url(get_author_posts_url(get_the_author_meta('ID'),get_the_author_meta( 'user_nicename' ))) .'"><img src="'. get_avatar_url( get_the_author_meta('ID'), 64 )/*$ava*/ .'"></a></span><span><a href="'. esc_url(get_author_posts_url(get_the_author_meta('ID'),get_the_author_meta( 'user_nicename' ))) .'">'. get_the_author() .'</a></span><span class="bull">·</span>'. poi_time_since(get_post_time('U', true),false,true) .'<span class="bull">·</span>'. get_post_views(get_the_ID()) .' '._n("View","Views",get_post_views(get_the_ID()),"sakura")/*次阅读*/.$edit_this_post_link.'</p>';
     endwhile; endif;
   }elseif(is_page()){
@@ -509,7 +509,7 @@ function header_user_menu(){
   ?>
   <div class="header-user-avatar">
     <a href="<?php echo $login_url; ?>">
-    <svg class="top_none"><use xlink:href="#none"/></svg>
+    <svg class="top_none"><use xlink:href="#svg_none"/></svg>
     </a>
     <div class="header-user-menu">
       <div class="herder-user-name no-logged">Whether to <a href="<?php echo $login_url; ?>" target="_blank" style="color:#333;font-weight:bold;text-decoration:none">log in</a> now?
@@ -573,6 +573,8 @@ function get_next_thumbnail_url() {
 
 /**
  * 文章摘要
+ * @param $more
+ * @return string
  */
 function changes_post_excerpt_more( $more ) {
     return ' ...';
@@ -749,7 +751,7 @@ function siren_private_message_hook($comment_content , $comment){
     $current_commenter = wp_get_current_commenter();
     if ( $is_private ) $comment_content = '#私密# ' . $comment_content;
     if ( $current_commenter['comment_author_email'] == $email || $parent_email == $current_commenter['comment_author_email'] || current_user_can('delete_user') ) return $comment_content;
-    if ( $is_private ) return '<svg class="lock" aria-hidden="true"><use xlink:href="#lock"></use></svg> '.__("The comment is private","sakura")/*该评论为私密评论*/;
+    if ( $is_private ) return '<svg class="lock" aria-hidden="true"><use xlink:href="#svg_lock"></use></svg> '.__("The comment is private","sakura")/*该评论为私密评论*/;
     return $comment_content;
 }
 add_filter('get_comment_text','siren_private_message_hook',10,2);
@@ -798,6 +800,8 @@ add_action('admin_menu', 'disable_dashboard_widgets');
 
 /**
  * 获取用户UA信息
+ * @param $ua
+ * @return string[]
  */
 // 浏览器信息
 function siren_get_browsers($ua){

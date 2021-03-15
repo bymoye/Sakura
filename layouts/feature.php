@@ -6,7 +6,7 @@
 
 ?>
 	<div class="top-feature">
-		<h1 class="fes-title" style="font-family: 'Ubuntu', sans-serif;"><svg class="pinna" aria-hidden="true"><use xlink:href="#anchor"></use></svg> <?php echo akina_option('feature_title', '蝚焦'); ?></h1>
+		<h1 class="fes-title" style="font-family: 'Ubuntu', sans-serif;"><svg class="pinna" aria-hidden="true"><use xlink:href="#svg_anchor"></use></svg> <?php echo akina_option('feature_title', '蝚焦'); ?></h1>
 		<div class="feature-content">
 			<li class="feature-1">
 				<a href="<?php echo akina_option('feature1_link', '#'); ?>" target="_blank"><div class="feature-title"><span class="foverlay-bg"></span><span class="foverlay"><?php echo akina_option('feature1_title', 'feature1'); ?></span></div><img class="lazyload" src="https://cdn.jsdelivr.net/gh/moezx/cdn@3.0.1/img/svg/loader/orange.progress-bar-stripe-loader.svg" data-src="<?php echo akina_option('feature1_img', ''); ?>"></a>

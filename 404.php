@@ -20,13 +20,13 @@ if ( $site_description && ( is_home() || is_front_page() ) ) echo " - $site_desc
 
 <?php wp_head(); ?>
 <script>
-var getsvg = new XMLHttpRequest();
+const getsvg = new XMLHttpRequest();
 getsvg.open("GET", "https://cdn.jsdelivr.net/gh/bymoye/sakura@latest/images/icon.svg", true);
 getsvg.onload = function(e) {
     document.body.insertAdjacentHTML("beforeEnd", '<div style="display:none;">' + getsvg.responseText + '</div>');
 }
 getsvg.send();
-var the_dom="<?php echo str_replace("http://", "", str_replace("https://", "", get_site_url())); ?>";
+let the_dom="<?php echo str_replace("http://", "", str_replace("https://", "", get_site_url())); ?>";
 </script>
 </head>
 <body <?php body_class(); ?>>
@@ -41,8 +41,8 @@ var the_dom="<?php echo str_replace("http://", "", str_replace("https://", "", g
 <div style="display:block; width:284px;margin: auto;">
 <p style="margin-bottom: 1em;margin-top: 1.5em;text-align: center;font-size: 15px;"><?php _e('Don\'t worry, search in site?','sakura');/*别急，试试站内搜索？*/?></p>
 <form class="s-search" method="get" action="/" role="search">
-<svg class="search icon-search" viewBox="0 0 40 40" style="position: absolute;width: 24px; bottom: 8px;left: 12px; fill: #ddd;stroke:#ddd ;stroke-miterlimit:10;stroke-width:40px;";><use xlink:href="#search"/></svg>
-    <input class="text-input" style="padding: 8px 20px 8px 46px;" type="search" name="s" placeholder="<?php _e('Search...', 'akina') ?>" required>	
+<svg class="search icon-search" viewBox="0 0 40 40" style="position: absolute;width: 24px; bottom: 8px;left: 12px; fill: #ddd;stroke:#ddd ;stroke-miterlimit:10;stroke-width:40px;";><use xlink:href="#svg_search"/></svg>
+    <input class="text-input" style="padding: 8px 20px 8px 46px;" type="search" name="s" placeholder="<?php _e('Search...', 'akina') ?>" required>
 </form>
 </div>
 </section>

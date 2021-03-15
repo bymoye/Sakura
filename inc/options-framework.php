@@ -294,6 +294,8 @@ endif;
  * This runs after the submit/reset button has been clicked and
  * validates the inputs.
  *
+ * @param $input
+ * @return array
  * @uses $_POST['reset'] to restore default options
  */
 function optionsframework_validate( $input ) {

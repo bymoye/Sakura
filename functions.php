@@ -102,7 +102,7 @@ function akina_setup() {
 	function coolwp_remove_open_sans_from_wp_core() {
 		wp_deregister_style( 'open-sans' );
 		wp_register_style( 'open-sans', false );
-		wp_enqueue_style('open-sans','');
+		wp_enqueue_style('open-sans');
 	}
 	add_action( 'init', 'coolwp_remove_open_sans_from_wp_core' );
 	
@@ -428,14 +428,14 @@ if(!function_exists('akina_comment_format')){
                                             $i_private = get_comment_meta($comment_ID, '_private', true);
                                             $flag = '';
                                             $class = !empty($i_private)? 'private_now' : null;
-                                            $flag .= ' <svg class="lock" aria-hidden="true"><use xlink:href="#xuehua"></use></svg> <a href="javascript:;" data-actionp="set_private" data-idp="' . get_comment_id() . '" id="sp" class="sm '.$class.'" style="color:rgba(0,0,0,.35)">'.__("Private", "sakura").': <span class="has_set_private">';
+                                            $flag .= ' <svg class="lock" aria-hidden="true"><use xlink:href="#svg_xuehua"></use></svg> <a href="javascript:;" data-actionp="set_private" data-idp="' . get_comment_id() . '" id="sp" class="sm '.$class.'" style="color:rgba(0,0,0,.35)">'.__("Private", "sakura").': <span class="has_set_private">';
                                             if (!empty($i_private)) {
-                                                $flag .= __("Yes", "sakura").' <svg class="lock" aria-hidden="true"><use xlink:href="#lock"></use></svg>';
+                                                $flag .= __("Yes", "sakura").' <svg class="lock" aria-hidden="true"><use xlink:href="#svg_lock"></use></svg>';
                                             } else {
-                                                $flag .= __("No", "sakura").' <svg class="lock" aria-hidden="true"><use xlink:href="#unlock"></use></svg>';
+                                                $flag .= __("No", "sakura").' <svg class="lock" aria-hidden="true"><use xlink:href="#svg_unlock"></use></svg>';
                                             }
                                             $flag .= '</span></a>';
-                                            $flag .= edit_comment_link('<svg class="edit" aria-hidden="true"><use xlink:href="#edit"></use></svg> '.__("Edit", "mashiro"), ' <span style="color:rgba(0,0,0,.35)">', '</span>');
+                                            $flag .= edit_comment_link('<svg class="edit" aria-hidden="true"><use xlink:href="#svg_edit"></use></svg> '.__("Edit", "mashiro"), ' <span style="color:rgba(0,0,0,.35)">', '</span>');
                                             echo $flag;
                                         } ?></div>
 								</div>
@@ -455,45 +455,46 @@ if(!function_exists('akina_comment_format')){
 
 /**
  * 获取访客VIP样式
+ * @param $comment_author_email
+ * @param $user_id
  */
     function get_author_class($comment_author_email, $user_id){
         global $wpdb;
         $author_count = count($wpdb->get_results(
         "SELECT comment_ID as author_count FROM $wpdb->comments WHERE comment_author_email = '$comment_author_email' "));
         if($author_count>=1 && $author_count< 5 )//数字可自行修改，代表评论次数。
-            echo '<svg class="level"><use xlink:href="#level_0"/></svg>';
+            echo '<svg class="level"><use xlink:href="#svg_level_0"/></svg>';
         else if($author_count>=6 && $author_count< 10)
-            echo '<svg class="level"><use xlink:href="#level_1"/></svg>';
+            echo '<svg class="level"><use xlink:href="#svg_level_1"/></svg>';
         else if($author_count>=10 && $author_count< 20)
-            echo '<svg class="level"><use xlink:href="#level_2"/></svg>';
+            echo '<svg class="level"><use xlink:href="#svg_level_2"/></svg>';
         else if($author_count>=20 && $author_count< 40)
-            echo '<svg class="level"><use xlink:href="#level_3"/></svg>';
+            echo '<svg class="level"><use xlink:href="#svg_level_3"/></svg>';
         else if($author_count>=40 && $author_count< 80)
-            echo '<svg class="level"><use xlink:href="#level_4"/></svg>';
+            echo '<svg class="level"><use xlink:href="#svg_level_4"/></svg>';
         else if($author_count>=80 && $author_count< 160)
-            echo '<svg class="level"><use xlink:href="#level_5"/></svg>';
+            echo '<svg class="level"><use xlink:href="#svg_level_5"/></svg>';
         else if($author_count>=160)
-            echo '<svg class="level"><use xlink:href="#level_6"/></svg>';
+            echo '<svg class="level"><use xlink:href="#svg_level_6"/></svg>';
     }
 
 /**
  * post views
+ * @param $number
+ * @return string
  */
 function restyle_text($number) {
     switch (akina_option('statistics_format')) {
         case "type_2": //23,333 次访问
             return number_format($number);
-            break;
         case "type_3": //23 333 次访问
             return number_format($number, 0, '.', ' ');
-            break;
         case "type_4": //23k 次访问
             if($number >= 1000) {
                 return round($number/1000,2) . 'k';
             }else{
                 return $number;
             }
-            break;
         default:
             return $number;
     }
@@ -558,6 +559,7 @@ function get_the_link_items($id = null){
 function get_link_items(){
   $linkcats = get_terms( 'link_category' );
   	if ( !empty($linkcats) ) {
+        $result ='';
       	foreach( $linkcats as $linkcat){            
         	$result .=  '<h3 class="link-title"><span class="link-fix">'.$linkcat->name.'</span></h3>';
         	if( $linkcat->description ) $result .= '<div class="link-description">' . $linkcat->description . '</div>';
@@ -701,7 +703,7 @@ add_filter("mce_buttons_3", "enable_more_buttons");
 function download($atts, $content = null) {  
 return '<a class="download" href="'.$content.'" rel="external"  
 target="_blank" title="下载地址">  
-<span><svg class="pulldown"><use xlink:href="#pull_down"/></svg>Download</span></a>';}  
+<span><svg class="pulldown"><use xlink:href="#svg_pull_down"/></svg>Download</span></a>';}  
 add_shortcode("download", "download"); 
 
 add_action('after_wp_tiny_mce', 'bolo_after_wp_tiny_mce');  
@@ -750,42 +752,39 @@ function custom_html() {
 	}
 	echo '<script type="text/javascript" src="'.get_template_directory_uri().'/js/login.js"></script>'."\n";
 	echo '<script type="text/javascript">'."\n";
-	echo 'jQuery("body").prepend("<div class=\"loading\"><img src=\"https://cdn.jsdelivr.net/gh/moezx/cdn@3.1.9/img/Sakura/images/login_loading.gif\" width=\"58\" height=\"10\"></div><div id=\"bg\"><img /></div>");'."\n";
-	echo 'jQuery(\'#bg\').children(\'img\').attr(\'src\', \''.$loginbg.'\').load(function(){'."\n";
+    echo 'document.body.insertAdjacentHTML("afterbegin","<div class=\"loading\"><img src=\"https://cdn.jsdelivr.net/gh/moezx/cdn@3.1.9/img/Sakura/images/login_loading.gif\" width=\"58\" height=\"10\"></div><div id=\"bg\"><img /></div>");'."\n";
+    echo 'let bg_img = document.querySelector("#bg img");'."\n";
+    echo 'bg_img.setAttribute("src","'.$loginbg. '");'."\n";
+    echo 'bg_img.addEventListener("load",function(){'."\n";
 	echo '	resizeImage(\'bg\');'."\n";
-	echo '	jQuery(window).bind("resize", function() { resizeImage(\'bg\'); });'."\n";
-	echo '	jQuery(\'.loading\').fadeOut();'."\n";
+    echo '  window.onresize = ()=>{resizeImage("bg");}'."\n";
+    echo '  fadeOut(document.querySelector(".loading"))'."\n";
 	echo '});';
 	echo '</script>'."\n";
 	echo '<script>
 	function verificationOK(){
-		var x, y, z = "verification";
-		var x=$(\'#loginform\').find(\'input[name="verification"]\').val();
-		//var x=document.forms["loginform"]["verification"].value; //原生js实现
-		var y=$(\'#registerform\').find(\'input[name="verification"]\').val();
-		var z=$(\'#lostpasswordform\').find(\'input[name="verification"]\').val();
+		let x, y, z = "verification";
+		x=document.forms["loginform"]["verification"].value;
+        y=document.forms["registerform"]["verification"].value;
 		if (x=="verification" || y=="verification" || z=="verification"){
 		  alert("Please slide the block to verificate!");
 		  return false;
 	  }
 	}
 	$(document).ready(function(){
-		$( \'<p><div id="verification-slider"><div id="slider"><div id="slider_bg"></div><span id="label">»</span><span id="labelTip">Slide to Verificate</span></div><input type="hidden" name="verification" value="verification" /></div><p>\' ).insertBefore( $( ".submit" ) );
-		$(\'form\').attr(\'onsubmit\',\'return verificationOK();\');
-        $(\'h1 a\').attr(\'style\',\'background-image: url('.akina_option('logo_img').'); \');
+        document.querySelector(".submit").insertAdjacentHTML("beforebegin",\'<p><div id="verification-slider"><div id="slider"><div id="slider_bg"></div><span id="label">»</span><span id="labelTip">Slide to Verificate</span></div><input type="hidden" name="verification" value="verification" /></div><p>\');
+        document.querySelector("h1 a").style.backgroundImage = "url(\''.akina_option('logo_img').'\')";
 		$(".forgetmenot").replaceWith(\'<p class="forgetmenot">Remember Me<input name="rememberme" id="rememberme" value="forever" type="checkbox"><label for="rememberme" style="float: right;margin-top: 5px;transform: scale(2);margin-right: -10px;"></label></p>\');
 	});
 	</script>';
-	echo '<script type="text/javascript">
-		var startTime = 0;
-		var endTime = 0;
-		var numTime = 0;
+	echo "<script type=\"text/javascript\">
+		let startTime = 0,endTime = 0,numTime = 0;
 		$(function () {
-			var slider = new SliderUnlock("#slider",{
-			successLabelTip : "OK"
+			var slider = new SliderUnlock(\"#slider\",{
+			successLabelTip : \"OK\"
 		},function(){
-			var sli_width = $("#slider_bg").width();
-			$(\'#verification-slider\').html(\'\').append(\'<input id="verification-ok" class="input" type="text" size="25" value="OK!" name="verification" disabled="true" />\');
+			var sli_width = $(\"#slider_bg\").width();
+			$(\'#verification-slider\').html(\'\').append(\'<input id=\"verification-ok\" class=\"input\" type=\"text\" size=\"25\" value=\"OK!\" name=\"verification\" disabled=\"true\" />\');
 			
 			endTime = nowTime();
 			numTime = endTime-startTime;
@@ -803,16 +802,16 @@ function custom_html() {
 		* @type
 		*/
 		function nowTime(){
-			var myDate = new Date();
-			var H = myDate.getHours();//获取小时
-			var M = myDate.getMinutes(); //获取分钟
-			var S = myDate.getSeconds();//获取秒
-			var MS = myDate.getMilliseconds();//获取毫秒
-			var milliSeconds = H * 3600 * 1000 + M * 60 * 1000 + S * 1000 + MS;
+			let myDate = new Date(),
+			    H = myDate.getHours(),//获取小时
+			    M = myDate.getMinutes(), //获取分钟
+			    S = myDate.getSeconds(),//获取秒
+			    MS = myDate.getMilliseconds(),//获取毫秒
+			    milliSeconds = H * 3600 * 1000 + M * 60 * 1000 + S * 1000 + MS;
 			return milliSeconds;
 		}
 	</script>
-	<script type="text/javascript" src="'.get_template_directory_uri().'/user/verification.js"></script>';
+	<script type=\"text/javascript\" src=\"#slider_bg\\\"" .get_template_directory_uri().'/user/verification.js"></script>';
 }
 add_action('login_footer', 'custom_html');
 
@@ -853,7 +852,7 @@ function comment_mail_notify($comment_id){
     $comment = get_comment($comment_id);
     $parent_id = $comment->comment_parent ? $comment->comment_parent : '';
     $spam_confirmed = $comment->comment_approved;
-    $mail_notify = akina_option('mail_notify') ? get_comment_meta($parent_id,'mail_notify',false) : false;
+    $mail_notify = akina_option('mail_notify') ? get_comment_meta($parent_id,'mail_notify') : false;
     $admin_notify = akina_option('admin_notify') ? '1' : (get_comment($parent_id)->comment_author_email != get_bloginfo('admin_email') ? '1' : '0');
     if(($parent_id != '') && ($spam_confirmed != 'spam') && ($admin_notify != '0') && (!$mail_notify)){
     $wp_email = $mail_user_name . '@' . preg_replace('#^www\.#', '', strtolower($_SERVER['SERVER_NAME']));
@@ -1205,7 +1204,7 @@ function memory_archives_list() {
                 $mon = $mon_tmp;
                 $output .= '<li class="al_li"><span class="al_mon"><span style="color:#0bf;">'.get_the_time('M').'</span> (<span id="post-num"></span>'.__(" post(s)","sakura") /*篇文章*/.')</span><ul class="al_post_list">'; //输出月份
             }
-            $output .= '<li>'.'<a href="'. get_permalink() .'"><span style="color:#0bf;">'/*get_the_time('d'.__(" ","sakura")) 日*/.'</span>'. get_the_title() .' <span>('.get_post_views(get_the_ID()).' <svg class="fire" aria-hidden="true"><use xlink:href="#fire"></use></svg> / '. get_comments_number('0', '1', '%') .' <svg class="fire" aria-hidden="true"><use xlink:href="#commenting"></use></svg>)</span></a></li>'; //输出文章日期和标题
+            $output .= '<li>'.'<a href="'. get_permalink() .'"><span style="color:#0bf;">'/*get_the_time('d'.__(" ","sakura")) 日*/.'</span>'. get_the_title() .' <span>('.get_post_views(get_the_ID()).' <svg class="fire" aria-hidden="true"><use xlink:href="#svg_fire"></use></svg> / '. get_comments_number('0', '1', '%') .' <svg class="fire" aria-hidden="true"><use xlink:href="#svg_commenting"></use></svg>)</span></a></li>'; //输出文章日期和标题
         endwhile;
         wp_reset_postdata();
         $output .= '</ul></li></ul> <!--<ul class="al_mon_list"><li><ul class="al_post_list" style="display: block;"><li>博客已经萌萌哒运行了<span id="monitorday"></span>天</li></ul></li></ul>--></div>';
@@ -1247,6 +1246,8 @@ add_action('admin_menu', 'remove_dashboard');
 /**
  * Filter the except length to 20 words. 限制摘要长度
  *
+ * @param $string
+ * @param $start
  * @param int $length Excerpt length.
  * @return int (Maybe) modified excerpt length.
  */
@@ -1541,6 +1542,7 @@ if (akina_option('cover_cdn_options') == "type_2"){
   }elseif(akina_option('cover_cdn_options') == "type_1"){
     return get_random_image_url();
   }
+    return;
 }
 
 //防止设置置顶文章造成的图片同侧bug
@@ -1578,7 +1580,7 @@ function markdown_parser($incoming_comment) {
     global $wpdb,$comment_markdown_content;
     $re = '/```([\s\S]*?)```[\s]*|`{1,2}[^`](.*?)`{1,2}|\[.*?\]\([\s\S]*?\)/m';
     if(preg_replace($re,'temp',$incoming_comment['comment_content']) != strip_tags(preg_replace($re,'temp',$incoming_comment['comment_content']))){
-        siren_ajax_comment_err('评论只支持Markdown啦，见谅╮(￣▽￣)╭<br>Markdown Supported while <svg class="markdown" aria-hidden="true"><use xlink:href="#code"></use></svg> Forbidden');
+        siren_ajax_comment_err('评论只支持Markdown啦，见谅╮(￣▽￣)╭<br>Markdown Supported while <svg class="markdown" aria-hidden="true"><use xlink:href="#svg_code"></use></svg> Forbidden');
         return( $incoming_comment );
     }
     $myCustomer = $wpdb->get_row("SELECT * FROM wp_comments");
@@ -1681,7 +1683,7 @@ if ( !function_exists( 'disable_embeds_init' ) ) :
         $wp->public_query_vars = array_diff($wp->public_query_vars, array('embed'));
         remove_action('rest_api_init', 'wp_oembed_register_route');
         add_filter('embed_oembed_discover', '__return_false');
-        remove_filter('oembed_dataparse', 'wp_filter_oembed_result', 10);
+        remove_filter('oembed_dataparse', 'wp_filter_oembed_result');
         remove_action('wp_head', 'wp_oembed_add_discovery_links');
         remove_action('wp_head', 'wp_oembed_add_host_js');
         add_filter('tiny_mce_plugins', 'disable_embeds_tiny_mce_plugin');
@@ -1714,7 +1716,7 @@ if ( !function_exists( 'disable_embeds_init' ) ) :
 endif;
 
 
-remove_action( 'wp_head', 'rest_output_link_wp_head', 10 );
+remove_action( 'wp_head', 'rest_output_link_wp_head');
 
 //自定义邮箱发件人
 function new_from_name($email){

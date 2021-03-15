@@ -20,18 +20,18 @@
 	<p><?php echo mb_strimwidth(strip_shortcodes(strip_tags(apply_filters('the_content', $post->post_content))), 0, 150,"...");?></p>
 	<div class="s-time">
 	<?php if(is_sticky()) : ?>
-			<svg class="hot"><use xlink:href="#hot"></use></svg>
+			<svg class="hot"><use xlink:href="#svg_hot"></use></svg>
 		 <?php endif ?>
-		 <svg class="fenlei"><use xlink:href="#time"/></svg><?php echo poi_time_since(strtotime($post->post_date_gmt));//the_time('Y-m-d');?>
+		 <svg class="fenlei"><use xlink:href="#svg_time"/></svg><?php echo poi_time_since(strtotime($post->post_date_gmt));//the_time('Y-m-d');?>
 	  </div>
 	</div>
 	<footer class="entry-footer">
 	<div class="info-meta">
        <div class="comnum">  
-        <span><svg class="fenlei2"><use xlink:href="#message"/></svg><?php comments_popup_link('NOTHING', '1 '.__("Comment","sakura")/*条评论*/, '% '.__("Comments","sakura")/*条评论*/); ?></span>
+        <span><svg class="fenlei2"><use xlink:href="#svg_message"/></svg><?php comments_popup_link('NOTHING', '1 '.__("Comment","sakura")/*条评论*/, '% '.__("Comments","sakura")/*条评论*/); ?></span>
 		</div>
 		<div class="views"> 
-		<span><svg class="fenlei2"><use xlink:href="#eyes"/></svg><?php echo get_post_views(get_the_ID()).' '._n('Hit','Hits',get_post_views(get_the_ID()),'sakura')/*热度*/?></span>
+		<span><svg class="fenlei2"><use xlink:href="#svg_eyes"/></svg><?php echo get_post_views(get_the_ID()).' '._n('Hit','Hits',get_post_views(get_the_ID()),'sakura')/*热度*/?></span>
 		 </div>   
         </div>		
 	</footer><!-- .entry-footer -->

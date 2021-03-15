@@ -36,7 +36,7 @@ get_header();
                 array_push($all[$year], $mon);      
                 $output .= "<div class='archive-title' id='arti-$year-$mon'><span class='ar-time'><i><svg class='calendar'><use xlink:href='#calendar'/></svg></i></span><h3>$year-$mon</h3><div class='archives archives-$mon' id='monlist' data-date='$year-$mon'>";      
             }      
-            $output .= '<span class="ar-circle"></span><div class="arrow-left-ar"></div><div class="brick"><a href="'.get_permalink() .'"><span class="time"><svg class="fenlei"><use xlink:href="#time"/></svg>'.get_the_time('n-d').'</span>'.get_the_title() .'<em>('. get_comments_number('0', '1', '%') .')</em></a></div>';      
+            $output .= '<span class="ar-circle"></span><div class="arrow-left-ar"></div><div class="brick"><a href="'.get_permalink() .'"><span class="time"><svg class="fenlei"><use xlink:href="#svg_time"/></svg>'.get_the_time('n-d').'</span>'.get_the_title() .'<em>('. get_comments_number('0', '1', '%') .')</em></a></div>';      
         endwhile;      
         wp_reset_postdata();      
         $output .= '</div></div>';      

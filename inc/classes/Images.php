@@ -17,6 +17,8 @@ class Images
 
     /**
      * Chevereto upload interface
+     * @param $image
+     * @return array
      */
     public function Chevereto_API($image) {
         $upload_url = akina_option('cheverto_url') . '/api/1/upload';
@@ -43,18 +45,19 @@ class Images
             $link = 'https://view.moezx.cc/images/2019/10/28/default_d_h_large.gif';
             $proxy = akina_option('cmt_image_proxy') . $link;
         }
-        $output = array(
+        return array(
             'status' => $status,
             'success' => $success,
             'message' => $message,
             'link' => $link,
             'proxy' => $proxy,
         );
-        return $output;
     }
 
     /**
      * Imgur upload interface
+     * @param $image
+     * @return array
      */
     public function Imgur_API($image) {
         $upload_url = akina_option('imgur_upload_image_proxy');
@@ -83,18 +86,19 @@ class Images
             $link = 'https://view.moezx.cc/images/2019/10/28/default_d_h_large.gif';
             $proxy = akina_option('cmt_image_proxy') . $link;
         }
-        $output = array(
+        return array(
             'status' => $status,
             'success' => $success,
             'message' => $message,
             'link' => $link,
             'proxy' => $proxy,
         );
-        return $output;
     }
 
     /**
      * smms upload interface
+     * @param $image
+     * @return array|void
      */
     public function SMMS_API($image) {
         $client_id = $this->smms_client_id;
@@ -132,13 +136,12 @@ class Images
             $link = 'https://view.moezx.cc/images/2019/10/28/default_d_h_large.gif';
             $proxy = akina_option('cmt_image_proxy') . $link;
         }
-        $output = array(
+        return array(
             'status' => $status,
             'success' => $success,
             'message' => $message,
             'link' => $link,
             'proxy' => $proxy,
         );
-        return $output;
     }
 }

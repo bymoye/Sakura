@@ -29,10 +29,10 @@
 	  </div>
 	<div class="works-meta">
        <div class="works-comnum">  
-        <span><svg class="fenlei2"><use xlink:href="#message"/></svg> <?php comments_popup_link(__('NOTHING','sakura'), '1 ', '% '); /*暂无*/?></span>
+        <span><svg class="fenlei2"><use xlink:href="#svg_message"/></svg> <?php comments_popup_link(__('NOTHING','sakura'), '1 ', '% '); /*暂无*/?></span>
 		</div>
 		<div class="works-views"> 
-		<span><svg class="fenlei2"><use xlink:href="#eyes"/></svg> <?php echo get_post_views(get_the_ID()); ?> </span>
+		<span><svg class="fenlei2"><use xlink:href="#svg_eyes"/></svg> <?php echo get_post_views(get_the_ID()); ?> </span>
 		 </div>   
         </div>
 		<a class="worksmore" href="<?php the_permalink(); ?>"></a>

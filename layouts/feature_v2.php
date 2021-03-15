@@ -7,7 +7,7 @@
 
 ?>
 <div class="top-feature-row">
-    <h1 class="fes-title" style="font-family: 'Ubuntu', sans-serif;"><svg class="pinna" aria-hidden="true"><use xlink:href="#anchor"/></svg> <?php echo akina_option('feature_title', '�۽�'); ?></h1>
+    <h1 class="fes-title" style="font-family: 'Ubuntu', sans-serif;"><svg class="pinna" aria-hidden="true"><use xlink:href="#svg_anchor"/></svg> <?php echo akina_option('feature_title', '�۽�'); ?></h1>
     <div class="top-feature-v2">
         <div class="the-feature square from_left_and_right">
             <a href="<?php echo akina_option('feature1_link', '#'); ?>" target="_blank">

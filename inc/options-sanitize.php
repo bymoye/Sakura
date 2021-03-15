@@ -2,8 +2,7 @@
 add_filter( 'of_sanitize_text', 'sanitize_text_field' );
 function of_sanitize_textarea($input) {
 	global $allowedposttags;
-	$output = wp_kses( $input, $allowedposttags);
-	return $output;
+    return wp_kses( $input, $allowedposttags);
 }
 add_filter( 'of_sanitize_textarea', 'of_sanitize_textarea' );
 add_filter( 'of_sanitize_select', 'of_sanitize_enum', 10, 2);
@@ -57,13 +56,11 @@ function of_sanitize_editor($input) {
 add_filter( 'of_sanitize_editor', 'of_sanitize_editor' );
 function of_sanitize_allowedtags($input) {
 	global $allowedtags;
-	$output = wpautop(wp_kses( $input, $allowedtags));
-	return $output;
+    return wpautop(wp_kses( $input, $allowedtags));
 }
 function of_sanitize_allowedposttags($input) {
 	global $allowedposttags;
-	$output = wpautop(wp_kses( $input, $allowedposttags));
-	return $output;
+    return wpautop(wp_kses( $input, $allowedposttags));
 }
 
 add_filter( 'of_sanitize_info', 'of_sanitize_allowedposttags' );

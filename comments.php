@@ -17,7 +17,7 @@
 	<section id="comments" class="comments">
 
 		<div class="commentwrap comments-hidden">
-			<div class="notification"><svg class="message"><use xlink:href="#message"/></svg><?php _e('view comments', 'sakura'); /*查看评论*/?> -
+			<div class="notification"><svg class="message"><use xlink:href="#svg_message"/></svg><?php _e('view comments', 'sakura'); /*查看评论*/?> -
 			<span class="noticom"><?php comments_number('NOTHING', '1'.__(" comment","sakura"), '%'.__(" comments","sakura")); ?> </span>
 			</div>
 		</div>
@@ -39,7 +39,7 @@
 
 				<?php if(comments_open()): ?>
 					<div class="commentwrap">
-						<div class="notification-hidden"><svg class="fenlei"><use xlink:href="#message"/></svg> <?php _e('no comment', 'sakura'); /*暂无评论*/?></div>
+						<div class="notification-hidden"><svg class="fenlei"><use xlink:href="#svg_message"/></svg> <?php _e('no comment', 'sakura'); /*暂无评论*/?></div>
 					
 					</div>
 				<?php endif; ?>
@@ -52,14 +52,14 @@
 					if(akina_option('norobot')) $robot_comments = '<label class="siren-checkbox-label"><input class="siren-checkbox-radio" type="checkbox" name="no-robot"><span class="siren-no-robot-checkbox siren-checkbox-radioInput"></span>'.__('I\'m not a robot', 'sakura').'</label>';
 					$private_ms = akina_option('open_private_message') ? '<label class="siren-checkbox-label"><input class="siren-checkbox-radio" type="checkbox" name="is-private"><span class="siren-is-private-checkbox siren-checkbox-radioInput"></span>'.__('Comment in private', 'sakura').'</label>' : '';
 					$mail_notify = akina_option('mail_notify') ? '<label class="siren-checkbox-label"><input class="siren-checkbox-radio" type="checkbox" name="mail-notify"><span class="siren-mail-notify-checkbox siren-checkbox-radioInput"></span>'.__('Comment reply notify', 'sakura').'</label>' : '';
-					$args = array(
+                    $args = array(
 						'id_form' => 'commentform',
 						'id_submit' => 'submit',
 						'title_reply' => '',
-						'title_reply_to' => '<div class="graybar"<svg class="fire"><use xlink:href="#comments-o"></use></svg>' . __('Leave a Reply to', 'sakura') . ' %s' . '</div>',
+						'title_reply_to' => '<div class="graybar"<svg class="fire"><use xlink:href="#svg_comments-o"></use></svg>' . __('Leave a Reply to', 'sakura') . ' %s' . '</div>',
 						'cancel_reply_link' => __('Cancel Reply', 'sakura'),
 						'label_submit' => __('BiuBiuBiu~', 'sakura'),
-						'comment_field' => '<p><svg class="markdown" aria-hidden="true"><use xlink:href="#markdown"/></svg> Markdown Supported while <svg class="markdown" aria-hidden="true"><use xlink:href="#code"/></svg> Forbidden</p><div class="comment-textarea"><textarea placeholder="' . __("You are a surprise that I will only meet once in my life", "sakura") . ' ..." name="comment" class="commentbody" id="comment" rows="5" tabindex="4"></textarea><label class="input-label">' . __("You are a surprise that I will only meet once in my life", "sakura") . ' ...</label></div>
+						'comment_field' => '<p><svg class="markdown" aria-hidden="true"><use xlink:href="#svg_markdown"/></svg> Markdown Supported while <svg class="markdown" aria-hidden="true"><use xlink:href="#svg_code"/></svg> Forbidden</p><div class="comment-textarea"><textarea placeholder="' . __("You are a surprise that I will only meet once in my life", "sakura") . ' ..." name="comment" class="commentbody" id="comment" rows="5" tabindex="4"></textarea><label class="input-label">' . __("You are a surprise that I will only meet once in my life", "sakura") . ' ...</label></div>
                         <div id="upload-img-show"></div>
                         <!--插入表情面版-->
                         <p id="emotion-toggle" class="no-select">

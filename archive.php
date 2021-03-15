@@ -54,7 +54,7 @@ get_header(); ?>
 		<div id="add_post"><span id="add_post_time" style="visibility: hidden;" title="<?php echo akina_option('auto_load_post',''); ?>"  ></span></div>
 		<?php }else{ ?>
 		<nav class="navigator">
-        <?php previous_posts_link('<svg class="fire"><use xlink:href="#back"></use></svg>') ?><?php next_posts_link('<svg class="fire"><use xlink:href="#right"></use></svg>') ?>
+        <?php previous_posts_link('<svg class="fire"><use xlink:href="#svg_back"></use></svg>') ?><?php next_posts_link('<svg class="fire"><use xlink:href="#svg_right"></use></svg>') ?>
 		</nav>
 		<?php } ?>
 	</div><!-- #primary -->

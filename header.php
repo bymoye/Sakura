@@ -32,19 +32,19 @@ if (akina_option('akina_meta') == true) {
 		if ($tags) {
 			foreach($tags as $tag) {
 				$keywords .= $tag->name . ','; 
-			};
-		};
-		if ($categories) {
+			}
+        }
+        if ($categories) {
 			foreach($categories as $category) {
 				$keywords .= $category->name . ','; 
-			};
-		};
-		$description = mb_strimwidth( str_replace("\r\n", '', strip_tags($post->post_content)), 0, 240, '…');
+			}
+        }
+        $description = mb_strimwidth( str_replace("\r\n", '', strip_tags($post->post_content)), 0, 240, '…');
 	} else {
 		$keywords = akina_option('akina_meta_keywords');
 		$description = akina_option('akina_meta_description');
-	};
-?>
+	}
+    ?>
 <meta name="description" content="<?php echo $description; ?>" />
 <meta name="keywords" content="<?php echo $keywords; ?>" />
 <?php } ?>
@@ -87,7 +87,7 @@ if (akina_option('akina_meta') == true) {
 						<?php } ?><!-- logo end -->
 					</div><!-- .site-branding -->
 					<?php header_user_menu(); if(akina_option('top_search') == 'yes') { ?>
-					<div class="searchbox"><svg class="search js-toggle-search" viewBox="0 0 40 40"><use xlink:href="#search"/></svg></div>
+					<div class="searchbox"><svg class="search js-toggle-search" viewBox="0 0 40 40"><use xlink:href="#svg_search"/></svg></div>
 					<?php } ?>
 					<div class="lower"><?php if(!akina_option('shownav')){ ?>
 						<div id="show-nav" class="showNav">

@@ -191,9 +191,9 @@ function attach_image() {
             xhr.send(formData);
             xhr.onreadystatechange = function () {
                 if (xhr.readyState == 4 && (xhr.status == 200 || xhr.status == 304)) {
-                    cached.innerHTML = '<svg class="picture" aria-hidden="true"><use xlink:href="#yes"/></svg>';
+                    cached.innerHTML = '<svg class="picture" aria-hidden="true"><use xlink:href="#svg_yes"/></svg>';
                     setTimeout(function () {
-                        cached.innerHTML = '<svg class="picture" aria-hidden="true"><use xlink:href="#picture"/></svg>';
+                        cached.innerHTML = '<svg class="picture" aria-hidden="true"><use xlink:href="#svg_picture"/></svg>';
                     }, 1000);
                     let res = JSON.parse(xhr.responseText);
                     if (res.status == 200) {
@@ -206,10 +206,10 @@ function attach_image() {
                         addComment.createButterbar("上传失败！<br>Uploaded failed!<br> 文件名/Filename: " + f.name + "<br>code: " + res.status + "<br>" + res.message, 3000);
                     }
                 } else if (xhr.readyState == 4) {
-                    cached.innerHTML = '<svg class="picture" aria-hidden="true"><use xlink:href="#no"/></svg>';
+                    cached.innerHTML = '<svg class="picture" aria-hidden="true"><use xlink:href="#svg_no"/></svg>';
                     alert("上传失败，请重试.\nUpload failed, please try again.");
                     setTimeout(function () {
-                        cached.innerHTML = '<svg class="picture" aria-hidden="true"><use xlink:href="#picture"/></svg>';
+                        cached.innerHTML = '<svg class="picture" aria-hidden="true"><use xlink:href="#svg_picture"/></svg>';
                     }, 1000);
                 }
             }
@@ -224,7 +224,7 @@ function clean_upload_images() {
 function add_upload_tips() {
     let form_subit = document.querySelector('.form-submit #submit');
     if (form_subit == null) return;
-    form_subit.insertAdjacentHTML('afterend', '<div class="insert-image-tips popup"><svg class="picture" aria-hidden="true"><use xlink:href="#picture"/></svg><span class="insert-img-popuptext" id="uploadTipPopup">上传图片</span></div><input id="upload-img-file" type="file" accept="image/*" multiple="multiple" class="insert-image-button">');
+    form_subit.insertAdjacentHTML('afterend', '<div class="insert-image-tips popup"><svg class="picture" aria-hidden="true"><use xlink:href="#svg_picture"/></svg><span class="insert-img-popuptext" id="uploadTipPopup">上传图片</span></div><input id="upload-img-file" type="file" accept="image/*" multiple="multiple" class="insert-image-button">');
     attach_image();
     let file_subit = document.getElementById('upload-img-file'),
         hover = document.getElementsByClassName('insert-image-tips')[0],
@@ -258,7 +258,7 @@ function original_emoji_click() {
     if (emoji.length == 0) return;
     document.getElementsByClassName("menhera-container")[0]?.addEventListener("click", function (e) {
         if (e.target.classList.contains("emoji-item")) {
-            grin(e.target.innerText, type = "custom", before = "`", after = "` ");
+            grin(e.target.innerText, "custom", "`", "` ");
         }
     })
 }
@@ -291,8 +291,7 @@ function scrollBar() {
         cached.style.background = c;
         let m = document.getElementsByClassName('toc-container');
         if (m.length != 0) {
-            let f = document.querySelector(".site-content")?.getBoundingClientRect(outerHeight)["height"] + "px";
-            m[0].style.height = f;
+            m[0].style.height = document.querySelector(".site-content")?.getBoundingClientRect(outerHeight)["height"] + "px";
         }
     });
 }
@@ -303,7 +302,8 @@ function iconsvg() {
     iconsvg == null ? document.body.insertAdjacentHTML('beforeend', "<div id='iconsvg' style='display:none;'></div>") : null;
     if (document.getElementById('iconsvg').children.length == 0) {
         let xhr = new XMLHttpRequest();
-        xhr.open("get", "https://cdn.jsdelivr.net/gh/bymoye/sakura@1.0.5.2/images/icon.svg", true);
+        xhr.open("get", "https://cdn.jsdelivr.net/gh/bymoye/sakura/images/icon.svg", true);
+        //xhr.open("get", "http://localhost/wp-content/themes/Sakura/images/icon.svg", true);
         xhr.onreadystatechange = function () {
             if (xhr.readyState == 4 && (xhr.status == 200 || xhr.status == 304)) {
                 document.getElementById('iconsvg').insertAdjacentHTML('afterbegin', xhr.responseText);
@@ -313,7 +313,7 @@ function iconsvg() {
     }
     if (document.getElementsByClassName('sitelogo')[0].children.length == 0) {
         let xhr = new XMLHttpRequest();
-        xhr.open("get", "https://cdn.jsdelivr.net/gh/bymoye/sakura@1.0.5.2/images/nmx.svg", true);
+        xhr.open("get", "https://cdn.jsdelivr.net/gh/bymoye/sakura/images/nmx.svg", true);
         xhr.onreadystatechange = function () {
             if (xhr.readyState == 4 && (xhr.status == 200 || xhr.status == 304)) {
                 for (let i = 0; i < sitelogo.length; i++) {
@@ -449,12 +449,12 @@ function coverVideo() {
     if (video.paused) {
         video.play();
         try {
-            btn.innerHTML = '<svg class="stop" aria-hidden="true"><use xlink:href="#stop"></use></svg>';
+            btn.innerHTML = '<svg class="stop" aria-hidden="true"><use xlink:href="#svg_stop"></use></svg>';
         } catch { };
     } else {
         video.pause();
         try {
-            btn.innerHTML = '<svg class="play" aria-hidden="true"><use xlink:href="#play"></use></svg>';
+            btn.innerHTML = '<svg class="play" aria-hidden="true"><use xlink:href="#svg_play"></use></svg>';
         } catch { };
     }
 }
@@ -468,7 +468,7 @@ function killCoverVideo() {
     } else {
         video.pause();
         try {
-            btn.innerHTML = '<svg class="play" aria-hidden="true"><use xlink:href="#play"></use></svg>';
+            btn.innerHTML = '<svg class="play" aria-hidden="true"><use xlink:href="#svg_play"></use></svg>';
         } catch { };
         //console.info('pause:killCoverVideo()');
     }
@@ -521,7 +521,7 @@ function copy_code_block() {
     let ele = document.querySelectorAll("pre code");
     for (let j = 0; j < ele.length; j++) {
         ele[j].setAttribute('id', 'hljs-' + j);
-        ele[j].insertAdjacentHTML('afterend', '<a class="copy-code" href="javascript:" data-clipboard-target="#hljs-' + j + '" title="拷贝代码"><svg class="clipboard" aria-hidden="true"><use xlink:href="#clipboard"></use></svg></a>');
+        ele[j].insertAdjacentHTML('afterend', '<a class="copy-code" href="javascript:" data-clipboard-target="#hljs-' + j + '" title="拷贝代码"><svg class="clipboard" aria-hidden="true"><use xlink:href="#svg_clipboard"></use></svg></a>');
     };
     let clipboard = new ClipboardJS('.copy-code');
 }
@@ -540,8 +540,7 @@ function tableOfContentScroll(flag) {
                 for(let i = 0;i<_els.length;i++){
                     let _el = _els[i].querySelectorAll('h1,h2,h3,h4,h5');
                     for(let j = 0 ;j<_el.length;j++){
-                        let hyphenated = "toc-head-" + id;
-                        _el[j].id = hyphenated;
+                        _el[j].id = "toc-head-" + id;
                         id++;
                     }
                 }
@@ -555,7 +554,7 @@ function tableOfContentScroll(flag) {
     }
 }
 tableOfContentScroll(true);
-var pjaxInit = function () {
+const pjaxInit = function () {
     add_upload_tips();
     no_right_click();
     click_to_view_image();
@@ -606,7 +605,7 @@ function sm() {
                     let request = new XMLHttpRequest();
                     request.onreadystatechange = function () {
                         if (this.readyState == 4 && this.status == 200) {
-                            rateHolderp.innerHTML = request.responseText + ' <svg class="lock" aria-hidden="true"><use xlink:href="#lock"></use></svg>';
+                            rateHolderp.innerHTML = request.responseText + ' <svg class="lock" aria-hidden="true"><use xlink:href="#svg_lock"></use></svg>';
                         }
                     };
                     request.open('POST', '/wp-admin/admin-ajax.php', true);
@@ -633,14 +632,13 @@ function motionSwitch(ele) {
     document.querySelector(ele + '-bar').classList.add("on-hover");
     document.querySelector(ele + '-container').style.display = 'block';
 }
-let ready = function (fn) {
-    if (document.addEventListener) {
-        document.addEventListener('DOMContentLoaded', function ed() {
-            document.removeEventListener('DOMContentLoaded', ed, false);
-            try { fn(); } catch (e) { }
-        }, false);
+let ready=function(fn){
+    if (typeof fn !== 'function') return;
+    if (document.readyState==='complete') {
+        return fn();
     }
-}
+    document.addEventListener('DOMContentLoaded', fn, false);
+};
 function smileBoxToggle() {
     document.getElementById("emotion-toggle")?.addEventListener('click', function () {
         let emotion_toggle_off = document.querySelector('.emotion-toggle-off'),
@@ -669,7 +667,7 @@ function grin(tag, type, before, after) {
     }
     if (document.selection) {
         myField.focus();
-        sel = document.selection.createRange();
+        let sel = document.selection.createRange();
         sel.text = tag;
         myField.focus();
     } else if (myField.selectionStart || myField.selectionStart == '0') {
@@ -708,7 +706,7 @@ function add_copyright() {
     }
 }
 add_copyright();
-ready(function () {
+ready(()=>{
     getqqinfo();
 });
 
@@ -722,6 +720,7 @@ function getqqinfo() {
         qq_check = document.getElementsByClassName("qq-check")[0],
         gravatar_check = document.getElementsByClassName("gravatar-check")[0],
         user_avatar_img = document.querySelector("div.comment-user-avatar img");
+        if (author == null) return;
     if (!getCookie('user_qq') && !getCookie('user_qq_email') && !getCookie('user_author')) {
         qq.value = author.value = email.value = url.value = "";
     }
@@ -1034,15 +1033,6 @@ let s = document.getElementById("bgvideo"),
                     let _height = document.documentElement.clientHeight + "px";
                     document.getElementById("centerbg").style.height = "100vh";
                     document.getElementById("bgvideo").style.minHeight = "100vh";
-                    window.resizeFlag = null;
-                    window.onresize = function () {
-                        if (resizeFlag = null) {
-                            clearTimeout(resizeFlag);
-                        }
-                        resizeFlag = setTimeout(function () {
-                            Siren.AH();
-                        }, 1000);
-                    }
                 }
             } else {
                 document.querySelector(".headertop")?.classList.add("headertop-bar");
@@ -1135,7 +1125,7 @@ let s = document.getElementById("bgvideo"),
                             _xhr.send();
                             _xhr.onreadystatechange = function () {
                                 if (_xhr.readyState == 4 && _xhr.status == 200) {
-                                    json = _xhr.responseText;
+                                    let json = _xhr.responseText;
                                     if (json != "") {
                                         sessionStorage.setItem('search', json);
                                         QueryStorage = JSON.parse(json);
@@ -1161,7 +1151,7 @@ let s = document.getElementById("bgvideo"),
 
                     function Cx(arr, q) {
                         q = q.replace(q, "^(?=.*?" + q + ").+$").replace(/\s/g, ")(?=.*?");
-                        i = arr.filter(
+                        let i = arr.filter(
                             v => Object.values(v).some(
                                 v => new RegExp(q + '').test(v)
                             )
@@ -1191,7 +1181,7 @@ let s = document.getElementById("bgvideo"),
                             text = b < 60 ? text.slice(0, 80) : text.slice(b - 30, b + 30);
                             text = text.replace(s[s.length - 1], '<mark class="search-keyword"> ' + s[s.length - 1].toUpperCase() + ' </mark>');
                         }
-                        return '<div class="ins-selectable ins-search-item" href="' + link + '"><header><svg class="searchresult" aria-hidden="true"><use xlink:href="#' + fa + '"></use></svg>' + title + '<svg class="searchresult" aria-hidden="true"><use xlink:href="#' + iconfont + '"></use> ' + comments + '</svg>' + '</header><p class="ins-search-preview">' + text + '</p></div>';
+                        return '<div class="ins-selectable ins-search-item" href="' + link + '"><header><svg class="searchresult" aria-hidden="true"><use xlink:href="#svg_' + fa + '"></use></svg>' + title + '<svg class="searchresult" aria-hidden="true"><use xlink:href="#svg_' + iconfont + '"></use> ' + comments + '</svg>' + '</header><p class="ins-search-preview">' + text + '</p></div>';
                     }
 
                     function query(B, A, z) {
@@ -1381,8 +1371,7 @@ let s = document.getElementById("bgvideo"),
                         addComment.createButterbar("提交中(Commiting)....");
                     };
                     xhr.onerror = function () {
-                        let t = addComment;
-                        t.createButterbar(xhr.responseText);
+                        addComment.createButterbar(xhr.responseText);
                     };
                     xhr.onreadystatechange = function () {
                         if (xhr.readyState == 4 && xhr.status == 200) {
@@ -1422,21 +1411,21 @@ let s = document.getElementById("bgvideo"),
                                 temp.parentNode.removeChild(temp)
                             }
                         } else {
-                            let t = addComment;
-                            t.createButterbar(xhr.responseText);
+                            addComment.createButterbar(xhr.responseText);
                         }
                     };
                     xhr.send(serialize(from_Data) + "&action=ajax_comment");
                 }
             });
-            addComment = {
+            var addComment = {
                 moveForm: function (commId, parentId, respondId) {
                     let t = this,
                         div, comm = document.getElementById(commId),
                         respond = document.getElementById(respondId),
                         cancel = document.getElementById('cancel-comment-reply-link'),
                         parent = document.getElementById('comment_parent'),
-                        post = document.getElementById('comment_post_ID');
+                        post = document.getElementById('comment_post_ID'),
+                        temp;
                     __cancel.textContent = __cancel_text;
                     t.respondId = respondId;
                     if (!document.getElementById('wp-temp-form-div')) {
@@ -1444,7 +1433,8 @@ let s = document.getElementById("bgvideo"),
                         div.id = 'wp-temp-form-div';
                         div.style.display = 'none';
                         respond.parentNode.insertBefore(div, respond)
-                    } !comm ? (temp = document.getElementById('wp-temp-form-div'), document.getElementById('comment_parent').value = '0', temp.parentNode.insertBefore(respond, temp), temp.parentNode.removeChild(temp)) : comm.parentNode.insertBefore(respond, comm.nextSibling);
+                    }
+                    !comm ? (temp = document.getElementById('wp-temp-form-div'), document.getElementById('comment_parent').value = '0', temp.parentNode.insertBefore(respond, temp), temp.parentNode.removeChild(temp)) : comm.parentNode.insertBefore(respond, comm.nextSibling);
                     let _respond = document.getElementById("respond");
                     window.scrollTo({
                         top: _respond.getBoundingClientRect().top + window.pageYOffset - _respond.clientTop - 100,
@@ -1484,7 +1474,7 @@ let s = document.getElementById("bgvideo"),
                     document.body.insertAdjacentHTML('beforeend', '<div class="butterBar butterBar--center"><p class="butterBar-message">' + message + '</p></div>');
                     let butterBar = () => {
                         let _butterBar = document.getElementsByClassName("butterBar");
-                        if (_butterBar.length = 0) return;
+                        if (_butterBar.length == 0) return;
                         for (let i=0;i<_butterBar.length;i++){
                             let a = _butterBar[i];
                             a.parentNode.removeChild(a);
@@ -1650,7 +1640,7 @@ if (Poi.pjax) {
         // $(document).on('pjax:beforeSend', () => { //离开页面停止播放
         let normal = document.getElementsByClassName("normal-cover-video");
         if (normal.length > 0) {
-            for (let a; a < normal.length; a++) {
+            for (let a=0; a < normal.length; a++) {
                 normal[a].pause();
                 normal[a].src = '';
                 normal[a].load = '';
@@ -1697,7 +1687,7 @@ if (Poi.pjax) {
         post_list_show_animation();
     }, false);
 };
-ready(function () {
+ready(()=>{
     Siren.AH();
     Siren.PE();
     Siren.NH();
