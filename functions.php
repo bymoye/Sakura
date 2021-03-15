@@ -762,56 +762,11 @@ function custom_html() {
 	echo '});';
 	echo '</script>'."\n";
 	echo '<script>
-	function verificationOK(){
-		let x, y, z = "verification";
-		x=document.forms["loginform"]["verification"].value;
-        y=document.forms["registerform"]["verification"].value;
-		if (x=="verification" || y=="verification" || z=="verification"){
-		  alert("Please slide the block to verificate!");
-		  return false;
-	  }
-	}
-	$(document).ready(function(){
-        document.querySelector(".submit").insertAdjacentHTML("beforebegin",\'<p><div id="verification-slider"><div id="slider"><div id="slider_bg"></div><span id="label">»</span><span id="labelTip">Slide to Verificate</span></div><input type="hidden" name="verification" value="verification" /></div><p>\');
+	ready(()=>{
         document.querySelector("h1 a").style.backgroundImage = "url(\''.akina_option('logo_img').'\')";
-		$(".forgetmenot").replaceWith(\'<p class="forgetmenot">Remember Me<input name="rememberme" id="rememberme" value="forever" type="checkbox"><label for="rememberme" style="float: right;margin-top: 5px;transform: scale(2);margin-right: -10px;"></label></p>\');
+        document.querySelector(".forgetmenot").outerHTML =\'<p class="forgetmenot">Remember Me<input name="rememberme" id="rememberme" value="forever" type="checkbox"><label for="rememberme" style="float: right;margin-top: 5px;transform: scale(2);margin-right: -10px;"></label></p>\';
 	});
 	</script>';
-	echo "<script type=\"text/javascript\">
-		let startTime = 0,endTime = 0,numTime = 0;
-		$(function () {
-			var slider = new SliderUnlock(\"#slider\",{
-			successLabelTip : \"OK\"
-		},function(){
-			var sli_width = $(\"#slider_bg\").width();
-			$(\'#verification-slider\').html(\'\').append(\'<input id=\"verification-ok\" class=\"input\" type=\"text\" size=\"25\" value=\"OK!\" name=\"verification\" disabled=\"true\" />\');
-			
-			endTime = nowTime();
-			numTime = endTime-startTime;
-			endTime = 0;
-			startTime = 0;
-			// 获取到滑动使用的时间 滑动的宽度
-			// alert( numTime );
-			// alert( sli_width );
-		});
-			slider.init();
-		})
-
-		/**
-		* 获取时间精确到毫秒
-		* @type
-		*/
-		function nowTime(){
-			let myDate = new Date(),
-			    H = myDate.getHours(),//获取小时
-			    M = myDate.getMinutes(), //获取分钟
-			    S = myDate.getSeconds(),//获取秒
-			    MS = myDate.getMilliseconds(),//获取毫秒
-			    milliSeconds = H * 3600 * 1000 + M * 60 * 1000 + S * 1000 + MS;
-			return milliSeconds;
-		}
-	</script>
-	<script type=\"text/javascript\" src=\"#slider_bg\\\"" .get_template_directory_uri().'/user/verification.js"></script>';
 }
 add_action('login_footer', 'custom_html');
 

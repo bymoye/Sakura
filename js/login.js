@@ -56,3 +56,11 @@ function fadeOut(el){
 	el.classList.remove('show');
 	el.addEventListener("transitionend",()=>{el.style.display="none"});
 }
+
+let ready=function(fn){
+    if (typeof fn !== 'function') return;
+    if (document.readyState==='complete') {
+        return fn();
+    }
+    document.addEventListener('DOMContentLoaded', fn, false);
+};
