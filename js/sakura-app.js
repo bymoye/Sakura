@@ -1632,8 +1632,7 @@ if (Poi.pjax) {
         ],
         timeout: 8000,
         history: true,
-        cacheBust: false,
-        debug: true,
+        cacheBust: false
     });
     document.addEventListener("pjax:send", () => {
         // $(document).on('pjax:beforeSend', () => { //离开页面停止播放

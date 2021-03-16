@@ -7,7 +7,7 @@
  * @package Sakura
  */
 define('SAKURA_VERSION', '3.3.2');
-define('NMX_VERSION', '1.0.5');
+define('NMX_VERSION', '1.1.1');
 define('BUILD_VERSION', '3');
 
 //ini_set('display_errors', true);
