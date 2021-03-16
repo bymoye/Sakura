@@ -302,8 +302,7 @@ function iconsvg() {
     iconsvg == null ? document.body.insertAdjacentHTML('beforeend', "<div id='iconsvg' style='display:none;'></div>") : null;
     if (document.getElementById('iconsvg').children.length == 0) {
         let xhr = new XMLHttpRequest();
-       //xhr.open("get", "https://cdn.jsdelivr.net/gh/bymoye/sakura@1.0.5.2/images/icon.svg", true);
-        xhr.open("get", "http://localhost/wp-content/themes/Sakura/images/icon.svg", true);
+       xhr.open("get", "https://cdn.jsdelivr.net/gh/bymoye/sakura/images/icon.svg", true);
         xhr.onreadystatechange = function () {
             if (xhr.readyState == 4 && (xhr.status == 200 || xhr.status == 304)) {
                 document.getElementById('iconsvg').insertAdjacentHTML('afterbegin', xhr.responseText);
@@ -313,7 +312,7 @@ function iconsvg() {
     }
     if (document.getElementsByClassName('sitelogo')[0].children.length == 0) {
         let xhr = new XMLHttpRequest();
-        xhr.open("get", "https://cdn.jsdelivr.net/gh/bymoye/sakura@1.0.5.2/images/nmx.svg", true);
+        xhr.open("get", "https://cdn.jsdelivr.net/gh/bymoye/sakura/images/nmx.svg", true);
         xhr.onreadystatechange = function () {
             if (xhr.readyState == 4 && (xhr.status == 200 || xhr.status == 304)) {
                 for (let i = 0; i < sitelogo.length; i++) {
