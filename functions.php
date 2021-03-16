@@ -726,7 +726,7 @@ function custom_login() {
 	//echo '<link rel="stylesheet" type="text/css" href="' . get_bloginfo('template_directory') . '/inc/login.css" />'."\n";
 	echo '<link rel="stylesheet" type="text/css" href="'.get_template_directory_uri().'/inc/login.css?'.SAKURA_VERSION.'" />'."\n";
 	//echo '<script type="text/javascript" src="'.get_bloginfo('template_directory').'/js/jquery.min.js"></script>'."\n";
-	echo '<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/jquery/jquery@1.9.0/jquery.min.js"></script>' . "\n";
+	//echo '<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/jquery/jquery@1.9.0/jquery.min.js"></script>' . "\n";
 }
 
 add_action('login_head', 'custom_login');
@@ -764,7 +764,16 @@ function custom_html() {
 	echo '<script>
 	ready(()=>{
         document.querySelector("h1 a").style.backgroundImage = "url(\''.akina_option('logo_img').'\')";
-        document.querySelector(".forgetmenot").outerHTML =\'<p class="forgetmenot">Remember Me<input name="rememberme" id="rememberme" value="forever" type="checkbox"><label for="rememberme" style="float: right;margin-top: 5px;transform: scale(2);margin-right: -10px;"></label></p>\';
+        // reg_passmail
+        let a = \'<div class="yzq"><canvas id="wzyzm" width="120" height="40"></canvas><input type="text" id="yzm" placeholder="请输入验证验证码"></div>\';
+        let b = \'<p class="forgetmenot">Remember Me<input name="rememberme" id="rememberme" value="forever" type="checkbox"><label for="rememberme" style="float: right;margin-top: 5px;transform: scale(2);margin-right: -10px;"></label></p>\';
+        if (document.querySelector(".forgetmenot") != null){
+            document.querySelector(".forgetmenot").outerHTML = a+b;
+        }else {
+            document.querySelector("#reg_passmail").outerHTML = a;
+        }
+        // document.querySelector(".forgetmenot").outerHTML =\'<div class="yzq"><canvas id="wzyzm" width="120" height="40"></canvas><input type="text" id="yzm" placeholder="请输入验证验证码"></div><p class="forgetmenot">Remember Me<input name="rememberme" id="rememberme" value="forever" type="checkbox"><label for="rememberme" style="float: right;margin-top: 5px;transform: scale(2);margin-right: -10px;"></label></p>\';
+        sxyz();
 	});
 	</script>';
 }

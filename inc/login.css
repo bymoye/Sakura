@@ -375,3 +375,32 @@ input[type=checkbox]:checked:before {
 .login .privacy-policy-page-link {
     margin: 1em 0 1em !important;
 }
+
+canvas{
+	background: #ffffffde;
+	height: 46px;
+    border-radius: 3px;
+	width: 45%;
+    vertical-align: top;
+}
+input#yzm {
+    border: 1px solid #EAEAEA;
+    border-radius: 0px;
+    padding: 5px 10px;
+    color: #444;
+    font-weight: normal;
+    font-size: 14px;
+    background: #FFF;
+    font-family: "Microsoft Yahei";
+    box-shadow: 0 0 0px 1000px white inset;
+    height: 46px;
+    border-radius: 3px;
+    /* margin-top: 10px; */
+    width: 50%;
+    margin-left: 5%;
+    margin-right: 0;
+}
+.yzq {
+    position: relative;
+    padding: 0px 35px;
+}
