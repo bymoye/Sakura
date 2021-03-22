@@ -307,6 +307,9 @@ function the_headPattern(){
     } else {
         $edit_this_post_link = '';
     }
+    if(!get_the_title()){
+      $t .= '<h1 class="entry-title">无标题 | Nothing</h1>';
+    }
     $t .= the_title( '<h1 class="entry-title">', '</h1>', false);
     $t .= '<p class="entry-census"><span><a href="'. esc_url(get_author_posts_url(get_the_author_meta('ID'),get_the_author_meta( 'user_nicename' ))) .'"><img src="'. get_avatar_url( get_the_author_meta('ID'), 64 )/*$ava*/ .'"></a></span><span><a href="'. esc_url(get_author_posts_url(get_the_author_meta('ID'),get_the_author_meta( 'user_nicename' ))) .'">'. get_the_author() .'</a></span><span class="bull">·</span>'. poi_time_since(get_post_time('U', true),false,true) .'<span class="bull">·</span>'. get_post_views(get_the_ID()) .' '._n("View","Views",get_post_views(get_the_ID()),"sakura")/*次阅读*/.$edit_this_post_link.'</p>';
     endwhile; endif;
@@ -316,7 +319,27 @@ function the_headPattern(){
   } else {
       $full_image_url = get_random_bg_url();
   }
-    $t .= the_title( '<h1 class="entry-title">', '</h1>', false);
+  if(!get_the_title()){
+    if(is_page_template('user/page-archive.php')){
+      $t .= '<h1 class="entry-title">月份归档</h1>';
+    } elseif(is_page_template('user/page-timeline.php')){
+      $t .= '<h1 class="entry-title">时光轴 | timeline</h1>';
+    } elseif(is_page_template('user/page-register.php')){
+      $t .= '<h1 class="entry-title">新用户 | New Account</h1>';
+    } elseif(is_page_template('user/page-login.php')){
+      $t .= '<h1 class="entry-title">登录 | Login</h1>';
+    } elseif(is_page_template('user/page-links.php')){
+      $t .= '<h1 class="entry-titlele">友情链接 | friends</h1>';
+    } elseif(is_page_template('user/page-shuoshuo.php')){
+      $t .= '<h1 class="entry-title">碎碎念</h1>';
+    } else{
+      $t .= '<h1 class="entry-title">无标题 | Nothing</h1>';
+    }
+  }
+  $t .= the_title( '<h1 class="entry-title">', '</h1>', false);
+  }elseif(is_author()){
+      $full_image_url = get_random_bg_url();
+      $t .= '<h1 class="entry-title"> '.sprintf( __( "\" %s \" 个人归档页","sakura" ), get_the_author()) .'</h1>';
   }elseif(is_archive()){
     if (z_taxonomy_image_url()) {
       $full_image_url = z_taxonomy_image_url();

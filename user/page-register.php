@@ -61,9 +61,6 @@ if( !empty($_POST['register_reg']) ) {
 		<?php if(akina_option('ex_register_open')) : ?>
 		<?php if(!is_user_logged_in()){ ?>
 			<div class="ex-register">
-				<div class="ex-register-title">
-					<h3>New Account</h3>
-				</div>
 				<form action="<?php echo $_SERVER["REQUEST_URI"]; ?>" method="post">  
 					<p><input type="text" name="user_login" tabindex="1" id="user_login" class="input" value="<?php if(!empty($sanitized_user_login)) echo $sanitized_user_login; ?>" placeholder="用户名" required /></p>
 					<p><input type="text" name="user_email" tabindex="2" id="user_email" class="input" value="<?php if(!empty($user_email)) echo $user_email; ?>" size="25" placeholder="电子邮箱" required /></p>

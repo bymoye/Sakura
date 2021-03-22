@@ -12,10 +12,7 @@ get_header();
 	
 	<article <?php post_class("post-item"); ?>>
 		<?php the_content(); ?>
-		<div id="archives-temp">  
-		<?php if(akina_option('patternimg') || !get_post_thumbnail_id(get_the_ID())) { ?>
-        <h2><?php the_title();?></h2>
-        <?php } ?>	
+		<div id="archives-temp">
     <div id="archives-content">      
     <?php       
         $the_query = new WP_Query( 'posts_per_page=-1&ignore_sticky_posts=1' );      

@@ -29,8 +29,8 @@
 			<p style="font-family: 'Ubuntu', sans-serif;">
 					<span style="color: #b9b9b9;">
 						<?php /* 能保留下面两个链接吗？算是我一个小小的心愿吧~ */ ?>
-						这是迷的匿名信 © 2018-2020 Theme <a href="https://github.com/bymoye/Sakura/" target="_blank" style="color: #b9b9b9;;text-decoration: underline dotted rgba(0, 0, 0, .1);">Sakura</a><br>
-					<a>查询了 <?php echo get_num_queries()?> 次数据库,耗时 <?php timer_stop(1) ?> 秒,消耗了 <?php echo round(memory_get_peak_usage()/1024/1024,2) ?> MB内存</a>
+						这是迷的匿名信 © 2018-2021 Theme <a href="https://github.com/bymoye/Sakura/" target="_blank" style="color: #b9b9b9;text-decoration: underline dotted rgba(0, 0, 0, .1);">Sakura</a><br>
+						<?php printf(' 耗时 %.3f 秒 | 查询 %d 次 | 内存 %.2f MB',timer_stop(0,3),get_num_queries(),memory_get_peak_usage() / 1024 / 1024);?>
 				</span>
 				</p>
 			</div>

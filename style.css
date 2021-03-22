@@ -763,8 +763,7 @@ a:hover {
     color: #FFF;
     z-index: 1;
     bottom: 0;
-    backdrop-filter: blur(15px) saturate(90%);
-    
+    backdrop-filter: blur(15px) saturate(50%);
     transition: top .5s cubic-bezier(0.4, 0, 1, 1),background-color .5s;
 }
 
@@ -4076,7 +4075,6 @@ i.iconfont.js-toggle-search.iconsearch {
     right: 0;
     left: 0;
     bottom: 0;
-    background: #fff;
     visibility: hidden;
     opacity: 0
 }

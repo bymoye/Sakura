@@ -170,6 +170,7 @@ add_action( 'after_setup_theme', 'akina_content_width', 0 );
 function sakura_scripts() {
     if(akina_option('jsdelivr_cdn_test')){ 
         wp_enqueue_script( 'js_lib', get_template_directory_uri() . '/cdn/js/lib.js', array(), NMX_VERSION.akina_option('cookie_version', ''), true );
+        wp_enqueue_script( 'js_lightgallery', get_template_directory_uri() . '/cdn/js/src/lightgallery.min.js', array(), NMX_VERSION.akina_option('cookie_version', ''), true );
     } else { 
         wp_enqueue_script( 'js_lib', 'https://cdn.jsdelivr.net/gh/bymoye/Sakura@' . NMX_VERSION . '/cdn/js/lib.min.js', array(), NMX_VERSION, true );
     }
@@ -765,14 +766,16 @@ function custom_html() {
 	ready(()=>{
         document.querySelector("h1 a").style.backgroundImage = "url(\''.akina_option('logo_img').'\')";
         // reg_passmail
-        let a = \'<div class="yzq"><canvas id="wzyzm" width="120" height="40"></canvas><input type="text" id="yzm" placeholder="请输入验证验证码"></div>\';
+        let a = \'<div class="yzq"><canvas id="wzyzm" width="120" height="40"></canvas><input type="text" id="yzm" placeholder="请输入验证码"></div>\';
         let b = \'<p class="forgetmenot">Remember Me<input name="rememberme" id="rememberme" value="forever" type="checkbox"><label for="rememberme" style="float: right;margin-top: 5px;transform: scale(2);margin-right: -10px;"></label></p>\';
         if (document.querySelector(".forgetmenot") != null){
             document.querySelector(".forgetmenot").outerHTML = a+b;
-        }else {
-            document.querySelector("#reg_passmail").outerHTML = a;
+        }else if(document.querySelector("#reg_passmail") != null) {
+            document.querySelector("#reg_passmail").insertAdjacentHTML(\'beforebegin\', a);
+        }else{
+            document.querySelector("#wp-submit").insertAdjacentHTML(\'beforebegin\', a);
+            document.querySelector(".yzq").style.padding = "0";
         }
-        // document.querySelector(".forgetmenot").outerHTML =\'<div class="yzq"><canvas id="wzyzm" width="120" height="40"></canvas><input type="text" id="yzm" placeholder="请输入验证验证码"></div><p class="forgetmenot">Remember Me<input name="rememberme" id="rememberme" value="forever" type="checkbox"><label for="rememberme" style="float: right;margin-top: 5px;transform: scale(2);margin-right: -10px;"></label></p>\';
         sxyz();
 	});
 	</script>';
