@@ -1354,8 +1354,8 @@ let s = document.getElementById("bgvideo"),
                                     let b = result[i];
                                     document.getElementById("main").insertAdjacentHTML('beforeend', b.outerHTML);
                                 }
-                            let test = document.querySelector("#content");
-                            _pjax.refresh(test);
+                            let content = document.querySelector("#content");
+                            _pjax.refresh(content);
                             document.querySelector("#pagination a")?.classList.remove("loading");
                             document.querySelector("#pagination a").innerHTML = "Previous";
                             document.querySelector("#add_post span").classList.remove("loading");
@@ -1363,11 +1363,9 @@ let s = document.getElementById("bgvideo"),
                             lazyload();
                             post_list_show_animation();
                             if (nextHref != undefined) {
-                                let respond = document.getElementById("respond");
                                 let tempScrollTop = document.documentElement.scrollTop;
-                                window.scrollTo({ top: tempScrollTop });
                                 window.scrollTo({
-                                    top: tempScollTop + 100,
+                                    top: tempScrollTop + 100,
                                     behavior: "smooth"
                                 });
                                 document.querySelector("#pagination a").setAttribute("href", nextHref);
