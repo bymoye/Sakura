@@ -307,7 +307,9 @@ function scrollBar() {
 
 function iconsvg() {
     let iconsvg = document.getElementById('iconsvg'),
-        sitelogo = document.getElementsByClassName('sitelogo');
+        sitelogo = document.getElementsByClassName('sitelogo'),
+        i = 0,
+        last_time = Date.now();
     iconsvg == null ? document.body.insertAdjacentHTML('beforeend', "<div id='iconsvg' style='display:none;'></div>") : null;
     if (document.getElementById('iconsvg').children.length == 0) {
         let xhr = new XMLHttpRequest();
@@ -332,8 +334,38 @@ function iconsvg() {
         }
         xhr.send();
     }
-    document.getElementsByClassName('openNav')[0].classList.add('exhide');
-    document.getElementsByClassName('site-header')[0].classList.add('exhide');
+    if (document.getElementById("blur_background")==null){
+        document.body.insertAdjacentHTML('beforeend', "<div id='blur_background' style='position: fixed;width: 100%;height: 100%;top: 0;left: 0;z-index: -1;background-color: rgba(0, 0, 0, .1);'></div>");
+        window.addEventListener("scroll",_blur);
+    }
+    let blur = document.getElementById("blur_background");
+    let _blur_check =(_scrollTop)=>{
+        let _blur = blur.style.backdropFilter;
+        return (_scrollTop > 100 && _blur == "blur(5px)") || (_scrollTop <= 100 && (_blur == "blur(0px)" || _blur == ""))};
+    function _blur () {
+        let scrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop;
+        if(_blur_check(scrollTop))return;
+        let e = requestAnimationFrame(_blur);
+            if (Date.now() - last_time > 20) {
+                last_time = Date.now();
+            if (scrollTop > 100 && blur.style.backdropFilter != "blur(5px)"){
+                //console.log("zzzzzz");
+                i <= 5 ? i+=0.1 : i=5;
+                blur.style.backdropFilter = "blur(" + i + "px)";
+            }
+            if (scrollTop < 100 && blur.style.backdropFilter != "blur(0px)"){
+                //console.log("totoo");
+                i >= 0 ? i-=0.1 : i=0;
+                blur.style.backdropFilter = "blur(" + i + "px)";
+            }
+        }
+        if (_blur_check(scrollTop)) {
+            cancelAnimationFrame(e);
+            }
+    }
+    _blur();
+    document.getElementsByClassName('openNav')[0].classList.remove('exbit');
+    document.getElementsByClassName('site-header')[0].classList.remove('exbit');
 }
 
 
@@ -1258,25 +1290,21 @@ let s = document.getElementById("bgvideo"),
         },
         NH: function () {
             let h1 = 0,
-                b1 = 0,
                 t = window.innerHeight / 4,
                 i = document.documentElement.scrollTop || window.pageYOffset,
-                style = document.createElement("style");
-            style.innerHTML = "body::before{backdrop-filter:blur(5px)}";
-            800 > document.body.clientWidth && (window.document.head.appendChild(style));
+                 _add = (_class) => {
+                    document.querySelector(".site-header").classList.add(_class);
+                    document.querySelector(".openNav").classList.add(_class);
+                },
+                _remove = (_class) => {
+                    document.querySelector(".site-header").classList.remove(_class);
+                    document.querySelector(".openNav").classList.remove(_class);
+                }
             window.addEventListener("scroll", function () {
-                let s = document.documentElement.scrollTop || window.pageYOffset,
-                    cWidth = document.body.clientWidth,
-                    cached = document.getElementsByClassName("site-header")[0],
-                    n = document.getElementsByClassName("openNav")[0];
-                s == 0 && (cached.classList.remove('exbit'), n.classList.remove('exbit'));
-                s == h1 && (cached.classList.remove('yya'), n.classList.remove('yya')),
-                    s > h1 && (cached.classList.add('yya'), n.classList.add('yya')),
-                    s > t && (cached.classList.add('exbit'), n.classList.add('exbit'),
-                        800 < cWidth && b1 == 0 && (window.document.head.appendChild(style), b1 = 1),
-                        s > i ? (cached.classList.remove('exhide'), n.classList.remove('exhide')) : (cached.classList.add('exhide'), n.classList.add('exhide')),
-                        i = s),
-                    800 < cWidth && s < t && b1 == 1 && (window.document.head.removeChild(style), b1 = 0);
+                let s = document.documentElement.scrollTop || window.pageYOffset;
+                    if (s==h1) { _remove("exbit");_remove("yya");}
+                    if (s>h1) { _add("yya");}
+                    if(s>t) {_add("exbit");s<=i && (_remove("exbit"));i=s;}
             })
         },
         XLS: function () {

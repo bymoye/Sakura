@@ -170,7 +170,7 @@ add_action( 'after_setup_theme', 'akina_content_width', 0 );
 function sakura_scripts() {
     if(akina_option('jsdelivr_cdn_test')){ 
         wp_enqueue_script( 'js_lib', get_template_directory_uri() . '/cdn/js/lib.js', array(), NMX_VERSION.akina_option('cookie_version', ''), true );
-        wp_enqueue_script( 'js_lightgallery', get_template_directory_uri() . '/cdn/js/src/lightgallery.min.js', array(), NMX_VERSION.akina_option('cookie_version', ''), true );
+       // wp_enqueue_script( 'js_lightgallery', get_template_directory_uri() . '/cdn/js/src/lightgallery.min.js', array(), NMX_VERSION.akina_option('cookie_version', ''), true );
     } else { 
         wp_enqueue_script( 'js_lib', 'https://cdn.jsdelivr.net/gh/bymoye/Sakura@' . NMX_VERSION . '/cdn/js/lib.min.js', array(), NMX_VERSION, true );
     }

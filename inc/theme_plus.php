@@ -361,8 +361,10 @@ function the_headPattern(){
   <div class="pattern-attachment-img lazyload" style="background-image: url(<?php echo $full_image_lazyload ?>)" data-src="<?php echo $full_image_url_src ?>"> </div>
     <header class="pattern-header <?php if(is_single()){echo $header;} ?>"><?php echo $t; ?></header>
   </div>
-  <?php else :
+  <?php elseif(is_home()) :
     echo '<div class="blank"></div>';
+  else:
+    echo '<div class="pattern-center-blank"></div>';
   endif;
 }
 

@@ -970,7 +970,7 @@ a:hover {
 }
 
 .exbit {
-    top: -100px;
+    top: -100px !important;
     z-index: 9999
 }
 
@@ -978,10 +978,10 @@ a:hover {
     background-color: rgba(255,255,255,.8)
 }
 
-.exhide {
+/* .exhide {
     top: 0;
     z-index: 9999
-}
+} */
 
 .site-branding {
     float: left;
@@ -5171,6 +5171,7 @@ i.iconfont.down {
         position: fixed;
         z-index: 99999;
         display: block;
+        top:0;
     }
     .iconflat {
         background: 0 0;
@@ -8346,19 +8347,6 @@ p.comment-form-cookies-consent {
         height: 40px;
         width: 40px;
         padding: 9px;
-    }
-
-    body::before{
-        content: '';
-        position: fixed;
-        width:100%;
-        height:100%;
-        top: 0;
-        left: 0;
-        z-index: -1;
-        background-color: rgba(0, 0, 0, .1);
-        /* will-change: ; */
-        transition: backdrop-filter .8s cubic-bezier(0.9, 0.6, 0.79, 1.07) .1s;
     }
 
     .emotion-box {
