@@ -138,8 +138,6 @@ if ( akina_option('theme_skin') ) { ?>
     top: 10% !important;
 }
 <?php } ?>
-.post-list-thumb{opacity: 0}
-.post-list-show {opacity: 1}
 <?php } // theme-skin ?>
 <?php // Custom style
 if ( akina_option('site_custom_style') ) {

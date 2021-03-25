@@ -83,7 +83,6 @@ Tags: 樱花庄的白猫
 }
 
 html {
-    font-family: sans-serif;
     -webkit-text-size-adjust: 100%;
     -ms-text-size-adjust: 100%;
     overflow-x: hidden
@@ -970,8 +969,7 @@ a:hover {
 }
 
 .exbit {
-    top: -100px !important;
-    z-index: 9999
+    transform: translateY(-200px);
 }
 
 .site-header:hover {
@@ -1444,8 +1442,10 @@ i.iconfont.hotpost {
     margin: 20px 0 20px;
     border-radius: 10px;
     background-color: rgba(255, 255, 255, .5);
-    transition: .5s ease all;
-    opacity: 0
+    visibility: hidden;
+    -webkit-transform: translateY(80px);
+    transform: translateY(80px);
+    transition: all .5s ease;
 }
 
 .post-list-thumb:hover {
@@ -1639,19 +1639,21 @@ i.iconfont.hotpost {
 }
 
 .post-list-show {
-    animation: post-list-show .5s;
-    -webkit-animation: post-list-show .5s;
-    opacity: 1
+    visibility: visible;
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+    /* animation: post-list-show .5s;
+    -webkit-animation: post-list-show .5s; */
 }
 
 @keyframes post-list-show {
     0% {
-        opacity: 0;
+        visibility: hidden;
         -webkit-transform: translateY(80px);
         transform: translateY(80px)
     }
     100% {
-        opacity: 1;
+        visibility: visible;
         -webkit-transform: translateY(0);
         transform: translateY(0)
     }
@@ -8127,7 +8129,7 @@ p.comment-form-cookies-consent {
 .sitelogo_svg {
     height: 30px;
     transform: translateY(10px);
-    animation:logofill 40s infinite;
+    /*animation:logofill 40s infinite;*/
 }
 
 .site-title:hover .sitelogo-de{

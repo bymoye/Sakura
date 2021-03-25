@@ -16,8 +16,8 @@ mashiro_global.ini = new function () {
         post_list_show_animation();
         copy_code_block();
         coverVideoIni();
-        scrollBar();
         iconsvg();
+        scrollBar();
         load_bangumi();
         sm();
     }
@@ -72,7 +72,7 @@ function imgError(ele, type) {
 }
 
 function post_list_show_animation() {
-    if (document.getElementsByTagName('article')[0]?.classList.contains("post-list-thumb")) {
+    if (document.querySelector('article')?.classList.contains("post-list-thumb")) {
         let options = {
             root: null,
             threshold: [0.4]
@@ -81,32 +81,29 @@ function post_list_show_animation() {
             articles = document.getElementsByClassName('post-list-thumb');
 
         function callback(entries) {
-            entries.forEach((article) => {
+               for (let i=0;i<entries.length;i++){
+                let article=entries[i];
                 if (!window.IntersectionObserver) {
-                    article.target.style.willChange = 'auto';
+                    //article.target.style.willChange = 'auto';
                     if (article.target.classList.contains("post-list-show") === false) {
                         article.target.classList.add("post-list-show");
+                        io.unobserve(article.target)
                     }
                 } else {
-                    if (!window.IntersectionObserver) {
-                        article.target.style.willChange = 'auto';
-                        if (article.target.classList.contains("post-list-show") === false) {
-                            article.target.classList.add("post-list-show");
-                        }
-                    } else {
                         if (article.target.classList.contains("post-list-show")) {
-                            article.target.style.willChange = 'auto';
+                            //article.target.style.willChange = 'auto';
                             io.unobserve(article.target)
                         } else {
                             if (article.isIntersecting) {
                                 article.target.classList.add("post-list-show");
-                                article.target.style.willChange = 'auto';
+                                //article.target.style.willChange = 'auto';
                                 io.unobserve(article.target)
                             }
                         }
-                    }
+                    
                 }
-            })
+            }
+            //})
         }
         for (let a = 0; a < articles.length; a++) {
             io.observe(articles[a]);
@@ -282,12 +279,37 @@ function cmt_showPopup(ele) {
     // }
 }
 function scrollBar() {
+    let cached = document.getElementById('bar'),
+        f = document.querySelector(".toc-container"),
+        blur = document.getElementById("blur_background"),
+        i = 0,
+        s, a, b, c, result;
+    let _blur_check = (_scrollTop) => {
+        let _blur = blur.style.backdropFilter;
+        return (_scrollTop > 100 && _blur == "blur(5px)") || (_scrollTop <= 100 && (_blur == "blur(0px)" || _blur == ""))
+    };
+    function _blur() {
+        if (_blur_check(s)) return;
+        if (s > 100 && blur.style.backdropFilter != "blur(5px)") {
+            i <= 5 ? i += 0.01 : i = 5;
+            blur.style.backdropFilter = "blur(" + i + "px)";
+        }
+        if (s < 100 && blur.style.backdropFilter != "blur(0px)") {
+            i >= 0 ? i -= 0.01 : i = 0;
+            blur.style.backdropFilter = "blur(" + i + "px)";
+        }
+        if (!_blur_check(s)) {
+            requestAnimationFrame(_blur);
+        }
+    }
+    _blur();
+
+
     window.addEventListener('scroll', ()=>{
-        let s = document.documentElement.scrollTop || document.body.scrollTop,
+        s = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop,
         a = document.documentElement.scrollHeight || document.body.scrollHeight,
-        b = window.innerHeight, c,
-        result = parseInt(s / (a - b) * 100),
-        cached = document.getElementById('bar');
+        b = window.innerHeight,
+        result = parseInt(s / (a - b) * 100);
     cached.style.width = result + "%";
     switch (true) {
         case (result <= 19): c = '#00BCD4'; break;
@@ -298,18 +320,16 @@ function scrollBar() {
         case (result == 100): c = '#5aaadb'; break;
     }
     cached.style.background = c;
-    let f = document.querySelector(".toc-container");
     if (f != null) {
         f.style.height = document.querySelector(".site-content")?.getBoundingClientRect(outerHeight)["height"] + "px";
     }
+    _blur();
     });
 }
 
 function iconsvg() {
     let iconsvg = document.getElementById('iconsvg'),
-        sitelogo = document.getElementsByClassName('sitelogo'),
-        i = 0,
-        last_time = Date.now();
+        sitelogo = document.getElementsByClassName('sitelogo');
     iconsvg == null ? document.body.insertAdjacentHTML('beforeend', "<div id='iconsvg' style='display:none;'></div>") : null;
     if (document.getElementById('iconsvg').children.length == 0) {
         let xhr = new XMLHttpRequest();
@@ -336,34 +356,7 @@ function iconsvg() {
     }
     if (document.getElementById("blur_background")==null){
         document.body.insertAdjacentHTML('beforeend', "<div id='blur_background' style='position: fixed;width: 100%;height: 100%;top: 0;left: 0;z-index: -1;background-color: rgba(0, 0, 0, .1);'></div>");
-        window.addEventListener("scroll",_blur);
     }
-    let blur = document.getElementById("blur_background");
-    let _blur_check =(_scrollTop)=>{
-        let _blur = blur.style.backdropFilter;
-        return (_scrollTop > 100 && _blur == "blur(5px)") || (_scrollTop <= 100 && (_blur == "blur(0px)" || _blur == ""))};
-    function _blur () {
-        let scrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop;
-        if(_blur_check(scrollTop))return;
-        let e = requestAnimationFrame(_blur);
-            if (Date.now() - last_time > 20) {
-                last_time = Date.now();
-            if (scrollTop > 100 && blur.style.backdropFilter != "blur(5px)"){
-                //console.log("zzzzzz");
-                i <= 5 ? i+=0.1 : i=5;
-                blur.style.backdropFilter = "blur(" + i + "px)";
-            }
-            if (scrollTop < 100 && blur.style.backdropFilter != "blur(0px)"){
-                //console.log("totoo");
-                i >= 0 ? i-=0.1 : i=0;
-                blur.style.backdropFilter = "blur(" + i + "px)";
-            }
-        }
-        if (_blur_check(scrollTop)) {
-            cancelAnimationFrame(e);
-            }
-    }
-    _blur();
     document.getElementsByClassName('openNav')[0].classList.remove('exbit');
     document.getElementsByClassName('site-header')[0].classList.remove('exbit');
 }
