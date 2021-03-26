@@ -303,8 +303,6 @@ function scrollBar() {
         }
     }
     _blur();
-
-
     window.addEventListener('scroll', ()=>{
         s = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop,
         a = document.documentElement.scrollHeight || document.body.scrollHeight,
@@ -1574,50 +1572,43 @@ let s = document.getElementById("bgvideo"),
             document.body.addEventListener('input', POWERMODE)
         },
         FDT: function () {
-            let _header = document.getElementsByClassName("pattern-header");
-            if (_header.length == 0) return;
-            let _center = document.getElementsByClassName("pattern-center"),
-                str, _blur,
-                g = 0.4,
-                reg = /blur\((.*?)px\) saturate\((.*?)\)/g,
-                i = 0,
-                last_time = Date.now(),
+            let _header = document.querySelector(".pattern-header");
+            if (!_header) return;
+            let top,
+                _center = document.querySelector(".pattern-center"),
+                g = 60,
+                i = 15,
+                e,
                 _headertoggle = () => {
-                    let nowTime = Date.now(),
-                        top = _header[0]?.style.top,
-                        e = requestAnimationFrame(_headertoggle);
-                    if (nowTime - last_time > 20) {
-                        last_time = nowTime;
-                        if (top == "0px") {
-                            g <= 0.5 ? g = 0.5 : g -= 0.05;
-                            _header[0].style.backdropFilter = "blur(" + i++ + "px) saturate(" + g + ")";
-                        } else if (top == "60%") {
-                            g >= 1 ? g = 1 : g += 0.05;
-                            _header[0].style.backdropFilter = "blur(" + i-- + "px) saturate(" + g + ")";
-                        }
+                    switch(top){
+                        case "0px":g > 60 ? g -= 0.5 : g = 60;
+                                   i < 15 ? i += 0.1 : i = 15;
+                                   break;
+                        case "60%":g < 100 ? g +=0.5 : g = 100;
+                                   i > 5 ? i -= 0.1 : i = 5;
+                                   break;
                     }
-                    if (i >= 16 || i <= 4) {
-                        cancelAnimationFrame(e);
+                    _header.style.backdropFilter = "blur(" + i + "px) saturate(" + g + "%)";
+                    if ((top == "0px" && i!=15) || (top == "60%" && i!=5)) {
+                        e = requestAnimationFrame(_headertoggle);
                     }
                 }
 
-            _center[0]?.addEventListener("mouseover", function () {
-                _header[0].style.top = "60%";
+            _center?.addEventListener("mouseover", function () {
+               _header.style.top = "60%";
             });
-            _center[0]?.addEventListener("mouseleave", function () {
-                _header[0].style.top = "0px";
+            _center?.addEventListener("mouseleave", function () {
+                _header.style.top = "0px";
             });
-            _header[0].ontransitionend = function (e) {
+            _header.ontransitionend = function (e) {
                 e.stopPropagation();
                 if (e.target === this) {
-                    let top = _header[0].style.top;
-                    str = getComputedStyle(_header[0])?.backdropFilter;
-                    _blur = str?.replace(reg, '$1');
-                    if (top == "0px" || top == "60%") {
-                        i = _blur;
+                    top = _header.style.top;
                         _headertoggle();
-                    }
                 }
+            }
+            _header.ontransitionrun =()=>{
+                cancelAnimationFrame(e);
             }
         },
         GT: function () {
