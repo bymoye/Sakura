@@ -282,28 +282,34 @@ function scrollBar() {
     let cached = document.getElementById('bar'),
         f = document.querySelector(".toc-container"),
         blur = document.getElementById("blur_background"),
-        i = 0,
-        s, a, b, c, result;
+        i = 0,timer=null,
+        s=0, a, b, c, result;
     let _blur_check = (_scrollTop) => {
         let _blur = blur.style.backdropFilter;
-        return (_scrollTop > 100 && _blur == "blur(5px)") || (_scrollTop <= 100 && (_blur == "blur(0px)" || _blur == ""))
+        return ((_scrollTop > 100 && _blur == "blur(5px)") || (_scrollTop <= 100 && (_blur == "blur(0px)" || _blur == "")))
     };
     function _blur() {
         if (_blur_check(s)) return;
+        console.log("hi");
         if (s > 100 && blur.style.backdropFilter != "blur(5px)") {
-            i <= 5 ? i += 0.01 : i = 5;
+            i <= 5 ? i += 0.05 : i = 5;
             blur.style.backdropFilter = "blur(" + i + "px)";
         }
         if (s < 100 && blur.style.backdropFilter != "blur(0px)") {
-            i >= 0 ? i -= 0.01 : i = 0;
+            i >= 0 ? i -= 0.05 : i = 0;
             blur.style.backdropFilter = "blur(" + i + "px)";
         }
         if (!_blur_check(s)) {
             requestAnimationFrame(_blur);
         }
     }
+
     _blur();
     window.addEventListener('scroll', ()=>{
+        if(timer){
+            clearTimeout(timer);
+        }
+    timer = setTimeout(()=>{
         s = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop,
         a = document.documentElement.scrollHeight || document.body.scrollHeight,
         b = window.innerHeight,
@@ -321,7 +327,8 @@ function scrollBar() {
     if (f != null) {
         f.style.height = document.querySelector(".site-content")?.getBoundingClientRect(outerHeight)["height"] + "px";
     }
-    _blur();
+        _blur();
+    },30);
     });
 }
 
@@ -1578,8 +1585,10 @@ let s = document.getElementById("bgvideo"),
                 _center = document.querySelector(".pattern-center"),
                 g = 60,
                 i = 15,
-                e,
+                e,flag,
                 _headertoggle = () => {
+                    if (flag)return;
+                    flag=true;
                     switch(top){
                         case "0px":g > 60 ? g -= 0.5 : g = 60;
                                    i < 15 ? i += 0.1 : i = 15;
@@ -1590,6 +1599,7 @@ let s = document.getElementById("bgvideo"),
                     }
                     _header.style.backdropFilter = "blur(" + i + "px) saturate(" + g + "%)";
                     if ((top == "0px" && i!=15) || (top == "60%" && i!=5)) {
+                        flag=false;
                         e = requestAnimationFrame(_headertoggle);
                     }
                 }
@@ -1608,6 +1618,7 @@ let s = document.getElementById("bgvideo"),
                 }
             }
             _header.ontransitionrun =()=>{
+                flag=false;
                 cancelAnimationFrame(e);
             }
         },

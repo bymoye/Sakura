@@ -7090,6 +7090,7 @@ a.toc-link {
     height: 3px;
     background: orange;
     transiton-property: width, background;
+    width:0%;
     transition-duration: 1s, 1s;
     z-index: 99999
 }
@@ -8129,7 +8130,7 @@ p.comment-form-cookies-consent {
 .sitelogo_svg {
     height: 30px;
     transform: translateY(10px);
-    /*animation:logofill 40s infinite;*/
+    animation:logofill 40s infinite;
 }
 
 .site-title:hover .sitelogo-de{
