@@ -971,7 +971,9 @@ a:hover {
 .exbit {
     transform: translateY(-200px);
 }
-
+.exbit svg{
+    animation: none;
+}
 .site-header:hover {
     background-color: rgba(255,255,255,.8)
 }
@@ -1442,7 +1444,7 @@ i.iconfont.hotpost {
     margin: 20px 0 20px;
     border-radius: 10px;
     background-color: rgba(255, 255, 255, .5);
-    visibility: hidden;
+    opacity: 0;
     -webkit-transform: translateY(80px);
     transform: translateY(80px);
     transition: all .5s ease;
@@ -1639,7 +1641,7 @@ i.iconfont.hotpost {
 }
 
 .post-list-show {
-    visibility: visible;
+    opacity: 1;
     -webkit-transform: translateY(0);
     transform: translateY(0);
     /* animation: post-list-show .5s;
@@ -1648,12 +1650,12 @@ i.iconfont.hotpost {
 
 @keyframes post-list-show {
     0% {
-        visibility: hidden;
+        opacity: 0;
         -webkit-transform: translateY(80px);
         transform: translateY(80px)
     }
     100% {
-        visibility: visible;
+        opacity: 1;
         -webkit-transform: translateY(0);
         transform: translateY(0)
     }
