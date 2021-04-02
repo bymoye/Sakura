@@ -32,7 +32,6 @@ mashiro_global.ini = new function () {
     }
 }
 
-
 function setCookie(name, value, days) {
     let expires = "";
     if (days) {
@@ -84,20 +83,17 @@ function post_list_show_animation() {
                for (let i=0;i<entries.length;i++){
                 let article=entries[i];
                 if (!window.IntersectionObserver) {
-                    //article.target.style.willChange = 'auto';
                     if (article.target.classList.contains("post-list-show") === false) {
                         article.target.classList.add("post-list-show");
                         io.unobserve(article.target)
                     }
                 } else {
                         if (article.target.classList.contains("post-list-show")) {
-                            //article.target.style.willChange = 'auto';
                             io.unobserve(article.target)
                         } else {
                             if (article.isIntersecting) {
                                 article.target.classList.add("post-list-show");
-                                //article.target.style.willChange = 'auto';
-                                io.unobserve(article.target)
+                                io.unobserve(article.target);
                             }
                         }
                     
@@ -114,7 +110,7 @@ function post_list_show_animation() {
 let ec_click = (e)=>{
     if (!e.target.classList.contains("highlight-wrap")) return;
     e.target.classList.toggle("code-block-fullscreen");
-    document.getElementsByTagName("html")[0].classList.toggle('code-block-fullscreen-html-scroll');
+    document.documentElement.classList.toggle('code-block-fullscreen-html-scroll');
 }
 
 function code_highlight_style() {
@@ -167,7 +163,7 @@ if (Poi.reply_link_version == 'new') {
 }
 
 function attach_image() {
-    let cached = document.getElementsByClassName("insert-image-tips")[0],
+    let cached = document.querySelector(".insert-image-tips"),
         upload_img = document.getElementById('upload-img-file');
     upload_img?.addEventListener("change", (function () {
         if (this.files.length > 10) {
@@ -272,11 +268,6 @@ function cmt_showPopup(ele) {
     ele.querySelector("input").onblur = ()=>{
         popup.classList.remove("show");
     }
-    // let popup = ele.children;
-    // popup.thePopup.classList.add("show");
-    // ele.lastChild.onblur = function () {
-    //     popup.thePopup.classList.remove("show");
-    // }
 }
 function scrollBar() {
     let cached = document.getElementById('bar'),
@@ -285,19 +276,18 @@ function scrollBar() {
         i = 0,timer=null,
         s=0, a, b, c, result;
     let _blur_check = (_scrollTop) => {
-        let _blur = blur.style.backdropFilter;
-        return ((_scrollTop > 100 && _blur == "blur(5px)") || (_scrollTop <= 100 && (_blur == "blur(0px)" || _blur == "")))
+        let _blur = blur.style.getPropertyValue("--blur");
+        return ((_scrollTop > 100 && _blur == "5px") || (_scrollTop <= 100 && (_blur == "0px" || _blur == "")))
     };
     function _blur() {
         if (_blur_check(s)) return;
-        console.log("hi");
-        if (s > 100 && blur.style.backdropFilter != "blur(5px)") {
+        let __blur = blur.style.getPropertyValue("--blur");
+        if (s > 100 && __blur != "5px") {
             i <= 5 ? i += 0.05 : i = 5;
-            blur.style.backdropFilter = "blur(" + i + "px)";
-        }else if (s < 100 && blur.style.backdropFilter != "blur(0px)") {
+        }else if (s < 100 && __blur != "0px") {
             i >= 0 ? i -= 0.05 : i = 0;
-            blur.style.backdropFilter = "blur(" + i + "px)";
         }
+        blur.style.setProperty("--blur",i+"px");
         if (!_blur_check(s)) {
             requestAnimationFrame(_blur);
         }
@@ -313,7 +303,7 @@ function scrollBar() {
         a = document.documentElement.scrollHeight || document.body.scrollHeight,
         b = window.innerHeight,
         result = parseInt(s / (a - b) * 100);
-    cached.style.width = result + "%";
+    cached.style.setProperty("--barwidth",result + "%");
     switch (true) {
         case (result <= 19): c = '#00BCD4'; break;
         case (result <= 39): c = '#50bcb6'; break;
@@ -322,7 +312,7 @@ function scrollBar() {
         case (result <= 99): c = '#FF0000'; break;
         case (result == 100): c = '#5aaadb'; break;
     }
-    cached.style.background = c;
+    cached.style.setProperty("--barcolor",c);
     if (f != null) {
         f.style.height = document.querySelector(".site-content")?.getBoundingClientRect(outerHeight)["height"] + "px";
     }
@@ -359,7 +349,7 @@ function iconsvg() {
         xhr.send();
     }
     if (document.getElementById("blur_background")==null){
-        document.body.insertAdjacentHTML('beforeend', "<div id='blur_background' style='position: fixed;width: 100%;height: 100%;top: 0;left: 0;z-index: -1;background-color: rgba(0, 0, 0, .1);'></div>");
+        document.body.insertAdjacentHTML('beforeend', "<div id='blur_background'></div>");
     }
     document.getElementsByClassName('openNav')[0].classList.remove('exbit');
     document.getElementsByClassName('site-header')[0].classList.remove('exbit');
@@ -1132,7 +1122,7 @@ let s = document.getElementById("bgvideo"),
             document.querySelector(".js-toggle-search").addEventListener("click", function () {
                 document.querySelector(".js-toggle-search").classList.toggle("is-active");
                 document.querySelector(".js-search").classList.toggle("is-visible");
-                document.getElementsByTagName("html")[0].style.overflowY = "hidden";
+                document.documentElement.style.overflowY = "hidden";
                 if (mashiro_option.live_search) {
                     let QueryStorage = [];
                     search_a(Poi.api + "sakura/v1/cache_search/json?_wpnonce=" + Poi.nonce);
@@ -1262,7 +1252,7 @@ let s = document.getElementById("bgvideo"),
                 if (js_search.classList.contains("is-visible")) {
                     document.getElementsByClassName("js-toggle-search")[0].classList.toggle("is-active");
                     js_search.classList.toggle("is-visible");
-                    document.getElementsByTagName("html")[0].style.overflowY = "unset";
+                    document.documentElement.style.overflowY = "unset";
                 }
             });
             try {
@@ -1455,7 +1445,7 @@ let s = document.getElementById("bgvideo"),
                         respond = document.getElementById(respondId),
                         cancel = document.getElementById('cancel-comment-reply-link'),
                         parent = document.getElementById('comment_parent'),
-                        post = document.getElementById('comment_post_ID'),
+                        //post = document.getElementById('comment_post_ID'),
                         temp;
                     __cancel.textContent = __cancel_text;
                     t.respondId = respondId;
@@ -1596,7 +1586,8 @@ let s = document.getElementById("bgvideo"),
                                    i > 5 ? i -= 0.1 : i = 5;
                                    break;
                     }
-                    _header.style.backdropFilter = "blur(" + i + "px) saturate(" + g + "%)";
+                    _header.style.setProperty("--blur",i+"px");
+                    _header.style.setProperty("--saturate",g+"%");
                     if ((top == "0px" && i!=15) || (top == "60%" && i!=5)) {
                         flag=false;
                         e = requestAnimationFrame(_headertoggle);
@@ -1695,7 +1686,7 @@ if (Poi.pjax) {
         if (document.querySelector(".js-search.is-visible")?.length > 0) {
             document.getElementsByClassName("js-toggle-search")[0]?.classList.toggle("is-active");
             document.getElementsByClassName("js-search")[0]?.classList.toggle("is-visible");
-            document.getElementsByTagName("html")[0].style.overflowY = "unset";
+            document.documentElement.style.overflowY = "unset";
         }
     });
     document.addEventListener("pjax:success", function () {
@@ -1752,25 +1743,3 @@ if ((isWebkit || isOpera || isIe) && document.getElementById && window.addEventL
         }
     }, false);
 }
-
-function social_share_limit() {
-    let top_social = document.getElementsByClassName("top-social"),
-        top_social_v2 = document.getElementsByClassName("top-social_v2");
-    if (top_social.length > 0 || top_social_v2.length > 0) {
-        let a = top_social.length > 0 ? top_social[0].getElementsByTagName("li") : top_social_v2[0].getElementsByTagName("li");
-        for (let i = a.length - 1; i >= 11; i--) {
-            a[i].remove();
-        }
-        if (document.body.clientWidth <= 860) {
-            for (let i = a.length - 1; i >= 10; i--) {
-                a[i].remove();
-            }
-        }
-        if (document.body.clientWidth <= 425) {
-            for (let i = a.length - 1; i >= 5; i--) {
-                a[i].remove();
-            }
-        }
-    }
-}
-social_share_limit();

@@ -101,7 +101,6 @@
 <script type="text/javascript"><?php echo akina_option('site_statistics'); ?></script>
 </div>
 <?php } ?>
-<canvas id="night-mode-cover"></canvas>
 <?php if (akina_option('sakura_widget')) : ?>
 	<aside id="secondary" class="widget-area" role="complementary" style="left: -400px;">
     <div class="heading"><?php _e('Widgets') /*小工具*/ ?></div>

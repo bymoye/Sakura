@@ -229,17 +229,6 @@ function optionsframework_options() {
 
 
 	$options[] = array(
-        'name' => __('网页背景风格', 'sakura'),
-        'id' => 'background_style',
-        'std' => "blur",
-        'type' => "radio",
-        'options' => array(
-            'simple' => __('白色简约', 'sakura'),
-            'blur' => __('高斯模糊', 'sakura')
-        )
-    );
-
-	$options[] = array(
         'name' => __('移动高斯模糊', 'sakura'),
         'desc' => __('默认关闭，勾选开启，仅对“高斯模糊”网页背景风格生效', 'sakura'),
         'id' => 'mobile_blur',
@@ -568,16 +557,6 @@ function optionsframework_options() {
 			'github' => __('GitHub', 'sakura'),
 		));
 
-	$options[] = array(
-		'name' => __('Post like', 'sakura'),/*文章点赞*/
-		'id' => 'post_like',
-		'std' => "yes",
-		'type' => "radio",
-		'options' => array(
-			'yes' => __('Open', 'sakura'),/*开启*/
-			'no' => __('Close', 'sakura')/*关闭*/
-		));	
-		
 	
 	$options[] = array(
 		'name' => __('Previous and Next', 'sakura'),/*上一篇下一篇*/

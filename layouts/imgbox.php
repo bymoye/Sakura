@@ -73,7 +73,7 @@
             <?php endif; ?>
         </div>
         <?php if (akina_option('social_style')=="v1"): ?>
-		<div class="top-social">
+		<div class="top-social_v1">
 		<?php if (akina_option('github')){ ?>
 		<li><a href="<?php echo akina_option('github', ''); ?>" target="_blank" class="social-github" title="github"><svg class="github"><use xlink:href="#svg_github"/></svg></a></li>
 		<?php } ?>	
