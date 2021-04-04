@@ -192,8 +192,8 @@ function sakura_scripts() {
 	$movies = akina_option('focus_amv') ? array('url' => akina_option('amv_url'), 'name' => akina_option('amv_title'), 'live' => $mv_live) : 'close';
 	$auto_height = akina_option('focus_height') ? 'fixed' : 'auto';
 	$code_lamp = 'close';
-    if(preg_match('/Chrome\/([^\s]+)/i', $_SERVER['HTTP_USER_AGENT'], $regs)){
-        $pjax_a = ($regs[1]>80 && akina_option('poi_pjax')) ? 1 : 0;
+    if(preg_match('/Chrome\/([^\s]+)/i', $_SERVER['HTTP_USER_AGENT'] ?? null, $regs)){
+        $pjax_a = ($regs[1]>80) ? 1 : 0;
     }else{
         $pjax_a = 0;
     }
