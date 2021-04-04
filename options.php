@@ -1118,6 +1118,21 @@ function optionsframework_options() {
 		'type' => 'checkbox');
 
 	$options[] = array(
+		'name' => __('lazyload spinner', 'sakura'),
+		'desc' => __('The placeholder to display when the image loads, fill in the image url', 'sakura'),/*图片加载时要显示的占位图，填写图片 url*/
+		'id' => 'qq_api_url',
+		'std' => 'https://api.2heng.xin/qqinfo/',
+		'type' => 'text');
+
+	$options[] = array(
+		'name' => __('lazyload spinner', 'sakura'),
+		'desc' => __('The placeholder to display when the image loads, fill in the image url', 'sakura'),/*图片加载时要显示的占位图，填写图片 url*/
+		'id' => 'qq_avatar_api_url',
+		'std' => 'https://api.2heng.xin/qqinfo/',
+		'type' => 'text');
+
+
+	$options[] = array(
 		'name' => __('Enable disqus', 'sakura'),/*开启多说插件支持*/
 		'desc' => __('Enable disqus for comment', 'sakura'),/*多说已经凉了*/
 		'id' => 'general_disqus_plugin_support',

@@ -192,10 +192,15 @@ function sakura_scripts() {
 	$movies = akina_option('focus_amv') ? array('url' => akina_option('amv_url'), 'name' => akina_option('amv_title'), 'live' => $mv_live) : 'close';
 	$auto_height = akina_option('focus_height') ? 'fixed' : 'auto';
 	$code_lamp = 'close';
+    if(preg_match('/Chrome\/([^\s]+)/i', $_SERVER['HTTP_USER_AGENT'], $regs)){
+        $pjax_a = ($regs[1]>80 && akina_option('poi_pjax')) ? 1 : 0;
+    }else{
+        $pjax_a = 0;
+    }
 	//if(wp_is_mobile()) $auto_height = 'fixed'; //拦截移动端
     version_compare( $GLOBALS['wp_version'], '5.1', '>=' ) ? $reply_link_version = 'new' : $reply_link_version = 'old';
 	wp_localize_script('app', 'Poi' , array(
-		'pjax' => akina_option('poi_pjax'),
+		'pjax' => $pjax_a,
 		'movies' => $movies,
 		'windowheight' => $auto_height,
 		'codelamp' => $code_lamp,

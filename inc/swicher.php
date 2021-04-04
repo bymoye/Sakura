@@ -1,63 +1,37 @@
 <?php
-function font_end_js_control() { ?>
+function font_end_js_control() { 
+    $check = fn($a) => $a ? 'true' : 'false';
+    $x = akina_option('app_no_jsdelivr_cdn');
+    $app_cdn_url = $x ? get_template_directory_uri() : 'https://cdn.jsdelivr.net/gh/bymoye/Sakura';
+    $app_file = '/cdn/theme/' . akina_option('entry_content_theme').($x ? '.css' : 'min.css');
+    $x = akina_option('jsdelivr_cdn_test');
+    $lib_cdn_url = $x ? get_template_directory_uri() : 'https://cdn.jsdelivr.net/gh/bymoye/Sakura';
+    $lib_file = '/cdn/css/lib' . ($x ? '.css' : 'min.css');
+    ?>
 <script>
 /*Initial Variables*/
-const mashiro_option = {};
+const mashiro_option = {
+      NProgressON : <?php echo $check(akina_option('nprogress_on'));?>,
+      mail_domain : "<?php echo akina_option('email_domain', ''); ?>",
+      email_name : "<?php echo akina_option('email_name', ''); ?>",
+      cookie_version_control : "<?php echo akina_option('cookie_version', ''); ?>",
+      qzone_autocomplete : false,
+      site_name : "<?php echo akina_option('site_name', ''); ?>",
+      author_name : "<?php echo akina_option('author_name', ''); ?>",
+      template_url : "<?php echo get_template_directory_uri(); ?>",
+      site_url : "<?php echo site_url(); ?>",
+      qq_api_url : <?php echo '"',akina_option('qq_api_url'),'"';?>,
+      qq_avatar_api_url : <?php echo '"',akina_option('qq_avatar_api_url'),'"';?>,
+      live_search : <?php echo $check(akina_option('live_search')) ?>,
+      land_at_home : <?php echo $check(is_home()) ?>,
+      baguetteBoxON : <?php echo $check(akina_option('image_viewer')) ?>,
+      clipboardCopyright : <?php echo $check(akina_option('clipboard_copyright')) ?>,
+      entry_content_theme_src : <?php echo '"',$app_cdn_url,$app_file,'"';?>,
+      entry_content_theme : "<?php echo akina_option('entry_content_theme'); ?>",
+      jsdelivr_css_src : <?php echo '"',$lib_cdn_url,$lib_file,'"';?>,
+      windowheight : 'auto'
+};
 const mashiro_global = {};
-mashiro_option.NProgressON = <?php if ( akina_option('nprogress_on') ){ echo 'true'; } else { echo 'false'; } ?>;
-mashiro_option.email_domain = "<?php echo akina_option('email_domain', ''); ?>";
-mashiro_option.email_name = "<?php echo akina_option('email_name', ''); ?>";
-mashiro_option.cookie_version_control = "<?php echo akina_option('cookie_version', ''); ?>";
-mashiro_option.qzone_autocomplete = false;
-mashiro_option.site_name = "<?php echo akina_option('site_name', ''); ?>";
-mashiro_option.author_name = "<?php echo akina_option('author_name', ''); ?>";
-mashiro_option.template_url = "<?php echo get_template_directory_uri(); ?>";
-mashiro_option.site_url = "<?php echo site_url(); ?>";
-mashiro_option.qq_api_url = "https://api.nmxc.ltd/x"; 
-mashiro_option.qq_avatar_api_url = "https://api.nmxc.ltd/x";
-mashiro_option.live_search = <?php if ( akina_option('live_search') ){ echo 'true'; } else { echo 'false'; } ?>;
-<?php if( is_home() ){ ?>
-mashiro_option.land_at_home = true;
-<?php }else {?>
-mashiro_option.land_at_home = false;
-<?php } ?>
-<?php if(akina_option('image_viewer') == 0){ ?>
-mashiro_option.baguetteBoxON = false;
-<?php }else {?>
-mashiro_option.baguetteBoxON = true;
-<?php } ?>
-<?php if(akina_option('clipboard_copyright') == 0){ ?>
-mashiro_option.clipboardCopyright = false;
-<?php }else {?>
-mashiro_option.clipboardCopyright = true;
-<?php } ?>
-<?php if (akina_option('app_no_jsdelivr_cdn')) {?>
-<?php if(akina_option('entry_content_theme') == "sakura"){ ?>
-mashiro_option.entry_content_theme_src = "<?php echo get_template_directory_uri() ?>/cdn/theme/sakura.css";
-<?php }elseif(akina_option('entry_content_theme') == "github") {?>
-mashiro_option.entry_content_theme_src = "<?php echo get_template_directory_uri() ?>/cdn/theme/github.css";
-<?php } ?>
-<?php } else {if(akina_option('entry_content_theme') == "sakura"){?>
-mashiro_option.entry_content_theme_src = "https://cdn.jsdelivr.net/combine/gh/bymoye/Sakura@0.0.1/cdn/theme/sakura.min.css";
-<?php }elseif(akina_option('entry_content_theme') == "github") {?>
-mashiro_option.entry_content_theme_src = "https://cdn.jsdelivr.net/combine/gh/bymoye/Sakura@0.0.1/cdn/theme/github.min.css";
-<?php } ?>
-<?php } ?>
-mashiro_option.entry_content_theme = "<?php echo akina_option('entry_content_theme'); ?>";
-<?php if(akina_option('jsdelivr_cdn_test')){ ?>
-mashiro_option.jsdelivr_css_src = "<?php echo get_template_directory_uri() ?>/cdn/css/lib.css";
-<?php } else { ?>
-mashiro_option.jsdelivr_css_src = "https://cdn.jsdelivr.net/gh/bymoye/Sakura@<?php echo NMX_VERSION; ?>/cdn/css/lib.min.css";
-<?php } ?>
-<?php
-$imgurl = DEFAULT_FEATURE_IMAGE();
-if(is_array($imgurl)){
-    $img_url = $imgurl[2];
-}else{
-    $img_url = $imgurl;
-}?>
-mashiro_option.cover_api = "<?php echo $img_url; ?>";
-mashiro_option.windowheight = /Mobile|Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent) ? 'auto' : 'auto';
 /*End of Initial Variables*/
 </script>
 <?php }
