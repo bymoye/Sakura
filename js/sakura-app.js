@@ -1358,7 +1358,7 @@ let s = document.getElementById("bgvideo"),
                                     document.getElementById("main").insertAdjacentHTML('beforeend', b.outerHTML);
                                 }
                             let content = document.querySelector("#content");
-                            if(Poi.ajax)_pjax.refresh(content);
+                            if(Poi.pjax === '1')_pjax.refresh(content);
                             let dpga = document.querySelector("#pagination a"),
                                 addps = document.querySelector("#add_post span");
                             if (dpga){
@@ -1665,7 +1665,7 @@ function topFunction(a) {
         };
     b()
 }
-if (Poi.pjax) {
+if (Poi.pjax==='1') {
     var _pjax = new Pjax({
         selectors: ["#page", "title", ".footer-device"],
         elements: [
