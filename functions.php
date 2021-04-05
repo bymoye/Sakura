@@ -175,6 +175,7 @@ function sakura_scripts() {
         wp_enqueue_script( 'js_lib', 'https://cdn.jsdelivr.net/gh/bymoye/Sakura@' . NMX_VERSION . '/cdn/js/lib.min.js', array(), NMX_VERSION, true );
     }
     if (akina_option('app_no_jsdelivr_cdn')) {
+        wp_enqueue_style( 'icon_css', get_template_directory_uri() . '/cdn/css/icon.css', array(), NMX_VERSION );
         wp_enqueue_style( 'saukra_css', get_stylesheet_uri(), array(), NMX_VERSION );
         wp_enqueue_script( 'app', get_template_directory_uri() . '/js/sakura-app.js', array(), NMX_VERSION, true );
     } else {
@@ -192,10 +193,9 @@ function sakura_scripts() {
 	$movies = akina_option('focus_amv') ? array('url' => akina_option('amv_url'), 'name' => akina_option('amv_title'), 'live' => $mv_live) : 'close';
 	$auto_height = akina_option('focus_height') ? 'fixed' : 'auto';
 	$code_lamp = 'close';
+    $pjax_a=null;
     if(preg_match('/Chrome\/([^\s]+)/i', $_SERVER['HTTP_USER_AGENT'] ?? null, $regs)){
-        $pjax_a = ($regs[1]>80) ? 1 : 0;
-    }else{
-        $pjax_a = 0;
+        $pjax_a = ($regs[1]>80 && akina_option('poi_pjax')) && 1;
     }
 	//if(wp_is_mobile()) $auto_height = 'fixed'; //拦截移动端
     version_compare( $GLOBALS['wp_version'], '5.1', '>=' ) ? $reply_link_version = 'new' : $reply_link_version = 'old';

@@ -1,8 +1,3 @@
-<?php
-
-//https://api.mashiro.top/cover
-
-?>
 <figure id="centerbg" class="centerbg">
 <?php if ( !akina_option('focus_infos') ){ ?>
 	<div class="focusinfo">
@@ -15,117 +10,117 @@
       	<?php endif; ?>
 		<div class="header-info">
             <p><?php echo akina_option('admin_des', 'Hi, Mashiro?'); ?></p>
-            <?php if (akina_option('social_style')=="v2"): ?>
+        <?php if (akina_option('social_style')=="v2"): ?>
             <div class="top-social_v2">
             <?php if (akina_option('github')){ ?>
-                <li><a href="<?php echo akina_option('github', ''); ?>" target="_blank" class="social-github" title="github"><svg class="github"><use xlink:href="#svg_github"/></svg></a></li>
-                <?php } ?>	
-                <?php if (akina_option('sina')){ ?>
-                <li><a href="<?php echo akina_option('sina', ''); ?>" target="_blank" class="social-sina" title="sina"><svg class="weibo"><use xlink:href="#svg_weibo"/></svg></a></li>
-                <?php } ?>
-                <?php if (akina_option('telegram')){ ?>
-                <li><a href="<?php echo akina_option('telegram', ''); ?>" target="_blank" class="social-lofter" title="telegram"><svg class="telegram"><use xlink:href="#svg_telegram"/></svg></a></li>
-                <?php } ?>	
-                <?php if (akina_option('qq')){ ?>
-                <li class="qq"><a href="<?php echo akina_option('qq', ''); ?>" title="Initiate chat ?"><svg class="qq"><use xlink:href="#svg_qq"/></svg></a></li>
-                <?php } ?>	
-                <?php if (akina_option('qzone')){ ?>
-                <li><a href="<?php echo akina_option('qzone', ''); ?>" target="_blank" class="social-qzone" title="qzone"><svg class="qzone"><use xlink:href="#svg_qzone"/></svg></a></li>
-                <?php } ?>
-                <?php if (akina_option('wechat')){ ?>
-                <li class="wechat"><a href="#"><svg class="wechat"><use xlink:href="#svg_wechat"/></svg></a>
+                <li><a href="<?php echo akina_option('github', ''); ?>" target="_blank" title="github"><i class="icon_v2_svg" style="--svg-name: var(--svg_github);--color: #0073aa;"></i></a></li>
+            <?php } ?>	
+            <?php if (akina_option('sina')){ ?>
+                <li><a href="<?php echo akina_option('sina', ''); ?>" target="_blank" title="sina"><i class="icon_v2_svg" style="--svg-name: var(--svg_weibo);--color: red;"></i></a></li>
+            <?php } ?>
+            <?php if (akina_option('telegram')){ ?>
+                <li><a href="<?php echo akina_option('telegram', ''); ?>" target="_blank" title="telegram"><i class="icon_v2_svg" style="--svg-name: var(--svg_telegram);--color: #0088cc;"></i></a></li>
+            <?php } ?>	
+            <?php if (akina_option('qq')){ ?>
+                <li class="qq"><a href="<?php echo akina_option('qq', ''); ?>" title="Initiate chat ?"><i class="icon_v2_svg" style="--svg-name: var(--svg_qq);--color: #0073aa;"></i></a></li>
+            <?php } ?>	
+            <?php if (akina_option('qzone')){ ?>
+                <li><a href="<?php echo akina_option('qzone', ''); ?>" target="_blank" title="qzone"><i class="icon_v2_svg" style="--svg-name: var(--svg_qzone);--color: #ffbf00;"></i></a></li>
+            <?php } ?>
+            <?php if (akina_option('wechat')){ ?>
+                <li class="wechat"><a href="#"><i class="icon_v2_svg" style="--svg-name: var(--svg_wechat);--color: #02bb0e;"></i></a>
                     <div class="wechatInner">
                         <img src="<?php echo akina_option('wechat', ''); ?>" alt="WeChat">
                     </div>
                 </li>
-                <?php } ?> 
-                <?php if (akina_option('lofter')){ ?>
-                <li><a href="<?php echo akina_option('lofter', ''); ?>" target="_blank" class="social-lofter" title="lofter"><svg class="lofter"><use xlink:href="#svg_lofter"/></svg></a></li>
-                <?php } ?>	
-                <?php if (akina_option('bili')){ ?>
-                <li><a href="<?php echo akina_option('bili', ''); ?>" target="_blank" class="social-bili" title="bilibili"><svg class="bilibili"><use xlink:href="#svg_bilibili"/></svg></a></li>
-                <?php } ?>
-                <?php if (akina_option('youku')){ ?>
-                <li><a href="<?php echo akina_option('youku', ''); ?>" target="_blank" class="social-youku" title="youku"><svg class="youku"><use xlink:href="#svg_youku"/></svg></a></li>
-                <?php } ?>
-                <?php if (akina_option('wangyiyun')){ ?>
-                <li><a href="<?php echo akina_option('wangyiyun', ''); ?>" target="_blank" class="social-wangyiyun" title="CloudMusic"><svg class="wangyiyun"><use xlink:href="#svg_CloudMusic"/></svg></a></li>
-                <?php } ?>
-                <?php if (akina_option('twitter')){ ?>
-                <li><a href="<?php echo akina_option('twitter', ''); ?>" target="_blank" class="social-wangyiyun" title="Twitter"><svg class="twitter"><use xlink:href="#svg_Twitter"/></svg></a></li>
-                <?php } ?>	
-                <?php if (akina_option('facebook')){ ?>
-                <li><a href="<?php echo akina_option('facebook', ''); ?>" target="_blank" class="social-wangyiyun" title="Facebook"><svg class="facebook"><use xlink:href="#svg_facebook"/></svg></a></li>
-                <?php } ?>	
-                <?php if (akina_option('jianshu')){ ?>
-                <li><a href="<?php echo akina_option('jianshu', ''); ?>" target="_blank" class="social-wangyiyun" title="Jianshu"><svg class="jianshu"><use xlink:href="#svg_jianshu"/></svg></a></li>
-                <?php } ?>
-                <?php if (akina_option('zhihu')){ ?>
-                <li><a href="<?php echo akina_option('zhihu', ''); ?>" target="_blank" class="social-wangyiyun" title="Zhihu"><svg class="zhihu"><use xlink:href="#svg_zhihu"/></svg></a></li>
-                <?php } ?>	
-                <?php if (akina_option('csdn')){ ?>
-                <li><a href="<?php echo akina_option('csdn', ''); ?>" target="_blank" class="social-wangyiyun" title="CSDN"><svg class="csdn"><use xlink:href="#svg_csdn"/></svg></a></li>
-                <?php } ?>		
-                <?php if (akina_option('email_name') && akina_option('email_domain')){ ?>
-                <li><a onclick="mail_me()" class="social-wangyiyun" title="E-mail"><svg class="email" ><use xlink:href="#svg_email"/></svg></a></li>
-                <?php } ?>	
+            <?php } ?> 
+            <?php if (akina_option('lofter')){ ?>
+                <li><a href="<?php echo akina_option('lofter', ''); ?>" target="_blank" title="lofter"><i class="icon_v2_svg" style="--svg-name: var(--svg_lofter);--color: #26706c;"></i></a></li>
+            <?php } ?>	
+            <?php if (akina_option('bili')){ ?>
+                <li><a href="<?php echo akina_option('bili', ''); ?>" target="_blank" title="bilibili"><i class="icon_v2_svg" style="--svg-name: var(--svg_bilibili);--color: #f689aa;"></i></a></li>
+            <?php } ?>
+            <?php if (akina_option('youku')){ ?>
+                <li><a href="<?php echo akina_option('youku', ''); ?>" target="_blank" title="youku"><i class="icon_v2_svg" style="--svg-name: var(--svg_youku);--color: #1aaba8;"></i></a></li>
+            <?php } ?>
+            <?php if (akina_option('wangyiyun')){ ?>
+                <li><a href="<?php echo akina_option('wangyiyun', ''); ?>" target="_blank" title="CloudMusic"><i class="icon_v2_svg" style="--svg-name: var(--svg_CloudMusic);--color: red;"></i></a></li>
+            <?php } ?>
+            <?php if (akina_option('twitter')){ ?>
+                <li><a href="<?php echo akina_option('twitter', ''); ?>" target="_blank" title="Twitter"><i class="icon_v2_svg" style="--svg-name: var(--svg_Twitter);--color: #1ab2e8;"></i></a></li>
+            <?php } ?>	
+            <?php if (akina_option('facebook')){ ?>
+                <li><a href="<?php echo akina_option('facebook', ''); ?>" target="_blank" title="Facebook"><i class="icon_v2_svg" style="--svg-name: var(--svg_facebook);--color: #405d9b;"></i></a></li>
+            <?php } ?>	
+            <?php if (akina_option('jianshu')){ ?>
+                <li><a href="<?php echo akina_option('jianshu', ''); ?>" target="_blank" title="Jianshu"><i class="icon_v2_svg" style="--svg-name: var(--svg_jianshu);--color: #e16049;"></i></a></li>
+            <?php } ?>
+            <?php if (akina_option('zhihu')){ ?>
+                <li><a href="<?php echo akina_option('zhihu', ''); ?>" target="_blank" title="Zhihu"><i class="icon_v2_svg" style="--svg-name: var(--svg_zhihu);--color: #eae9e7;"></i></a></li>
+            <?php } ?>	
+            <?php if (akina_option('csdn')){ ?>
+                <li><a href="<?php echo akina_option('csdn', ''); ?>" target="_blank" title="CSDN"><i class="icon_v2_svg" style="--svg-name: var(--svg_csdn);--color: #d51f07;"></i></a></li>
+            <?php } ?>		
+            <?php if (akina_option('email_name') && akina_option('email_domain')){ ?>
+                <li><a onclick="mail_me()" title="E-mail"><i class="icon_v2_svg" style="--svg-name: var(--svg_email);--color: #ffbf00;"></i></a></li>
+            <?php } ?>	
             </div>
-            <?php endif; ?>
+        <?php endif; ?>
         </div>
         <?php if (akina_option('social_style')=="v1"): ?>
-		<div class="top-social_v1">
-		<?php if (akina_option('github')){ ?>
-		<li><a href="<?php echo akina_option('github', ''); ?>" target="_blank" class="social-github" title="github"><svg class="github"><use xlink:href="#svg_github"/></svg></a></li>
-		<?php } ?>	
-		<?php if (akina_option('sina')){ ?>
-		<li><a href="<?php echo akina_option('sina', ''); ?>" target="_blank" class="social-sina" title="sina"><svg class="weibo"><use xlink:href="#svg_weibo"/></svg></a></li>
-		<?php } ?>
-		<?php if (akina_option('telegram')){ ?>
-		<li><a href="<?php echo akina_option('telegram', ''); ?>" target="_blank" class="social-lofter" title="telegram"><svg class="telegram"><use xlink:href="#svg_telegram"/></svg></a></li>
-		<?php } ?>	
-		<?php if (akina_option('qq')){ ?>
-		<li class="qq"><a href="<?php echo akina_option('qq', ''); ?>" title="Initiate chat ?"><svg class="qq"><use xlink:href="#svg_qq"/></svg></a></li>
-		<?php } ?>	
-		<?php if (akina_option('qzone')){ ?>
-		<li><a href="<?php echo akina_option('qzone', ''); ?>" target="_blank" class="social-qzone" title="qzone"><svg class="qzone"><use xlink:href="#svg_qzone"/></svg></a></li>
-		<?php } ?>
-		<?php if (akina_option('wechat')){ ?>
-		<li class="wechat"><a href="#"><svg class="wechat"><use xlink:href="#svg_wechat"/></svg></a>
-			<div class="wechatInner">
-				<img src="<?php echo akina_option('wechat', ''); ?>" alt="WeChat">
-			</div>
-		</li>
-		<?php } ?> 
-		<?php if (akina_option('lofter')){ ?>
-		<li><a href="<?php echo akina_option('lofter', ''); ?>" target="_blank" class="social-lofter" title="lofter"><svg class="lofter"><use xlink:href="#svg_lofter"/></svg></a></li>
-		<?php } ?>	
-		<?php if (akina_option('bili')){ ?>
-		<li><a href="<?php echo akina_option('bili', ''); ?>" target="_blank" class="social-bili" title="bilibili"><svg class="bilibili"><use xlink:href="#svg_bilibili"/></svg></a></li>
-		<?php } ?>
-		<?php if (akina_option('youku')){ ?>
-		<li><a href="<?php echo akina_option('youku', ''); ?>" target="_blank" class="social-youku" title="youku"><svg class="youku"><use xlink:href="#svg_youku"/></svg></a></li>
-		<?php } ?>
-		<?php if (akina_option('wangyiyun')){ ?>
-		<li><a href="<?php echo akina_option('wangyiyun', ''); ?>" target="_blank" class="social-wangyiyun" title="CloudMusic"><svg class="wangyiyun"><use xlink:href="#svg_CloudMusic"/></svg></a></li>
-		<?php } ?>
-		<?php if (akina_option('twitter')){ ?>
-		<li><a href="<?php echo akina_option('twitter', ''); ?>" target="_blank" class="social-wangyiyun" title="Twitter"><svg class="twitter"><use xlink:href="#svg_Twitter"/></svg></a></li>
-		<?php } ?>	
-		<?php if (akina_option('facebook')){ ?>
-		<li><a href="<?php echo akina_option('facebook', ''); ?>" target="_blank" class="social-wangyiyun" title="Facebook"><svg class="facebook"><use xlink:href="#svg_facebook"/></svg></a></li>
-		<?php } ?>	
-		<?php if (akina_option('jianshu')){ ?>
-		<li><a href="<?php echo akina_option('jianshu', ''); ?>" target="_blank" class="social-wangyiyun" title="Jianshu"><svg class="jianshu"><use xlink:href="#svg_jianshu"/></svg></a></li>
-		<?php } ?>
-		<?php if (akina_option('zhihu')){ ?>
-		<li><a href="<?php echo akina_option('zhihu', ''); ?>" target="_blank" class="social-wangyiyun" title="Zhihu"><svg class="zhihu"><use xlink:href="#svg_zhihu"/></svg></a></li>
-		<?php } ?>	
-		<?php if (akina_option('csdn')){ ?>
-		<li><a href="<?php echo akina_option('csdn', ''); ?>" target="_blank" class="social-wangyiyun" title="CSDN"><svg class="csdn"><use xlink:href="#svg_csdn"/></svg></a></li>
-		<?php } ?>		
-		<?php if (akina_option('email_name') && akina_option('email_domain')){ ?>
-		<li><a onclick="mail_me()" class="social-wangyiyun" title="E-mail"><svg class="email" ><use xlink:href="#svg_email"/></svg></a></li>
-		<?php } ?>	
+		    <div class="top-social_v1">
+		    <?php if (akina_option('github')){ ?>
+               <li><a href="<?php echo akina_option('github', ''); ?>" target="_blank" title="github"><i class="icon_v1_svg" style="--svg-name: var(--svg_github);--color: #0073aa;"></i></a></li>
+            <?php } ?>	
+            <?php if (akina_option('sina')){ ?>
+                <li><a href="<?php echo akina_option('sina', ''); ?>" target="_blank" title="sina"><i class="icon_v1_svg" style="--svg-name: var(--svg_weibo);--color: red;"></i></a></li>
+            <?php } ?>
+            <?php if (akina_option('telegram')){ ?>
+                <li><a href="<?php echo akina_option('telegram', ''); ?>" target="_blank" title="telegram"><i class="icon_v1_svg" style="--svg-name: var(--svg_telegram);--color: #0088cc;"></i></a></li>
+            <?php } ?>	
+            <?php if (akina_option('qq')){ ?>
+                <li class="qq"><a href="<?php echo akina_option('qq', ''); ?>" title="Initiate chat ?"><i class="icon_v1_svg" style="--svg-name: var(--svg_qq);--color: #0073aa;"></i></a></li>
+            <?php } ?>	
+            <?php if (akina_option('qzone')){ ?>
+                <li><a href="<?php echo akina_option('qzone', ''); ?>" target="_blank" title="qzone"><i class="icon_v1_svg" style="--svg-name: var(--svg_qzone);--color: #ffbf00;"></i></a></li>
+            <?php } ?>
+            <?php if (akina_option('wechat')){ ?>
+                <li class="wechat"><a href="#"><i class="icon_v1_svg" style="--svg-name: var(--svg_wechat);--color: #02bb0e;"></i></a>
+                    <div class="wechatInner">
+                        <img src="<?php echo akina_option('wechat', ''); ?>" alt="WeChat">
+                    </div>
+                </li>
+            <?php } ?> 
+            <?php if (akina_option('lofter')){ ?>
+                <li><a href="<?php echo akina_option('lofter', ''); ?>" target="_blank" title="lofter"><i class="icon_v1_svg" style="--svg-name: var(--svg_lofter);--color: #26706c;"></i></a></li>
+            <?php } ?>	
+            <?php if (akina_option('bili')){ ?>
+                <li><a href="<?php echo akina_option('bili', ''); ?>" target="_blank" title="bilibili"><i class="icon_v1_svg" style="--svg-name: var(--svg_bilibili);--color: #f689aa;"></i></a></li>
+            <?php } ?>
+            <?php if (akina_option('youku')){ ?>
+                <li><a href="<?php echo akina_option('youku', ''); ?>" target="_blank" title="youku"><i class="icon_v1_svg" style="--svg-name: var(--svg_youku);--color: #1aaba8;"></i></a></li>
+            <?php } ?>
+            <?php if (akina_option('wangyiyun')){ ?>
+                <li><a href="<?php echo akina_option('wangyiyun', ''); ?>" target="_blank" title="CloudMusic"><i class="icon_v1_svg" style="--svg-name: var(--svg_CloudMusic);--color: red;"></i></a></li>
+            <?php } ?>
+            <?php if (akina_option('twitter')){ ?>
+                <li><a href="<?php echo akina_option('twitter', ''); ?>" target="_blank" title="Twitter"><i class="icon_v1_svg" style="--svg-name: var(--svg_Twitter);--color: #1ab2e8;"></i></a></li>
+            <?php } ?>	
+            <?php if (akina_option('facebook')){ ?>
+                <li><a href="<?php echo akina_option('facebook', ''); ?>" target="_blank" title="Facebook"><i class="icon_v1_svg" style="--svg-name: var(--svg_facebook);--color: #405d9b;"></i></a></li>
+            <?php } ?>	
+            <?php if (akina_option('jianshu')){ ?>
+                <li><a href="<?php echo akina_option('jianshu', ''); ?>" target="_blank" title="Jianshu"><i class="icon_v1_svg" style="--svg-name: var(--svg_jianshu);--color: #e16049;"></i></a></li>
+            <?php } ?>
+            <?php if (akina_option('zhihu')){ ?>
+                <li><a href="<?php echo akina_option('zhihu', ''); ?>" target="_blank" title="Zhihu"><i class="icon_v1_svg" style="--svg-name: var(--svg_zhihu);--color: #eae9e7;"></i></a></li>
+            <?php } ?>	
+            <?php if (akina_option('csdn')){ ?>
+                <li><a href="<?php echo akina_option('csdn', ''); ?>" target="_blank" title="CSDN"><i class="icon_v1_svg" style="--svg-name: var(--svg_csdn);--color: #d51f07;"></i></a></li>
+            <?php } ?>		
+            <?php if (akina_option('email_name') && akina_option('email_domain')){ ?>
+                <li><a onclick="mail_me()" title="E-mail"><i class="icon_v1_svg" style="--svg-name: var(--svg_email);--color: #ffbf00;"></i></a></li>
+            <?php } ?>	
         <?php endif; ?>
 	</div>
 	<?php } ?>

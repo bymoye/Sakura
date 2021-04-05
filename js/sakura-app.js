@@ -661,7 +661,7 @@ POWERMODE.shake = false;
 document.body.addEventListener('input', POWERMODE);
 function motionSwitch(ele) {
     let motionEles = [".bili", ".menhera", ".tieba"];
-    for (let i=0;i<montionEles.length;i++) {
+    for (let i=0;i<motionEles.length;i++) {
         document.querySelector(motionEles[i] + '-bar').classList.remove('on-hover');
         document.querySelector(motionEles[i] + '-container').style.display = 'none';
     }
@@ -678,12 +678,9 @@ let ready=function(fn){
 function smileBoxToggle() {
     let et = document.getElementById("emotion-toggle");
     et && et.addEventListener('click', function () {
-        let emotion_toggle_off = document.querySelector('.emotion-toggle-off'),
-            emotion_toggle_on = document.querySelector('.emotion-toggle-on'),
-            emotion_box = document.querySelector('.emotion-box');
-        emotion_toggle_off.classList.toggle("emotion-hide");
-        emotion_toggle_on.classList.toggle("emotion-show");
-        emotion_box.classList.toggle("emotion-box-show");
+        document.querySelector('.emotion-toggle-off').classList.toggle("emotion-hide");
+        document.querySelector('.emotion-toggle-on').classList.toggle("emotion-show");
+        document.querySelector('.emotion-box').classList.toggle("emotion-box-show");
     })
 }
 smileBoxToggle();
@@ -1358,7 +1355,7 @@ let s = document.getElementById("bgvideo"),
                                     document.getElementById("main").insertAdjacentHTML('beforeend', b.outerHTML);
                                 }
                             let content = document.querySelector("#content");
-                            if(Poi.pjax === '1')_pjax.refresh(content);
+                            if(Poi.pjax)_pjax.refresh(content);
                             let dpga = document.querySelector("#pagination a"),
                                 addps = document.querySelector("#add_post span");
                             if (dpga){
@@ -1665,7 +1662,7 @@ function topFunction(a) {
         };
     b()
 }
-if (Poi.pjax==='1') {
+if (Poi.pjax) {
     var _pjax = new Pjax({
         selectors: ["#page", "title", ".footer-device"],
         elements: [

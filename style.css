@@ -7734,46 +7734,6 @@ svg.top_none,svg.search {
    animation: wrench 2.5s ease infinite;
    transition: all .5s ease-out;
    }
-
-svg.wangyiyun {
-   fill:rgb(255, 0, 0);
-}
-svg.bilibili {
-   fill:#f689aa;
-}
-svg.weibo {
-   fill: red;
-}
-svg.email {
-   fill:#ffbf00;
-}
-svg.qzone {
-   fill:#ffbf00;
-}
-svg.twitter {
-   fill:#1ab2e8;
-}
-svg.zhihu {
-   fill:#eae9e7;
-}
-svg.csdn {
-   fill:#d51f07;
-}
-svg.jianshu {
-   fill:#e16049;
-}
-svg.facebook {
-   fill:#405d9b;
-}
-svg.youku {
-   fill:#1aaba8;
-}
-svg.qq {
-   fill:#0073aa;
-}
-svg.lofter{
-   fill:#26706c;
-}
 svg.hot {
     width:14px;
     height:14px;
@@ -8259,4 +8219,38 @@ p.comment-form-cookies-consent {
 
     .linkpage li a p {
         color: #ddd;
+    }
+
+
+    .icon_v2_svg{
+        mask:0 0/23px 23px;
+        -webkit-mask: 0 0/23px 23px;
+        color: var(--color);
+        display: inline-block;
+        width: 23px;
+        height: 23px;
+        margin: 6px;
+        background-color: currentColor;
+        transition: color .5s;
+        vertical-align: middle;
+        mask-image: var(--svg-name);
+        -webkit-mask-image: var(--svg-name);
+    }
+
+    .icon_v1_svg{
+        mask:0 0/22px 22px;
+        -webkit-mask: 0 0/22px 22px;
+        color: var(--color);
+        display: inline-block;
+        width: 22px;
+        height: 22px;
+        margin: 9px;
+        background-color: currentColor;
+        transition: color .5s;
+        vertical-align: middle;
+        mask-image: var(--svg-name);
+        -webkit-mask-image: var(--svg-name);
+    }
+    .icon_v2_svg:hover,.icon_v1_svg:hover{
+        color:var(--themecolor)
     }
