@@ -26,7 +26,7 @@
 	<?php the_reward(); ?>
 	<footer class="post-footer">
 	<div class="post-tags">
-		<?php if ( has_tag() ) { echo '<svg class="pinna"><use xlink:href="#svg_tag"></use></svg> '; the_tags('', ' ', ' ');}?>
+		<?php if ( has_tag() ) { echo '<i class="post_icon_svg" style="--svg-name: var(--svg_tag);--size: 16px;"></i> '; the_tags('', ' ', ' ');}?>
 	</div>
     <?php get_template_part('layouts/sharelike'); ?>
 	</footer><!-- .entry-footer -->

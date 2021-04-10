@@ -24,6 +24,7 @@ const mashiro_option = {
       qq_avatar_api_url : <?php echo '"',akina_option('qq_avatar_api_url'),'"';?>,
       live_search : <?php echo $check(akina_option('live_search')) ?>,
       land_at_home : <?php echo $check(is_home()) ?>,
+      themebg : "<?php $img = get_random_bg_url();echo is_array($img) ? $img[2] : $img;?>",
       baguetteBoxON : <?php echo $check(akina_option('image_viewer')) ?>,
       clipboardCopyright : <?php echo $check(akina_option('clipboard_copyright')) ?>,
       entry_content_theme_src : <?php echo '"',$app_cdn_url,$app_file,'"';?>,

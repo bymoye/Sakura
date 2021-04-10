@@ -7,10 +7,8 @@ if ( akina_option('shownav') ) { ?>
 <?php } // Style Settings ?>
 <?php // theme-skin
 if ( akina_option('theme_skin') ) { ?>
-<?php $img = get_random_bg_url();?>
 :root{
     --themecolor:<?php echo akina_option('theme_skin'); ?>;
-    --bgimg:url('<?php echo is_array($img) ? $img[2] : $img;?>');
 }
 <?php } ?>
 <?php if(akina_option('entry_content_theme') == "sakura"){ ?>

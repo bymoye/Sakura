@@ -34,7 +34,7 @@ class Bilibili
         if ($totalpage - $page < 0) {
             $next = '<span>共追番' . $bgm["total"] . '部，继续加油吧！٩(ˊᗜˋ*)و</span>';
         } else {
-            $next = '<a class="bangumi-next" href="' . rest_url('sakura/v1/bangumi/bilibili') . '?page=' . ++$page . '" onclick="return false"><svg class="fire" aria-hidden="true"><use xlink:href="#svg_bolt"></use></svg> NEXT </a>';
+            $next = '<a class="bangumi-next" href="' . rest_url('sakura/v1/bangumi/bilibili') . '?page=' . ++$page . '" onclick="return false"><i class="post_icon_svg" style="--svg-name: var(--svg_bolt);--size: 35px;vertical-align: -0.1em;"></i>NEXT </a>';
         }
         $lists = $bgm["list"];
         $html = "";

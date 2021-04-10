@@ -17,7 +17,7 @@
 	<section id="comments" class="comments">
 
 		<div class="commentwrap comments-hidden">
-			<div class="notification"><svg class="message"><use xlink:href="#svg_message"/></svg><?php _e('view comments', 'sakura'); /*查看评论*/?> -
+			<div class="notification"><i class="post_icon_svg" style="--svg-name: var(--svg_message);--color: #000;--size: 14px;"></i><?php _e('view comments', 'sakura'); /*查看评论*/?> -
 			<span class="noticom"><?php comments_number('NOTHING', '1'.__(" comment","sakura"), '%'.__(" comments","sakura")); ?> </span>
 			</div>
 		</div>
@@ -39,7 +39,7 @@
 
 				<?php if(comments_open()): ?>
 					<div class="commentwrap">
-						<div class="notification-hidden"><svg class="fenlei"><use xlink:href="#svg_message"/></svg> <?php _e('no comment', 'sakura'); /*暂无评论*/?></div>
+						<div class="notification-hidden"><i class="post_icon_svg" style="--svg-name: var(--svg_message);"></i><?php _e('no comment', 'sakura'); /*暂无评论*/?></div>
 					
 					</div>
 				<?php endif; ?>
@@ -56,10 +56,10 @@
 						'id_form' => 'commentform',
 						'id_submit' => 'submit',
 						'title_reply' => '',
-						'title_reply_to' => '<div class="graybar"<svg class="fire"><use xlink:href="#svg_comments-o"></use></svg>' . __('Leave a Reply to', 'sakura') . ' %s' . '</div>',
+						'title_reply_to' => '<div class="graybar"><i class="post_icon_svg" style="--svg-name: var(--svg_comments-o);--size: 15px;"></i>' . __('Leave a Reply to', 'sakura') . ' %s' . '</div>',
 						'cancel_reply_link' => __('Cancel Reply', 'sakura'),
 						'label_submit' => __('BiuBiuBiu~', 'sakura'),
-						'comment_field' => '<p><svg class="markdown" aria-hidden="true"><use xlink:href="#svg_markdown"/></svg> Markdown Supported while <svg class="markdown" aria-hidden="true"><use xlink:href="#svg_code"/></svg> Forbidden</p><div class="comment-textarea"><textarea placeholder="' . __("You are a surprise that I will only meet once in my life", "sakura") . ' ..." name="comment" class="commentbody" id="comment" rows="5" tabindex="4"></textarea><label class="input-label">' . __("You are a surprise that I will only meet once in my life", "sakura") . ' ...</label></div>
+						'comment_field' => '<p><i class="post_icon_svg" style="--svg-name: var(--svg_markdown);--size: 20px;--color:#000;vertical-align: -0.3em;"></i>Markdown Supported while <i class="post_icon_svg" style="--svg-name: var(--svg_code);--size: 20px;--color:#000;vertical-align: -0.3em;"></i>Forbidden</p><div class="comment-textarea"><textarea placeholder="' . __("You are a surprise that I will only meet once in my life", "sakura") . ' ..." name="comment" class="commentbody" id="comment" rows="5" tabindex="4"></textarea><label class="input-label">' . __("You are a surprise that I will only meet once in my life", "sakura") . ' ...</label></div>
                         <div id="upload-img-show"></div>
                         <!--插入表情面版-->
                         <p id="emotion-toggle" class="no-select">

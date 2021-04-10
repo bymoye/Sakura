@@ -328,7 +328,7 @@ function optionsframework_options() {
 		'name' => __('Footer info', 'sakura'),/*页脚信息*/
 		'desc' => __('Footer description, support for HTML code', 'sakura'),/*页脚说明文字，支持HTML代码*/
 		'id' => 'footer_info',
-		'std' => 'Copyright &copy; by Mashiro All Rights Reserved.',
+		'std' => 'Copyright &copy; by bymoye All Rights Reserved.',
 		'type' => 'textarea');
 	
 	$options[] = array(

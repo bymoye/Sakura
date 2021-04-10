@@ -15,7 +15,7 @@ if ( akina_option('author_profile') == 'yes') {
 			</div>
 		</div>
 		<hr>
-		<p><svg class="pen"><use xlink:href="#svg_pen"/></svg><?php echo get_the_author_meta( 'description' ) ? get_the_author_meta( 'description' ) :akina_option('admin_des', 'Carpe Diem and Do what I like'); ?></p>
+		<p><i class='post_icon_svg' style='--svg-name: var(--svg_pen);--size: 16px;'></i><?php echo get_the_author_meta( 'description' ) ? get_the_author_meta( 'description' ) :akina_option('admin_des', 'Carpe Diem and Do what I like'); ?></p>
 	</section>
 
 <?php } ?>

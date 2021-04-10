@@ -8,7 +8,22 @@
 let addComment;
 mashiro_global.variables = new function () {
     this.has_hls = false;
-}
+};
+
+(function () {
+    const UA = navigator.userAgent,
+        version_list = { Firefox: 84, Edg: 88, Chrome: 88, Opera: 74, Version: 9 },
+        reg = /(Firefox|Chrome|Version|Opera|Version)\/(\d+)/i,
+        version = UA.match(reg);
+    if (version && version[2] > version_list[version[1]] && Poi.pjax) {
+        console.log("%c PJAX | BLUR ON! ", "background:#5ad5e8; color:#ffffff;font-size:15px");
+        Poi.pjax = true;
+    } else {
+        console.log("%c PJAX | BLUR OFF ", "background:#f00; color:#ffffff;font-size:15px");
+        if (Poi.pjax) console.log("不管怎么说,还是建议使用最新主流浏览器噢!");
+        Poi.pjax = "";
+    }
+})();
 
 mashiro_global.ini = new function () {
     this.normalize = function () { // initial functions when page first load (首次加载页面时的初始化函数)
@@ -185,16 +200,16 @@ function attach_image() {
                 xhr = new XMLHttpRequest();
             formData.append('cmt_img_file', f);
             xhr.addEventListener('loadstart', function () {
-                cached.innerHTML = '<svg class="picture" aria-hidden="true"><use xlink:href="#svg_loading"/></svg>';
+                cached.innerHTML = '<i class="picture_icon_svg" style="--svg-name: var(--svg_loading);"></i>';
                 addComment.createButterbar("上传中...<br>Uploading...");
             });
             xhr.open("POST", Poi.api + 'sakura/v1/image/upload?_wpnonce=' + Poi.nonce, true);
             xhr.send(formData);
             xhr.onreadystatechange = function () {
                 if (xhr.readyState == 4 && (xhr.status == 200 || xhr.status == 304)) {
-                    cached.innerHTML = '<svg class="picture" aria-hidden="true"><use xlink:href="#svg_yes"/></svg>';
+                    cached.innerHTML = '<i class="picture_icon_svg" style="--svg-name: var(--svg_yes);"></i>';
                     setTimeout(function () {
-                        cached.innerHTML = '<svg class="picture" aria-hidden="true"><use xlink:href="#svg_picture"/></svg>';
+                        cached.innerHTML = '<i class="picture_icon_svg" style="--svg-name: var(--svg_picture);"></i>';
                     }, 1000);
                     let res = JSON.parse(xhr.responseText);
                     if (res.status == 200) {
@@ -207,10 +222,10 @@ function attach_image() {
                         addComment.createButterbar("上传失败！<br>Uploaded failed!<br> 文件名/Filename: " + f.name + "<br>code: " + res.status + "<br>" + res.message, 3000);
                     }
                 } else if (xhr.readyState == 4) {
-                    cached.innerHTML = '<svg class="picture" aria-hidden="true"><use xlink:href="#svg_no"/></svg>';
+                    cached.innerHTML = '<i class="picture_icon_svg" style="--svg-name: var(--svg_no);"></i>';
                     alert("上传失败，请重试.\nUpload failed, please try again.");
                     setTimeout(function () {
-                        cached.innerHTML = '<svg class="picture" aria-hidden="true"><use xlink:href="#svg_picture"/></svg>';
+                        cached.innerHTML = '<i class="picture_icon_svg" style="--svg-name: var(--svg_picture);"></i>';
                     }, 1000);
                 }
             }
@@ -225,7 +240,7 @@ function clean_upload_images() {
 function add_upload_tips() {
     let form_subit = document.querySelector('.form-submit #submit');
     if (form_subit == null) return;
-    form_subit.insertAdjacentHTML('afterend', '<div class="insert-image-tips popup"><svg class="picture" aria-hidden="true"><use xlink:href="#svg_picture"/></svg><span class="insert-img-popuptext" id="uploadTipPopup">上传图片</span></div><input id="upload-img-file" type="file" accept="image/*" multiple="multiple" class="insert-image-button">');
+    form_subit.insertAdjacentHTML('afterend', '<div class="insert-image-tips popup"><i class="post_icon_svg" style="--svg-name: var(--svg_picture);--size: 20px;--color:#5d646c;position: absolute;left: 50%;top:50%;transform: translate(-50%,-50%);margin: 0;"></i><span class="insert-img-popuptext" id="uploadTipPopup">上传图片</span></div><input id="upload-img-file" type="file" accept="image/*" multiple="multiple" class="insert-image-button">');
     attach_image();
     let file_subit = document.getElementById('upload-img-file'),
         hover = document.getElementsByClassName('insert-image-tips')[0],
@@ -276,70 +291,74 @@ function cmt_showPopup(ele) {
 function scrollBar() {
     let cached = document.getElementById('bar'),
         f = document.querySelector(".toc-container"),
-        blur = document.getElementById("blur_background"),
         sc = document.querySelector(".site-content"),
-        i = 0,timer=null,
-        s=0, a, b, c, result;
-    let _blur_check = (_scrollTop) => {
-        let _blur = blur.style.getPropertyValue("--blur");
-        return ((_scrollTop > 100 && _blur == "5px") || (_scrollTop <= 100 && (_blur == "0px" || _blur == "")))
-    };
-    function _blur() {
-        if (_blur_check(s)) return;
-        let __blur = blur.style.getPropertyValue("--blur");
-        if (s > 100 && __blur != "5px") {
-            i <= 5 ? i += 0.05 : i = 5;
-        }else if (s < 100 && __blur != "0px") {
-            i >= 0 ? i -= 0.05 : i = 0;
+        blur_rs,
+        s = 0, a, b, c, result;
+    if (Poi.pjax) {
+        let _blur_check,
+            flag = false,
+            blur = document.getElementById("svg_blurfilter").children[0];
+        _blur_check = (_scrollTop) => {
+            let _blur = blur.getAttribute("stdDeviation");
+            return ((_scrollTop > 100 && _blur == "5") || (_scrollTop <= 100 && _blur == "0"))
+        };
+        function _blur() {
+            let __blur = Number(blur.getAttribute("stdDeviation"));
+            if (s > 100 && __blur != 5) {
+                __blur <= 5 ? __blur += 0.1 : __blur = 5;
+            } else if (s < 100 && __blur != 0) {
+                __blur >= 0 ? __blur -= 0.1 : __blur = 0;
+            }
+            blur.setAttribute("stdDeviation", __blur);
+            if (!_blur_check(s)) {
+                requestAnimationFrame(_blur);
+            } else {
+                flag = false;
+            }
         }
-        blur.style.setProperty("--blur",i+"px");
-        if (!_blur_check(s)) {
-            requestAnimationFrame(_blur);
+        blur_rs = () => {
+            if (!flag && !_blur_check(s)) {
+                requestAnimationFrame(_blur);
+                flag = true;
+            }
         }
+        blur_rs();
     }
-
-    _blur();
-    window.addEventListener('scroll', ()=>{
-        if(timer){
-            clearTimeout(timer);
-        }
-    timer = setTimeout(()=>{
+    window.addEventListener('scroll', () => {
         s = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop,
-        a = document.documentElement.scrollHeight || document.body.scrollHeight,
-        b = window.innerHeight,
-        result = parseInt(s / (a - b) * 100);
-    cached.style.setProperty("--barwidth",result + "%");
-    switch (true) {
-        case (result <= 19): c = '#00BCD4'; break;
-        case (result <= 39): c = '#50bcb6'; break;
-        case (result <= 59): c = '#85c440'; break;
-        case (result <= 79): c = '#f2b63c'; break;
-        case (result <= 99): c = '#FF0000'; break;
-        case (result == 100): c = '#5aaadb'; break;
-    }
-    cached.style.setProperty("--barcolor",c);
-    if (f && sc) {
-        f.style.height = sc.getBoundingClientRect(outerHeight)["height"] + "px";
-    }
-        _blur();
-    },30);
+            a = document.documentElement.scrollHeight || document.body.scrollHeight,
+            b = window.innerHeight,
+            result = parseInt(s / (a - b) * 100);
+        cached.style.setProperty("--barwidth", result + "%");
+        switch (true) {
+            case (result <= 19): c = '#00BCD4'; break;
+            case (result <= 39): c = '#50bcb6'; break;
+            case (result <= 59): c = '#85c440'; break;
+            case (result <= 79): c = '#f2b63c'; break;
+            case (result <= 99): c = '#FF0000'; break;
+            case (result == 100): c = '#5aaadb'; break;
+        }
+        cached.style.setProperty("--barcolor", c);
+        if (f && sc) {
+            f.style.height = sc.getBoundingClientRect(outerHeight)["height"] + "px";
+        }
+        if (Poi.pjax) blur_rs();
     });
 }
 
 function iconsvg() {
-    let iconsvg = document.getElementById('iconsvg'),
-        sitelogo = document.getElementsByClassName('sitelogo');
-    iconsvg == null ? document.body.insertAdjacentHTML('beforeend', "<div id='iconsvg' style='display:none;'></div>") : null;
-    if (document.getElementById('iconsvg').children.length == 0) {
-        let xhr = new XMLHttpRequest();
-       xhr.open("get", "https://cdn.jsdelivr.net/gh/bymoye/sakura/images/icon.svg", true);
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState == 4 && (xhr.status == 200 || xhr.status == 304)) {
-                document.getElementById('iconsvg').insertAdjacentHTML('afterbegin', xhr.responseText);
-            }
-        }
-        xhr.send();
-    }
+    let sitelogo = document.getElementsByClassName('sitelogo');
+    // iconsvg == null ? document.body.insertAdjacentHTML('beforeend', "<div id='iconsvg' style='display:none;'></div>") : null;
+    // if (document.getElementById('iconsvg').children.length == 0) {
+    //     let xhr = new XMLHttpRequest();
+    //    xhr.open("get", "https://cdn.jsdelivr.net/gh/bymoye/sakura/images/icon.svg", true);
+    //     xhr.onreadystatechange = function () {
+    //         if (xhr.readyState == 4 && (xhr.status == 200 || xhr.status == 304)) {
+    //             document.getElementById('iconsvg').insertAdjacentHTML('afterbegin', xhr.responseText);
+    //         }
+    //     }
+    //     xhr.send();
+    // }
     if (document.getElementsByClassName('sitelogo')[0].children.length == 0) {
         let xhr = new XMLHttpRequest();
         xhr.open("get", "https://cdn.jsdelivr.net/gh/bymoye/sakura/images/nmx.svg", true);
@@ -353,8 +372,30 @@ function iconsvg() {
         }
         xhr.send();
     }
-    if (document.getElementById("blur_background")==null){
-        document.body.insertAdjacentHTML('beforeend', "<div id='blur_background'></div>");
+    if (!document.getElementById("svg_blurfilter")) {
+        let a = "http://www.w3.org/2000/svg",
+            svg = document.createElementNS(a, "svg"),
+            image = document.createElementNS(a, "image");
+        svg.style.cssText = "position: fixed;width: 100%;height: 100%;z-index:-999";
+        image.setAttribute("href", mashiro_option.themebg);
+        image.setAttribute("x", "-5");
+        image.setAttribute("y", "-5");
+        image.setAttribute("height", "102%");
+        image.setAttribute("width", "102%");
+        image.setAttribute("preserveAspectRatio", "xMidYMid slice");
+        if (Poi.pjax) {
+            let filter = document.createElementNS(a, "filter"),
+                fe = document.createElementNS(a, "feGaussianBlur");
+            filter.id = "svg_blurfilter";
+            fe.setAttribute("stdDeviation", "5");
+            fe.setAttribute("color-interpolation-filters", "sRGB");
+            image.style.filter = "url(#svg_blurfilter)";
+            filter.append(fe);
+            svg.append(filter);
+        }
+        // image.setAttribute("filter", "url(#svg_blurfilter)");
+        svg.append(image);
+        document.body.insertBefore(svg, document.body.firstChild);
     }
     document.getElementsByClassName('openNav')[0].classList.remove('exbit');
     document.getElementsByClassName('site-header')[0].classList.remove('exbit');
@@ -483,12 +524,12 @@ function coverVideo() {
     if (video.paused) {
         video.play();
         try {
-            btn.innerHTML = '<svg class="stop" aria-hidden="true"><use xlink:href="#svg_stop"></use></svg>';
+            btn.innerHTML = '<i class="post_icon_svg" style="--svg-name: var(--svg_stop);--size: 14px;"></i>';
         } catch { };
     } else {
         video.pause();
         try {
-            btn.innerHTML = '<svg class="play" aria-hidden="true"><use xlink:href="#svg_play"></use></svg>';
+            btn.innerHTML = '<i class="post_icon_svg" style="--svg-name: var(--svg_play);--size: 14px;"></i>';
         } catch { };
     }
 }
@@ -502,7 +543,7 @@ function killCoverVideo() {
     } else {
         video.pause();
         try {
-            btn.innerHTML = '<svg class="play" aria-hidden="true"><use xlink:href="#svg_play"></use></svg>';
+            btn.innerHTML = '<i class="post_icon_svg" style="--svg-name: var(--svg_play);--size: 14px;"></i>';
         } catch { };
         //console.info('pause:killCoverVideo()');
     }
@@ -556,7 +597,7 @@ function copy_code_block() {
     let ele = document.querySelectorAll("pre code");
     for (let j = 0; j < ele.length; j++) {
         ele[j].setAttribute('id', 'hljs-' + j);
-        ele[j].insertAdjacentHTML('afterend', '<a class="copy-code" href="javascript:" data-clipboard-target="#hljs-' + j + '" title="拷贝代码"><svg class="clipboard" aria-hidden="true"><use xlink:href="#svg_clipboard"></use></svg></a>');
+        ele[j].insertAdjacentHTML('afterend', '<a class="copy-code" href="javascript:" data-clipboard-target="#hljs-' + j + '" title="拷贝代码"><i class="post_icon_svg" style="--svg-name: var(--svg_clipboard);--size: 14px;"></i></a>');
     };
     let clipboard = new ClipboardJS('.copy-code');
 }
@@ -641,7 +682,7 @@ function sm() {
                     let request = new XMLHttpRequest();
                     request.onreadystatechange = function () {
                         if (this.readyState == 4 && this.status == 200) {
-                            rateHolderp.innerHTML = request.responseText + ' <svg class="lock" aria-hidden="true"><use xlink:href="#svg_lock"></use></svg>';
+                            rateHolderp.innerHTML = request.responseText + ' <i class="post_icon_svg" style="--svg-name: var(--svg_lock);--size: 12px;--color:#7E8892;"></i>';
                         }
                     };
                     request.open('POST', '/wp-admin/admin-ajax.php', true);
@@ -740,10 +781,7 @@ function add_copyright() {
     document.body.addEventListener("copy", copytext);
 }
 add_copyright();
-ready(()=>{
-    getqqinfo();
-});
-
+ready(getqqinfo);
 
 function getqqinfo() {
     let is_get_by_qq = false,
@@ -931,7 +969,7 @@ function load_bangumi() {
                             row.insertAdjacentHTML('beforeend', html);
                         } else {
                             bgpa.classList.remove("loading");
-                            bgpa.innerHTML = "<svg class='fire' aria-hidden='true'><use xlink:href='#exclamation-triangle'></use></svg> ERROR ";
+                            bgpa.innerHTML = '<i class="post_icon_svg" style="--svg-name: var(--svg_exclamation-triangle);--size: 35px;vertical-align: -0.1em;"></i>ERROR ';
                         }
                     };
                     xhr.send();
@@ -1220,7 +1258,7 @@ let s = document.getElementById("bgvideo"),
                             text = b < 60 ? text.slice(0, 80) : text.slice(b - 30, b + 30);
                             text = text.replace(s[s.length - 1], '<mark class="search-keyword"> ' + s[s.length - 1].toUpperCase() + ' </mark>');
                         }
-                        return '<div class="ins-selectable ins-search-item" href="' + link + '"><header><svg class="searchresult" aria-hidden="true"><use xlink:href="#svg_' + fa + '"></use></svg>' + title + '<svg class="searchresult" aria-hidden="true"><use xlink:href="#svg_' + iconfont + '"></use> ' + comments + '</svg>' + '</header><p class="ins-search-preview">' + text + '</p></div>';
+                        return '<div class="ins-selectable ins-search-item" href="' + link + '"><header><i class="post_icon_svg" style="--svg-name: var(--svg_'+ fa +');--size: 14px;"></i>' + title + '<i class="post_icon_svg" style="--svg-name: var(--svg_' + iconfont + '">'+ comments + '</i>' + '</header><p class="ins-search-preview">' + text + '</p></div>';
                     }
 
                     function query(B, A, z) {
@@ -1288,8 +1326,7 @@ let s = document.getElementById("bgvideo"),
                 });
         },
         NH: function () {
-            let h1 = 0,
-                t = window.innerHeight / 4,
+            let t = window.innerHeight / 4,
                 i = document.documentElement.scrollTop || window.pageYOffset,
                  _add = (_class) => {
                     document.querySelector(".site-header").classList.add(_class);
@@ -1298,13 +1335,22 @@ let s = document.getElementById("bgvideo"),
                 _remove = (_class) => {
                     document.querySelector(".site-header").classList.remove(_class);
                     document.querySelector(".openNav").classList.remove(_class);
-                }
+                },
+                mb_to_top = document.getElementById("GoTop");
             window.addEventListener("scroll", function () {
                 let s = document.documentElement.scrollTop || window.pageYOffset;
-                    if (s==h1) { _remove("exbit");_remove("yya");}
-                    if (s>h1) { _add("yya");}
-                    if(s>t) {_add("exbit");s<=i && (_remove("exbit"));i=s;}
-            })
+                    if (s > 20){mb_to_top.style.transform = "scale(1)";}
+                    if (s < 20){mb_to_top.style.transform = "scale(0)";}
+                    if (s == 0) { _remove("exbit");_remove("yya");}
+                    if (s > 0) { _add("yya");}
+                    if(s > t) {_add("exbit");s <= i && (_remove("exbit")); i=s;}
+            });
+            mb_to_top.onclick = ()=>{
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                })
+            }
         },
         XLS: function () {
             let load_post_timer;
@@ -1599,10 +1645,10 @@ let s = document.getElementById("bgvideo"),
                     flag=true;
                     switch(top){
                         case "0px":g > 60 ? g -= 0.5 : g = 60;
-                                   i < 15 ? i += 0.1 : i = 15;
+                                   i < 15 ? i += 0.4 : i = 15;
                                    break;
                         case "60%":g < 100 ? g +=0.5 : g = 100;
-                                   i > 5 ? i -= 0.1 : i = 5;
+                                   i > 5 ? i -= 0.4 : i = 5;
                                    break;
                     }
                     _header.style.setProperty("--blur",i+"px");
@@ -1631,37 +1677,8 @@ let s = document.getElementById("bgvideo"),
                 cancelAnimationFrame(e);
             }
         },
-        GT: function () {
-            let mb_to_top = document.getElementById("GoTop");
-            window.addEventListener("scroll", function () {
-                let scrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop;
-                if (scrollTop > 20) {
-                    mb_to_top.style.transform = "scale(1)";
-                } else {
-                    mb_to_top.style.transform = "scale(0)";
-                }
-            }
-            );
-            mb_to_top.onclick = function () {
-                topFunction(10);
-            }
-        }
     }
 
-function topFunction(a) {
-    let d = document.body.scrollTop ? document.body : document.documentElement,
-        c = d.scrollTop,
-        b = function () {
-            c = c + (0 - c) / (a || 5);
-            if (c < 1) {
-                d.scrollTop = 0;
-                return
-            }
-            d.scrollTop = c;
-            requestAnimationFrame(b)
-        };
-    b()
-}
 if (Poi.pjax) {
     var _pjax = new Pjax({
         selectors: ["#page", "title", ".footer-device"],
@@ -1684,7 +1701,7 @@ if (Poi.pjax) {
                 normal[a].load = '';
             }
         }
-        document.getElementById("bar").style.width = "0%";
+        document.getElementById("bar").style.setProperty("--barwidth","0%");
         if (mashiro_option.NProgressON) NProgress.start();
         Siren.MNH();
     });
@@ -1729,7 +1746,6 @@ ready(()=>{
     Siren.AH();
     Siren.PE();
     Siren.NH();
-    Siren.GT();
     Siren.XLS();
     Siren.XCS();
     Siren.XCP();

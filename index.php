@@ -18,7 +18,7 @@ get_header();
    		$text = akina_option('notice_title');
    	?>
 	<div class="notice" style="margin-top:60px">
-	   <svg class="fire"><use xlink:href="#svg_notification"></use></svg>
+	   <i class="post_icon_svg" style="--svg-name: var(--svg_notification);--size: 15px;"></i>
 	  <?php if(strlen($text) > 142 && !wp_is_mobile()){ ?> 
 	  	<marquee align="middle" behavior="scroll" loop="-1" scrollamount="6" style="margin: 0 8px 0 20px; display: block;" onMouseOut="this.start()" onMouseOver="this.stop()">
 			<div class="notice-content"><?php echo $text; ?></div>
@@ -41,7 +41,7 @@ get_header();
 	
 	<div id="primary" class="content-area">
 		<main id="main" class="site-main" role="main">	
-		<h1 class="main-title" style="font-family: 'Ubuntu', sans-serif;"><svg class="pinna" aria-hidden="true"><use xlink:href="#svg_pinna"/></svg> Discovery</h1>
+		<h1 class="main-title" style="font-family: 'Ubuntu', sans-serif;"><i class="post_icon_svg" style="--svg-name: var(--svg_pinna);--color: #666;--size: 16px;vertical-align: -0.1em;margin:0;"></i> Discovery</h1>
 		<?php
 		if ( have_posts() ) :
 
@@ -68,7 +68,7 @@ get_header();
 		<div id="add_post"><span id="add_post_time" style="visibility: hidden;" title="<?php echo akina_option('auto_load_post',''); ?>"  ></span></div>
 		<?php }else{ ?>
 		<nav class="navigator">
-		<?php previous_posts_link('<svg class="fire"><use xlink:href="#svg_back"></use></svg>') ?><?php next_posts_link('<svg class="fire"><use xlink:href="#svg_right"></use></svg>') ?>
+		<?php previous_posts_link('<i class="post_icon_svg" style="--svg-name: var(--svg_back);--size: 15px;"></i>') ?><?php next_posts_link('<i class="post_icon_svg" style="--svg-name: var(--svg_right);--size: 15px;"></i>') ?>
 		</nav>
 		<?php } ?>
 	</div><!-- #primary -->

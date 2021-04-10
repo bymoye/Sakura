@@ -87,7 +87,7 @@ if (akina_option('akina_meta') == true) {
 						<?php } ?><!-- logo end -->
 					</div><!-- .site-branding -->
 					<?php header_user_menu(); if(akina_option('top_search') == 'yes') { ?>
-					<div class="searchbox"><svg class="search js-toggle-search" viewBox="0 0 40 40"><use xlink:href="#svg_search"/></svg></div>
+					<div class="searchbox"><i class="post_icon_svg search js-toggle-search" style="--svg-name: var(--svg_search);--color: #666;--size: 30px;"></i></div>
 					<?php } ?>
 					<div class="lower"><?php if(!akina_option('shownav')){ ?>
 						<div id="show-nav" class="showNav">

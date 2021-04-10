@@ -39,22 +39,22 @@ $the_cat = get_the_category();
 		<div class="post-content-wrap">
 			<div class="post-content">
 				<div class="post-date">
-				<svg class="fenlei"><use xlink:href="#svg_time"/></svg><?php echo poi_time_since(strtotime($post->post_date_gmt)); ?>
+				<i class="post_icon_svg" style="--svg-name: var(--svg_time);"></i><?php echo poi_time_since(strtotime($post->post_date_gmt)); ?>
 					<?php if(is_sticky()) : ?>
-					&nbsp;<svg class="hot"><use xlink:href="#svg_hot"></use></svg>
+					&nbsp;<i class="post_icon_svg" style="--svg-name: var(--svg_hot);--color: #FF3B00;--size: 14px;"></i>
 			 		<?php endif ?>
 				</div>
 				<a href="<?php the_permalink(); ?>" class="post-title"><h3><?php the_title();?></h3></a>
 				<div class="post-meta">
-					<span><svg class="fenlei"><use xlink:href="#svg_eyes"/></svg><?php echo get_post_views(get_the_ID()).' '._n('Hit','Hits',get_post_views(get_the_ID()),'sakura')/*热度*/?></span>
-					<span class="comments-number"><svg class="fenlei"><use xlink:href="#svg_message"/></svg><?php comments_popup_link('NOTHING', '1 '.__("Comment","sakura")/*条评论*/, '% '.__("Comments","sakura")/*条评论*/); ?></span>
-					<span><svg class="fenlei"><use xlink:href="#svg_fenlei"/></svg><a href="<?php echo esc_url(get_category_link($the_cat[0]->cat_ID)); ?>"><?php echo $the_cat[0]->cat_name; ?></a>
+					<span><i class="post_icon_svg" style="--svg-name: var(--svg_eyes);"></i><?php echo get_post_views(get_the_ID()).' '._n('Hit','Hits',get_post_views(get_the_ID()),'sakura')/*热度*/?></span>
+					<span class="comments-number"><i class="post_icon_svg" style="--svg-name: var(--svg_message);"></i></svg><?php comments_popup_link('NOTHING', '1 '.__("Comment","sakura")/*条评论*/, '% '.__("Comments","sakura")/*条评论*/); ?></span>
+					<span><i class="post_icon_svg" style="--svg-name: var(--svg_fenlei);"></i><a href="<?php echo esc_url(get_category_link($the_cat[0]->cat_ID)); ?>"><?php echo $the_cat[0]->cat_name; ?></a>
 					</span>
 				</div>
 				<div class="float-content">
 					<?php substr(the_excerpt() , 0 , 3); ?>
 					<div class="post-bottom">
-						<a href="<?php the_permalink(); ?>" class="button-normal"><svg class="caidan"><use xlink:href="#svg_caidan"/></svg></a>
+						<a href="<?php the_permalink(); ?>" class="button-normal"><i class="post_icon_svg" style="--svg-name: var(--svg_caidan);--color: #666;--size: 25px;"></i></a>
 					</div>
 				</div>
 			</div>
