@@ -3,10 +3,10 @@ function font_end_js_control() {
     $check = fn($a) => $a ? 'true' : 'false';
     $x = akina_option('app_no_jsdelivr_cdn');
     $app_cdn_url = $x ? get_template_directory_uri() : 'https://cdn.jsdelivr.net/gh/bymoye/Sakura';
-    $app_file = '/cdn/theme/' . akina_option('entry_content_theme').($x ? '.css' : 'min.css');
+    $app_file = '/cdn/theme/' . akina_option('entry_content_theme').($x ? '.css' : '.min.css');
     $x = akina_option('jsdelivr_cdn_test');
     $lib_cdn_url = $x ? get_template_directory_uri() : 'https://cdn.jsdelivr.net/gh/bymoye/Sakura';
-    $lib_file = '/cdn/css/lib' . ($x ? '.css' : 'min.css');
+    $lib_file = '/cdn/css/lib' . ($x ? '.css' : '.min.css');
     ?>
 <script>
 /*Initial Variables*/
