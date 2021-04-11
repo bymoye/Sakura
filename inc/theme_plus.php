@@ -5,6 +5,8 @@
 */
 
 // 允许分类、标签描述添加html代码
+use JetBrains\PhpStorm\NoReturn;
+
 remove_filter('pre_term_description', 'wp_filter_kses');
 remove_filter('term_description', 'wp_kses_data');
 // 去除顶部工具栏
@@ -137,7 +139,7 @@ add_filter( 'comment_text' , 'comment_add_at', 20, 2);
 if ( version_compare( $GLOBALS['wp_version'], '4.4-alpha', '<' ) ) { wp_die(__('Please upgrade wordpress to version 4.4+','sakura')); }/*请升级到4.4以上版本*/
 // 提示
 if(!function_exists('siren_ajax_comment_err')) {
-    function siren_ajax_comment_err($t) {
+    #[NoReturn] function siren_ajax_comment_err($t) {
         header('HTTP/1.0 500 Internal Server Error');
         header('Content-Type: text/plain;charset=UTF-8');
         echo $t;
@@ -231,7 +233,7 @@ if(akina_option('exlogin_url')){
 
 // 登陆跳转
 function Exuser_center(){ ?>
-  <script language='javascript' type='text/javascript'> 
+  <script type='text/javascript'>
     let secs = 5; //倒计时的秒数
     let URL;
     let TYPE;
@@ -565,7 +567,7 @@ function get_prev_thumbnail_url() {
   } 
   else { 
     $content = $prev_post->post_content; 
-    preg_match_all('/<img.*?(?: |\\t|\\r|\\n)?src=[\'"]?(.+?)[\'"]?(?:(?: |\\t|\\r|\\n)+.*?)?>/sim', $content, $strResult, PREG_PATTERN_ORDER); 
+    preg_match_all('/<img.*?(?: |\\t|\\r|\\n)?src=[\'"]?(.+?)[\'"]?(?:(?: |\\t|\\r|\\n)+.*?)?>/sim', $content, $strResult);
     $n = count($strResult[1]); 
     if($n > 0){ 
       return $strResult[1][0];  // 文章图
@@ -586,7 +588,7 @@ function get_next_thumbnail_url() {
   } 
   else { 
     $content = $next_post->post_content; 
-    preg_match_all('/<img.*?(?: |\\t|\\r|\\n)?src=[\'"]?(.+?)[\'"]?(?:(?: |\\t|\\r|\\n)+.*?)?>/sim', $content, $strResult, PREG_PATTERN_ORDER); 
+    preg_match_all('/<img.*?(?: |\\t|\\r|\\n)?src=[\'"]?(.+?)[\'"]?(?:(?: |\\t|\\r|\\n)+.*?)?>/sim', $content, $strResult);
     $n = count($strResult[1]); 
     if($n > 0){ 
       return $strResult[1][0];
@@ -643,9 +645,8 @@ function siren_auto_link_nofollow( $content ) {
       }
     }
   }
-   
-  $content = str_replace(']]>', ']]>', $content);
-  return $content;
+
+    return str_replace(']]>', ']]>', $content);
 }
 
 // 图片自动加标题
@@ -654,8 +655,7 @@ function siren_auto_images_alt($content) {
   global $post;
   $pattern ="/<a(.*?)href=('|\")(.*?).(bmp|gif|jpeg|jpg|png)('|\")(.*?)>/i";
   $replacement = '<a$1href=$2$3.$4$5 alt="'.$post->post_title.'" title="'.$post->post_title.'"$6>';
-  $content = preg_replace($pattern, $replacement, $content);
-  return $content;
+    return preg_replace($pattern, $replacement, $content);
 }
 
 // 分类页面全部添加斜杠，利于SEO
@@ -743,7 +743,7 @@ add_filter( 'request', 'siren_request' );
 function siren_request( $query_vars ){
     if ( array_key_exists( 'author_name', $query_vars ) ) {
         global $wpdb;
-        $author_id = $wpdb->get_var( $wpdb->prepare( "SELECT user_id FROM {$wpdb->usermeta} WHERE meta_key='nickname' AND meta_value = %s", $query_vars['author_name'] ) );
+        $author_id = $wpdb->get_var( $wpdb->prepare( "SELECT user_id FROM $wpdb->usermeta WHERE meta_key='nickname' AND meta_value = %s", $query_vars['author_name'] ) );
         if ( $author_id ) {
             $query_vars['author'] = $author_id;
             unset( $query_vars['author_name'] );    
@@ -834,11 +834,11 @@ function siren_get_browsers($ua){
   $icon = 'unknow'; 
     if (preg_match('#MSIE ([a-zA-Z0-9.]+)#i', $ua, $matches)) {
     $title = 'Internet Explorer '. $matches[1];
-    if ( strpos($matches[1], '7') !== false || strpos($matches[1], '8') !== false)
+    if ( str_contains($matches[1], '7') || str_contains($matches[1], '8'))
       $icon = 'ie8';
-    elseif ( strpos($matches[1], '9') !== false)
+    elseif (str_contains($matches[1], '9'))
       $icon = 'ie9';
-    elseif ( strpos($matches[1], '10') !== false)
+    elseif (str_contains($matches[1], '10'))
       $icon = 'ie10';
     else
       $icon = 'ie';

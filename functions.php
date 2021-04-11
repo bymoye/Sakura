@@ -6,15 +6,16 @@
  *
  * @package Sakura
  */
-define('SAKURA_VERSION', '3.3.2');
-define('NMX_VERSION', '1.1.4');
-define('BUILD_VERSION', '3');
 
-//ini_set('display_errors', true);
+
+const SAKURA_VERSION = '3.3.2';
+const NMX_VERSION = '1.1.4';
+const BUILD_VERSION = '3';
+
 //error_reporting(E_ALL);   
 error_reporting(E_ALL ^ E_NOTICE);
 
-if ( !function_exists('akina_setup')) :
+if ( !function_exists('akina_setup')){
 /**
  * Sets up theme defaults and registers support for various WordPress features.
  *
@@ -144,11 +145,11 @@ function akina_setup() {
 	}
 		
 }
-endif;
+}
 add_action( 'after_setup_theme', 'akina_setup' );
 
 function admin_lettering(){
-    echo'<style type="text/css">body{font-family: Microsoft YaHei;}</style>';
+    echo'<style>body{font-family: Microsoft YaHei;}</style>';
 }
 add_action('admin_head', 'admin_lettering');
 
@@ -239,7 +240,7 @@ function convertip($ip)
 {
     error_reporting(E_ALL ^ E_NOTICE);
     if (!filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) === false) {
-        $file_contents = file_get_contents('http://ip.taobao.com/outGetIpInfo?accessKey=alibaba-inc&ip='.$ip);
+        $file_contents = file_get_contents('https://ip.taobao.com/outGetIpInfo?accessKey=alibaba-inc&ip=' .$ip);
         $result = json_decode($file_contents,true);
         if ($result['data']['country'] != '中国') {
             return $result['data']['country'];
@@ -252,7 +253,7 @@ function convertip($ip)
             return 'IP date file not exists or access denied';
         }
         $ip = explode('.', $ip);
-        if($ip[0]=='')return;
+        if($ip[0]=='')return false;
         $ipNum = intval($ip[0]) * 16777216 + intval($ip[1]) * 65536 + intval($ip[2]) * 256 + intval($ip[3]);
         $DataBegin = fread($fd, 4);
         $DataEnd = fread($fd, 4);
@@ -600,9 +601,10 @@ function mytheme_default_avatar ( $avatar_defaults ) {
  */
 function theme_noself_ping( &$links ) { 
 	$home = get_option( 'home' );
-	foreach ( $links as $l => $link )
-	if ( 0 === strpos( $link, $home ) )
-	unset($links[$l]); 
+	foreach ( $links as $l => $link){
+        if ( 0 === strpos( $link, $home ) )
+        unset($links[$l]); 
+    }
 }
 add_action('pre_ping','theme_noself_ping');
 
@@ -621,9 +623,6 @@ function akina_body_classes( $classes ) {
   }
   // 定制中文字体class
   $classes[] = 'chinese-font';
-  /*if(!wp_is_mobile()) {
-      $classes[] = 'serif';
-  }*/
   return $classes;
 }
 add_filter( 'body_class', 'akina_body_classes' );
@@ -638,12 +637,8 @@ function unregister_default_widgets() {
  	unregister_widget("WP_Widget_Links");
  	unregister_widget("WP_Widget_Meta");
  	unregister_widget("WP_Widget_Search");
-    //unregister_widget("WP_Widget_Text");
  	unregister_widget("WP_Widget_Categories");
  	unregister_widget("WP_Widget_Recent_Posts");
-    //unregister_widget("WP_Widget_Recent_Comments");
-    //unregister_widget("WP_Widget_RSS");
-    //unregister_widget("WP_Widget_Tag_Cloud");
  	unregister_widget("WP_Nav_Menu_Widget");
 }
 add_action("widgets_init", "unregister_default_widgets", 11);
@@ -713,8 +708,6 @@ function bolo_after_wp_tiny_mce($mce_settings) {
 ?>  
 <script type="text/javascript">  
 QTags.addButton( 'download', '下载按钮', "[download]下载地址[/download]" );
-function bolo_QTnextpage_arg1() {
-}  
 </script>  
 <?php } 
 
@@ -797,8 +790,7 @@ function smallenvelop_login_message( $message ) {
 //Fix password reset bug </>
 function resetpassword_message_fix( $message ) {
     $message = str_replace("<", "", $message);
-	$message = str_replace(">", "", $message);
-	return $message;
+    return str_replace(">", "", $message);
 }
 add_filter( 'retrieve_password_message', 'resetpassword_message_fix' );
 
@@ -807,8 +799,7 @@ function new_user_message_fix( $message ) {
     $show_register_ip = "注册IP | Registration IP: ".get_the_user_ip()." (".convertip(get_the_user_ip()).")\r\n\r\n如非本人操作请忽略此邮件 | Please ignore this email if this was not your operation.\r\n\r\n";
     $message = str_replace("To set your password, visit the following address:", $show_register_ip."在此设置密码 | To set your password, visit the following address:", $message);
 	$message = str_replace("<", "", $message);
-	$message = str_replace(">", "\r\n\r\n设置密码后在此登陆 | Login here after setting password: ", $message);
-	return $message;
+    return str_replace(">", "\r\n\r\n设置密码后在此登陆 | Login here after setting password: ", $message);
 }
 add_filter( 'wp_new_user_notification_email', 'new_user_message_fix' );
 
@@ -818,7 +809,7 @@ add_filter( 'wp_new_user_notification_email', 'new_user_message_fix' );
 function comment_mail_notify($comment_id){
 	$mail_user_name = akina_option('mail_user_name') ? akina_option('mail_user_name') : 'poi';
     $comment = get_comment($comment_id);
-    $parent_id = $comment->comment_parent ? $comment->comment_parent : '';
+    $parent_id = $comment->comment_parent ?: '';
     $spam_confirmed = $comment->comment_approved;
     $mail_notify = akina_option('mail_notify') ? get_comment_meta($parent_id,'mail_notify') : false;
     $admin_notify = akina_option('admin_notify') ? '1' : (get_comment($parent_id)->comment_author_email != get_bloginfo('admin_email') ? '1' : '0');
@@ -904,9 +895,9 @@ function rt_add_link_target( $content ){
 	// loop though the segments
 	foreach( $bits as $key=>$bit ){
 	    // fix the target="_blank" bug after the link
-	    if ( strpos( $bit, 'href' ) === false ) continue;
+	    if (!str_contains($bit, 'href')) continue;
 	    // fix the target="_blank" bug in the codeblock
-	    if ( strpos( preg_replace('/code([\s\S]*?)\/code[\s]*/m','temp',$content), $bit ) === false )  continue;
+	    if (!str_contains(preg_replace('/code([\s\S]*?)\/code[\s]*/m', 'temp', $content), $bit))  continue;
 		// find the end of each link
 		$pos = strpos( $bit, '>' );
 		// check if there is an end (only fails with malformed markup)
@@ -916,7 +907,7 @@ function rt_add_link_target( $content ){
 			// for comparison, get the current site/network url
 			$siteurl = network_site_url();
 			// if the site url is in the attributes, assume it's in the href and skip, also if a target is present
-			if( strpos( $part, $siteurl ) === false && strpos( $part, 'target=' ) === false ){
+			if( !str_contains($part, $siteurl) && !str_contains($part, 'target=')){
 				// add the target attribute
 				$bits[$key] = 'target="_blank" ' . $bits[$key];
 			}
@@ -933,9 +924,8 @@ function comment_picture_support($content) {
     $content =  str_replace('{UPLOAD}', 'https://i.loli.net/', $content); 
     $content =  str_replace('[/img][img]', '[/img^img]', $content); 
     $content =  str_replace('[img]', '<br><img src="https://cdn.jsdelivr.net/gh/moezx/cdn@3.0.2/img/svg/loader/trans.ajax-spinner-preloader.svg" data-src="', $content); 
-    $content =  str_replace('[/img]', '" class="lazyload comment_inline_img" onerror="imgError(this)"><br>', $content); 
-    $content =  str_replace('[/img^img]', '" class="lazyload comment_inline_img" onerror="imgError(this)"><img src="https://cdn.jsdelivr.net/gh/moezx/cdn@3.0.2/img/svg/loader/trans.ajax-spinner-preloader.svg" data-src="', $content); 
-    return $content;
+    $content =  str_replace('[/img]', '" class="lazyload comment_inline_img" onerror="imgError(this)"><br>', $content);
+    return str_replace('[/img^img]', '" class="lazyload comment_inline_img" onerror="imgError(this)"><img src="https://cdn.jsdelivr.net/gh/moezx/cdn@3.0.2/img/svg/loader/trans.ajax-spinner-preloader.svg" data-src="', $content);
 }
 add_filter( 'comment_text', 'comment_picture_support' );
 
@@ -953,7 +943,7 @@ function push_tieba_smilies() {
 global $wpsmiliestrans;
 // don't bother setting up smilies if they are disabled
 if ( !get_option('use_smilies'))
-    return;
+    return false;
     $tiebaname = array('good','han','spray','Grievance','shui','reluctantly','anger','tongue','se','haha','rmb','doubt','tear','surprised2','Happy','ku','surprised','theblackline','smilingeyes','spit','huaji','bbd','hu','shame','naive','rbq','britan','aa','niconiconi','niconiconi_t','niconiconit','awesome');
     $return_smiles = '';
     for($i=0;$i<count($tiebaname);$i++){
@@ -976,8 +966,7 @@ if ( !get_option('use_smilies'))
 
 function tieba_smile_filter($content) {
     global $wpsmiliestrans;
-    $content =  str_replace(array_keys($wpsmiliestrans), $wpsmiliestrans, $content); 
-    return $content;
+    return str_replace(array_keys($wpsmiliestrans), $wpsmiliestrans, $content);
 }
 add_filter('the_content', 'tieba_smile_filter'); //替换文章关键词
 add_filter('comment_text', 'tieba_smile_filter');//替换评论关键词
@@ -1056,8 +1045,7 @@ push_bili_smilies();
 
 function bili_smile_filter($content) {
     global $bilismiliestrans;
-    $content =  str_replace(array_keys($bilismiliestrans), $bilismiliestrans, $content); 
-    return $content;
+    return str_replace(array_keys($bilismiliestrans), $bilismiliestrans, $content);
 }
 add_filter('the_content', 'bili_smile_filter'); //替换文章关键词
 add_filter('comment_text', 'bili_smile_filter');//替换评论关键词
@@ -1083,17 +1071,15 @@ function bili_smile_filter_rss($content) {
     }
     $content = str_replace("{{",'<img src="https://cdn.jsdelivr.net/gh/bymoye/cdn@1.2/sakura/images/smilies/'.$biliimgdir,$content);
     $content = str_replace("}}",$smilesgs.'" alt="emoji" style="height: 2em; max-height: 2em;">',$content);
-    $content =  str_replace('[img]', '<img src="', $content); 
-    $content =  str_replace('[/img]', '" style="display: block;margin-left: auto;margin-right: auto;">', $content); 
-    return $content;
+    $content =  str_replace('[img]', '<img src="', $content);
+    return str_replace('[/img]', '" style="display: block;margin-left: auto;margin-right: auto;">', $content);
 }
 add_filter( 'comment_text_rss', 'bili_smile_filter_rss' );//替换评论rss关键词
 
 function toc_support($content) {
     $content =  str_replace('[toc]', '<div class="has-toc have-toc"></div>', $content); // TOC 支持
     $content =  str_replace('[begin]', '<span class="begin">', $content); // 首字格式支持
-    $content =  str_replace('[/begin]', '</span>', $content); // 首字格式支持
-    return $content;
+    return str_replace('[/begin]', '</span>', $content);
 }
 add_filter('the_content', 'toc_support');
 add_filter('the_excerpt_rss', 'toc_support');
@@ -1428,7 +1414,7 @@ function html_tag_parser($content) {
         $content=preg_replace(
             '/\[github repo=[\'"]([^\'"]+)[\'"]\]/i',
             '
-            <iframe frameborder="0" scrolling="0" allowtransparency="true" 
+            <iframe allowtransparency="true" 
                     src="https://api.2heng.xin/github-card/?repo=$1" 
                     width="400" height="153"
                     style="margin-left: 50%; transform: translateX(-50%);"></iframe>
@@ -1510,7 +1496,7 @@ if (akina_option('cover_cdn_options') == "type_2"){
   }elseif(akina_option('cover_cdn_options') == "type_1"){
     return get_random_image_url();
   }
-    return;
+    return false;
 }
 
 //防止设置置顶文章造成的图片同侧bug
@@ -1664,7 +1650,7 @@ if ( !function_exists( 'disable_embeds_init' ) ) :
     }
     function disable_embeds_rewrites($rules){
         foreach ($rules as $rule => $rewrite) {
-            if (false !== strpos($rewrite, 'embed=true')) {
+            if (str_contains($rewrite, 'embed=true')) {
                 unset($rules[$rule]);
             }
         }

@@ -3,7 +3,10 @@
 /**
  Template Name: Bangumi
  */
-get_header(); 
+
+use Sakura\API\Bilibili;
+
+get_header();
 ?>
 <meta name="referrer" content="same-origin">
 <style>
@@ -20,7 +23,7 @@ get_header();
             <?php if (akina_option('bilibili_id') ):?>
                 <div class="row">
                 <?php
-                $bgm = new \Sakura\API\Bilibili();
+                $bgm = new Bilibili();
                 echo $bgm->get_bgm_items(); 
             ?>
             <?php else: ?>

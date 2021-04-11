@@ -10,18 +10,17 @@ mashiro_global.variables = new function () {
     this.has_hls = false;
 };
 
-(function () {
-    const UA = navigator.userAgent,
-        version_list = { Firefox: 84, Edg: 88, Chrome: 88, Opera: 74, Version: 9 },
-        reg = /(Firefox|Chrome|Version|Opera|Version)\/(\d+)/i,
-        version = UA.match(reg);
-    if (version && version[2] > version_list[version[1]] && Poi.pjax) {
+(()=>{
+    const version_list = { Firefox: 84, Edg: 88, Chrome: 88, Opera: 74, Version: 9 },
+        reg = /(Firefox|Chrome|Version|Opera)\/(\d+)/i,
+        version = navigator.userAgent.match(reg);
+    if (version && version[2] >= version_list[version[1]] && Poi.pjax) {
         console.log("%c PJAX | BLUR ON! ", "background:#5ad5e8; color:#ffffff;font-size:15px");
         Poi.pjax = true;
     } else {
         console.log("%c PJAX | BLUR OFF ", "background:#f00; color:#ffffff;font-size:15px");
         if (Poi.pjax) console.log("不管怎么说,还是建议使用最新主流浏览器噢!");
-        Poi.pjax = "";
+        Poi.pjax = false;
     }
 })();
 
@@ -87,35 +86,32 @@ function imgError(ele, type) {
 
 function post_list_show_animation() {
     if (document.querySelector('article') && document.querySelector('article').classList.contains("post-list-thumb")) {
-        let options = {
+        const options = {
             root: null,
             threshold: [0.4]
         },
-            io = new IntersectionObserver(callback, options),
-            articles = document.getElementsByClassName('post-list-thumb');
-
-        function callback(entries) {
-               for (let i=0;i<entries.length;i++){
-                let article=entries[i];
-                if (!window.IntersectionObserver) {
-                    if (article.target.classList.contains("post-list-show") === false) {
-                        article.target.classList.add("post-list-show");
-                        io.unobserve(article.target)
-                    }
-                } else {
+            articles = document.getElementsByClassName('post-list-thumb'),
+            callback = (entries) => {
+                for (let i = 0; i < entries.length; i++) {
+                    let article = entries[i];
+                    if (!window.IntersectionObserver) {
+                        if (article.target.classList.contains("post-list-show") === false) {
+                            article.target.classList.add("post-list-show");
+                            io.unobserve(article.target);
+                        }
+                    } else {
                         if (article.target.classList.contains("post-list-show")) {
-                            io.unobserve(article.target)
+                            io.unobserve(article.target);
                         } else {
                             if (article.isIntersecting) {
                                 article.target.classList.add("post-list-show");
                                 io.unobserve(article.target);
                             }
                         }
-                    
+                    }
                 }
-            }
-            //})
-        }
+            },
+            io = new IntersectionObserver(callback, options);
         for (let a = 0; a < articles.length; a++) {
             io.observe(articles[a]);
         }
@@ -129,10 +125,10 @@ let ec_click = (e)=>{
 }
 
 function code_highlight_style() {
-    let pre = document.getElementsByTagName("pre"),
+    const pre = document.getElementsByTagName("pre"),
         code = document.querySelectorAll("pre code");
     if (!pre.length)return;
-    function gen_top_bar(i) {
+    const gen_top_bar=(i)=>{
         let attributes = {
             'autocomplete': 'off',
             'autocorrect': 'off',
@@ -165,7 +161,7 @@ try {
     code_highlight_style();
 } catch{}
 
-let cm_click = (e)=>{
+const cm_click = (e)=>{
     if (e.target.classList.contains("comment-reply-link")) {
         e.stopPropagation();
         e.preventDefault();
@@ -175,12 +171,12 @@ let cm_click = (e)=>{
     }
 }
 if (Poi.reply_link_version == 'new') {
-    let cm = document.querySelector(".comments-main");
+    const cm = document.querySelector(".comments-main");
     if (cm)cm.addEventListener("click", cm_click);
 }
 
 function attach_image() {
-    let cached = document.querySelector(".insert-image-tips"),
+    const cached = document.querySelector(".insert-image-tips"),
         upload_img = document.getElementById('upload-img-file');
     if (!upload_img)return;
     upload_img.addEventListener("change", (function () {
@@ -214,7 +210,7 @@ function attach_image() {
                     let res = JSON.parse(xhr.responseText);
                     if (res.status == 200) {
                         let get_the_url = res.proxy;
-                        document.getElementById("upload-img-show").insertAdjacentHTML('afterend', '<img class="lazyload upload-image-preview" src="https://cdn.jsdelivr.net/gh/moezx/cdn@3.0.2/img/svg/loader/trans.ajax-spinner-preloader.svg" data-src="' + get_the_url + '" onclick="window.open(\'' + get_the_url + '\')" onerror="imgError(this)" />');
+                        document.getElementById("upload-img-show").insertAdjacentHTML('afterend', '<img class="lazyload upload-image-preview" src="https://cdn.jsdelivr.net/gh/moezx/cdn@3.0.2/img/svg/loader/trans.ajax-spinner-preloader.svg" data-src="' + get_the_url + '" onclick="window.open(\'' + get_the_url + '\')" onerror="imgError(this)"  alt=""/>');
                         lazyload();
                         addComment.createButterbar("图片上传成功~<br>Uploaded successfully~");
                         grin(get_the_url,'Img');
@@ -229,7 +225,7 @@ function attach_image() {
                     }, 1000);
                 }
             }
-        };
+        }
     }));
 }
 
@@ -239,7 +235,7 @@ function clean_upload_images() {
 
 function add_upload_tips() {
     let form_subit = document.querySelector('.form-submit #submit');
-    if (form_subit == null) return;
+    if (!form_subit) return;
     form_subit.insertAdjacentHTML('afterend', '<div class="insert-image-tips popup"><i class="post_icon_svg" style="--svg-name: var(--svg_picture);--size: 20px;--color:#5d646c;position: absolute;left: 50%;top:50%;transform: translate(-50%,-50%);margin: 0;"></i><span class="insert-img-popuptext" id="uploadTipPopup">上传图片</span></div><input id="upload-img-file" type="file" accept="image/*" multiple="multiple" class="insert-image-button">');
     attach_image();
     let file_subit = document.getElementById('upload-img-file'),
@@ -259,7 +255,7 @@ function add_upload_tips() {
 add_upload_tips();
 
 function click_to_view_image() {
-    let comment_inline = document.getElementsByClassName('comment_inline_img');
+    const comment_inline = document.getElementsByClassName('comment_inline_img');
     if (!comment_inline.length) return;
     document.getElementsByClassName("comments-main")[0].addEventListener("click", function (e) {
         if (e.target.classList.contains("comment_inline_img")) {
@@ -271,7 +267,7 @@ function click_to_view_image() {
 click_to_view_image();
 
 function original_emoji_click() {
-    let emoji = document.getElementsByClassName('emoji-item');
+    const emoji = document.getElementsByClassName('emoji-item');
     if (!emoji.length) return;
     document.getElementsByClassName("menhera-container")[0].addEventListener("click", function (e) {
         if (e.target.classList.contains("emoji-item")) {
@@ -282,7 +278,7 @@ function original_emoji_click() {
 original_emoji_click();
 
 function cmt_showPopup(ele) {
-    let popup = ele.querySelector("#thePopup");
+    const popup = ele.querySelector("#thePopup");
     popup.classList.add("show");
     ele.querySelector("input").onblur = ()=>{
         popup.classList.remove("show");
@@ -295,27 +291,26 @@ function scrollBar() {
         blur_rs,
         s = 0, a, b, c, result;
     if (Poi.pjax) {
-        let _blur_check,
-            flag = false,
+        let flag = false,
             blur = document.getElementById("svg_blurfilter").children[0];
-        _blur_check = (_scrollTop) => {
+        const _blur_check = (_scrollTop) => {
             let _blur = blur.getAttribute("stdDeviation");
             return ((_scrollTop > 100 && _blur == "5") || (_scrollTop <= 100 && _blur == "0"))
-        };
-        function _blur() {
-            let __blur = Number(blur.getAttribute("stdDeviation"));
-            if (s > 100 && __blur != 5) {
-                __blur <= 5 ? __blur += 0.1 : __blur = 5;
-            } else if (s < 100 && __blur != 0) {
-                __blur >= 0 ? __blur -= 0.1 : __blur = 0;
+        },
+            _blur = () => {
+                let __blur = Number(blur.getAttribute("stdDeviation"));
+                if (s > 100 && __blur != 5) {
+                    __blur < 5 ? __blur += 0.1 : __blur = 5;
+                } else if (s < 100 && __blur != 0) {
+                    __blur > 0 ? __blur -= 0.1 : __blur = 0;
+                }
+                blur.setAttribute("stdDeviation", __blur);
+                if (!_blur_check(s)) {
+                    requestAnimationFrame(_blur);
+                } else {
+                    flag = false;
+                }
             }
-            blur.setAttribute("stdDeviation", __blur);
-            if (!_blur_check(s)) {
-                requestAnimationFrame(_blur);
-            } else {
-                flag = false;
-            }
-        }
         blur_rs = () => {
             if (!flag && !_blur_check(s)) {
                 requestAnimationFrame(_blur);
@@ -347,7 +342,7 @@ function scrollBar() {
 }
 
 function iconsvg() {
-    let sitelogo = document.getElementsByClassName('sitelogo');
+    const sitelogo = document.getElementsByClassName('sitelogo');
     // iconsvg == null ? document.body.insertAdjacentHTML('beforeend', "<div id='iconsvg' style='display:none;'></div>") : null;
     // if (document.getElementById('iconsvg').children.length == 0) {
     //     let xhr = new XMLHttpRequest();
@@ -373,7 +368,7 @@ function iconsvg() {
         xhr.send();
     }
     if (!document.getElementById("svg_blurfilter")) {
-        let a = "http://www.w3.org/2000/svg",
+        const a = "http://www.w3.org/2000/svg",
             svg = document.createElementNS(a, "svg"),
             image = document.createElementNS(a, "image");
         svg.style.cssText = "position: fixed;width: 100%;height: 100%;z-index:-999";
@@ -384,7 +379,7 @@ function iconsvg() {
         image.setAttribute("width", "102%");
         image.setAttribute("preserveAspectRatio", "xMidYMid slice");
         if (Poi.pjax) {
-            let filter = document.createElementNS(a, "filter"),
+            const filter = document.createElementNS(a, "filter"),
                 fe = document.createElementNS(a, "feGaussianBlur");
             filter.id = "svg_blurfilter";
             fe.setAttribute("stdDeviation", "5");
@@ -416,24 +411,24 @@ function no_right_click() {
 no_right_click();
 
 function slideToogle(el, duration = 1000, mode = '', callback) {
-    let dom = el;
+    const dom = el;
     dom.status = dom.status || getComputedStyle(dom, null)['display'];
-    let flag = dom.status != 'none';
+    const flag = dom.status != 'none';
     if ((flag == 1 && mode == "show") || (flag == 0 && mode == "hide")) return;
     dom.status = flag ? 'none' : 'block';
     dom.style.transition = 'height ' + duration / 1000 + 's';
     dom.style.overflow = 'hidden';
     clearTimeout(dom.tagTimer);
-    dom.tagTimer = dom.tagTimer || null
+    dom.tagTimer = dom.tagTimer || null;
     dom.style.display = 'block';
-    dom.tagHeight = dom.tagHeight || dom.clientHeight + 'px'
+    dom.tagHeight = dom.tagHeight || dom.clientHeight + 'px';
     dom.style.display = '';
-    dom.style.height = flag ? dom.tagHeight : "0px"
+    dom.style.height = flag ? dom.tagHeight : "0px";
     setTimeout(() => {
-        dom.style.height = flag ? "0px" : dom.tagHeight
+        dom.style.height = flag ? "0px" : dom.tagHeight;
     }, 0)
     dom.tagTimer = setTimeout(() => {
-        dom.style.display = flag ? 'none' : 'block'
+        dom.style.display = flag ? 'none' : 'block';
         dom.style.transition = '';
         dom.style.overflow = '';
         dom.style.height = '';
@@ -443,9 +438,9 @@ function slideToogle(el, duration = 1000, mode = '', callback) {
 }
 
 function timeSeriesReload(flag) {
-    let archives = document.getElementById('archives');
+    const archives = document.getElementById('archives');
     if (!archives) return;
-    let al_li = archives.getElementsByClassName('al_mon');
+    const al_li = archives.getElementsByClassName('al_mon');
     if (flag == true) {
         archives.addEventListener("click", function (e) {
             if (e.target.classList.contains("al_mon")) {
@@ -456,7 +451,7 @@ function timeSeriesReload(flag) {
         lazyload();
     } else {
         (function () {
-            let al_expand_collapse = document.getElementById('al_expand_collapse');
+            const al_expand_collapse = document.getElementById('al_expand_collapse');
             al_expand_collapse.style.cursor = "s-resize";
             for (let i = 0; i < al_li.length; i++) {
                 let a = al_li[i],
@@ -500,13 +495,13 @@ function timeSeriesReload(flag) {
                         for (let i = 0; i < al_post_list.length; i++) {
                             let el = al_post_list[i];
                             slideToogle(el, 500, 'show');
-                        };
+                        }
                         al_expand_collapse_click++;
                     } else if (al_expand_collapse_click == 1) {
                         for (let i = 0; i < al_post_list.length; i++) {
                             let el = al_post_list[i];
                             slideToogle(el, 500, 'hide');
-                        };
+                        }
                         al_expand_collapse_click--;
                     }
                 });
@@ -518,24 +513,24 @@ timeSeriesReload();
 
 /*视频feature*/
 function coverVideo() {
-    let video = document.getElementById("coverVideo"),
+    const video = document.getElementById("coverVideo"),
         btn = document.getElementById("coverVideo-btn");
 
     if (video.paused) {
         video.play();
         try {
             btn.innerHTML = '<i class="post_icon_svg" style="--svg-name: var(--svg_stop);--size: 14px;"></i>';
-        } catch { };
+        } catch { }
     } else {
         video.pause();
         try {
             btn.innerHTML = '<i class="post_icon_svg" style="--svg-name: var(--svg_play);--size: 14px;"></i>';
-        } catch { };
+        } catch { }
     }
 }
 
 function killCoverVideo() {
-    let video = document.getElementById("coverVideo"),
+    const video = document.getElementById("coverVideo"),
         btn = document.getElementById("coverVideo-btn");
 
     if (video.paused) {
@@ -544,7 +539,7 @@ function killCoverVideo() {
         video.pause();
         try {
             btn.innerHTML = '<i class="post_icon_svg" style="--svg-name: var(--svg_play);--size: 14px;"></i>';
-        } catch { };
+        } catch { }
         //console.info('pause:killCoverVideo()');
     }
 }
@@ -598,7 +593,7 @@ function copy_code_block() {
     for (let j = 0; j < ele.length; j++) {
         ele[j].setAttribute('id', 'hljs-' + j);
         ele[j].insertAdjacentHTML('afterend', '<a class="copy-code" href="javascript:" data-clipboard-target="#hljs-' + j + '" title="拷贝代码"><i class="post_icon_svg" style="--svg-name: var(--svg_clipboard);--size: 14px;"></i></a>');
-    };
+    }
     let clipboard = new ClipboardJS('.copy-code');
 }
 
@@ -641,10 +636,10 @@ const pjaxInit = function () {
     }
     try {
         code_highlight_style();
-    } catch {};
+    } catch {}
     try {
         getqqinfo();
-    } catch {};
+    } catch {}
     lazyload();
     let iconflat = document.getElementsByClassName("iconflat");
     if (iconflat.length != 0) {
@@ -701,7 +696,7 @@ POWERMODE.colorful = true;
 POWERMODE.shake = false;
 document.body.addEventListener('input', POWERMODE);
 function motionSwitch(ele) {
-    let motionEles = [".bili", ".menhera", ".tieba"];
+    const motionEles = [".bili", ".menhera", ".tieba"];
     for (let i=0;i<motionEles.length;i++) {
         document.querySelector(motionEles[i] + '-bar').classList.remove('on-hover');
         document.querySelector(motionEles[i] + '-container').style.display = 'none';
@@ -709,13 +704,15 @@ function motionSwitch(ele) {
     document.querySelector(ele + '-bar').classList.add("on-hover");
     document.querySelector(ele + '-container').style.display = 'block';
 }
-let ready=function(fn){
+
+const ready=function(fn){
     if (typeof fn !== 'function') return;
     if (document.readyState==='complete') {
         return fn();
     }
     document.addEventListener('DOMContentLoaded', fn, false);
 };
+
 function smileBoxToggle() {
     let et = document.getElementById("emotion-toggle");
     et && et.addEventListener('click', function () {
@@ -759,14 +756,10 @@ function grin(tag, type, before, after) {
         myField.focus();
     }
 }
-let copytext = (e)=>{
-    if (window.getSelection().toString().length > 30 && mashiro_option.clipboardCopyright) {
-        setClipboardText(e);
-    }
-    addComment.createButterbar("复制成功！<br>Copied to clipboard successfully!", 1000);
-    function setClipboardText(event) {
+const copytext = (e) => {
+    const setClipboardText = (event) => {
         event.preventDefault();
-        let htmlData = "# 商业转载请联系作者获得授权，非商业转载请注明出处。<br>" + "# For commercial use, please contact the author for authorization. For non-commercial use, please indicate the source.<br>" + "# 协议(License)：署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0)<br>" + "# 作者(Author)：" + mashiro_option.author_name + "<br>" + "# 链接(URL)：" + window.location.href + "<br>" + "# 来源(Source)：" + mashiro_option.site_name + "<br><br>" + window.getSelection().toString().replace(/\r\n/g, "<br>"),
+        const htmlData = "# 商业转载请联系作者获得授权，非商业转载请注明出处。<br>" + "# For commercial use, please contact the author for authorization. For non-commercial use, please indicate the source.<br>" + "# 协议(License)：署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0)<br>" + "# 作者(Author)：" + mashiro_option.author_name + "<br>" + "# 链接(URL)：" + window.location.href + "<br>" + "# 来源(Source)：" + mashiro_option.site_name + "<br><br>" + window.getSelection().toString().replace(/\r\n/g, "<br>"),
             textData = "# 商业转载请联系作者获得授权，非商业转载请注明出处。\n" + "# For commercial use, please contact the author for authorization. For non-commercial use, please indicate the source.\n" + "# 协议(License)：署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0)\n" + "# 作者(Author)：" + mashiro_option.author_name + "\n" + "# 链接(URL)：" + window.location.href + "\n" + "# 来源(Source)：" + mashiro_option.site_name + "\n\n" + window.getSelection().toString().replace(/\r\n/g, "\n");
         if (event.clipboardData) {
             event.clipboardData.setData("text/html", htmlData);
@@ -775,6 +768,10 @@ let copytext = (e)=>{
             return window.clipboardData.setData("text", textData);
         }
     }
+    if (window.getSelection().toString().length > 30 && mashiro_option.clipboardCopyright) {
+        setClipboardText(e);
+    }
+    addComment.createButterbar("复制成功！<br>Copied to clipboard successfully!", 1000);
 }
 function add_copyright() {
     document.body.removeEventListener("copy",copytext);
@@ -996,7 +993,7 @@ let s = document.getElementById("bgvideo"),
     Siren = {
         MN: function () {
             let icf = document.getElementsByClassName("iconflat")[0];
-            icf && icf.addEventListener("click", function () {
+            icf && icf.addEventListener("click", ()=>{
                 document.body.classList.toggle("navOpen");
                 document.getElementById("main-container").classList.toggle("open");
                 document.getElementById("mo-nav").classList.toggle("open");
@@ -1075,7 +1072,7 @@ let s = document.getElementById("bgvideo"),
                     this.classList.add("video-pause");
                     this.classList.remove("loadvideo");
                     Siren.addsource();
-                    s.oncanplay = function () {
+                    s.oncanplay = ()=> {
                         Siren.splay();
                         document.getElementById("video-add").style.display = "block";
                         _btn.classList.add("videolive", "haslive");
@@ -1091,7 +1088,7 @@ let s = document.getElementById("bgvideo"),
                         _btn.classList.add("videolive");
                     }
                 }
-                s.onended = function () {
+                s.onended = () => {
                     s.setAttribute("src", "");
                     document.getElementById("video-add").style.display = "none";
                     _btn.classList.add("loadvideo");
@@ -1099,13 +1096,13 @@ let s = document.getElementById("bgvideo"),
                     document.querySelector(".focusinfo").style.top = "49.3%";
                 }
             });
-            document.getElementById("video-add").addEventListener("click", function () {
+            document.getElementById("video-add").addEventListener("click", ()=> {
                 Siren.addsource();
             });
         },
         AH: function () {
             if (Poi.windowheight == 'auto' && mashiro_option.windowheight == 'auto') {
-                if (document.querySelector(".main-title") != null) {
+                if (document.querySelector(".main-title")) {
                     //let _height = document.documentElement.clientHeight + "px";
                     document.getElementById("centerbg").style.height = "100vh";
                     document.getElementById("bgvideo").style.minHeight = "100vh";
@@ -1116,10 +1113,10 @@ let s = document.getElementById("bgvideo"),
             }
         },
         PE: function () {
-            if (document.querySelector(".headertop") != null) {
+            if (document.querySelector(".headertop")) {
                 let headertop = document.querySelector(".headertop"),
                     blank = document.querySelector(".blank");
-                if (document.querySelector(".main-title") != null) {
+                if (document.querySelector(".main-title")) {
                     try {
                         blank.style.paddingTop = "0px";
                     } catch (e) { }
@@ -1182,7 +1179,7 @@ let s = document.getElementById("bgvideo"),
                         Record = list.innerHTML,
                         searchFlag = null;
                     otxt.oninput = function () {
-                        if (searchFlag = null) {
+                        if (searchFlag == null) {
                             clearTimeout(searchFlag);
                         }
                         searchFlag = setTimeout(function () {
@@ -1228,12 +1225,11 @@ let s = document.getElementById("bgvideo"),
 
                     function Cx(arr, q) {
                         q = q.replace(q, "^(?=.*?" + q + ").+$").replace(/\s/g, ")(?=.*?");
-                        let i = arr.filter(
+                        return arr.filter(
                             v => Object.values(v).some(
                                 v => new RegExp(q + '').test(v)
                             )
                         );
-                        return i;
                     }
 
                     function div_href() {
@@ -1718,7 +1714,7 @@ if (Poi.pjax) {
         loading && loading.classList.remove("show");
         if (Poi.codelamp == 'open') {
             self.Prism.highlightAll(event)
-        };
+        }
         if (document.querySelector(".js-search.is-visible")) {
             document.getElementsByClassName("js-toggle-search")[0].classList.toggle("is-active");
             document.getElementsByClassName("js-search")[0].classList.toggle("is-visible");
@@ -1741,7 +1737,7 @@ if (Poi.pjax) {
         timeSeriesReload(true);
         post_list_show_animation();
     }, false);
-};
+}
 ready(()=>{
     Siren.AH();
     Siren.PE();
@@ -1759,22 +1755,24 @@ ready(()=>{
     console.log("%c 原作者 %c", "background:#2196F3; color:#ffffff", "", "https://github.com/mashirozx/Sakura/");
 });
 
-let isWebkit = navigator.userAgent.toLowerCase().indexOf('webkit') > -1,
-    isOpera = navigator.userAgent.toLowerCase().indexOf('opera') > -1,
-    isIe = navigator.userAgent.toLowerCase().indexOf('msie') > -1;
-if ((isWebkit || isOpera || isIe) && document.getElementById && window.addEventListener) {
-    window.addEventListener('hashchange', function () {
-        let id = location.hash.substring(1),
-            element;
-        if (!(/^[A-z0-9_-]+$/.test(id))) {
-            return;
-        }
-        element = document.getElementById(id);
-        if (element) {
-            if (!(/^(?:a|select|input|button|textarea)$/i.test(element.tagName))) {
-                element.tabIndex = -1;
+{
+    let isWebkit = navigator.userAgent.toLowerCase().indexOf('webkit') > -1,
+        isOpera = navigator.userAgent.toLowerCase().indexOf('opera') > -1,
+        isIe = navigator.userAgent.toLowerCase().indexOf('msie') > -1;
+    if ((isWebkit || isOpera || isIe) && document.getElementById && window.addEventListener) {
+        window.addEventListener('hashchange', function () {
+            let id = location.hash.substring(1),
+                element;
+            if (!(/^[A-z0-9_-]+$/.test(id))) {
+                return;
             }
-            element.focus();
-        }
-    }, false);
+            element = document.getElementById(id);
+            if (element) {
+                if (!(/^(?:a|select|input|button|textarea)$/i.test(element.tagName))) {
+                    element.tabIndex = -1;
+                }
+                element.focus();
+            }
+        }, false);
+    }
 }

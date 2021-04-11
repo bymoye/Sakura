@@ -94,7 +94,7 @@ if( !empty($_POST['register_reg']) ) {
 		<?php endif; ?>
 		</main><!-- #main -->
 	</div><!-- #primary -->
-<style type="text/css">
+<style>
 #slider {
 	margin: 0 auto 20px auto;
 	width: 300px;
@@ -134,19 +134,6 @@ if( !empty($_POST['register_reg']) ) {
 	font-size: 38px;
 	font-weight: 900;
 	border-radius: 3px;
-}
-
-#labelTip {
-	position: absolute;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	font-size: 13px;
-	font-family: 'Microsoft Yahei', serif;
-	color: #888;
-	line-height: 46px;
-	text-align: center;
-	z-index: 2;
 }
 #verification-slider{
 	margin: 1em;

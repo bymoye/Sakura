@@ -23,7 +23,7 @@ function z_init() {
 
 add_action( 'admin_head', 'z_add_style' );
 function z_add_style() {
-	echo '<style type="text/css" media="screen">
+	echo '<style media="screen">
 		th.column-thumb {width:60px;}
 		.form-field img.taxonomy-image {border:1px solid #eee;max-width:300px;max-height:300px;}
 		.inline-edit-row fieldset .thumb label span.title {width:48px;height:48px;border:1px solid #eee;display:inline-block;}
@@ -53,7 +53,7 @@ function z_edit_texonomy_field($taxonomy) {
 		$image_url = z_taxonomy_image_url( $taxonomy->term_id, NULL, TRUE );
 	echo '<tr class="form-field">
 		<th scope="row" valign="top"><label for="taxonomy_image">' .__('category/tag image', 'sakura') /*分类/标签图像*/. '</label></th>
-		<td><img class="taxonomy-image" src="' . z_taxonomy_image_url( $taxonomy->term_id, 'medium', TRUE ) . '"/><br/><input type="text" name="taxonomy_image" id="taxonomy_image" value="'.$image_url.'" /><br />
+		<td><img class="taxonomy-image" src="' . z_taxonomy_image_url( $taxonomy->term_id, 'medium', TRUE ) . '" alt=""/><br/><input type="text" name="taxonomy_image" id="taxonomy_image" value="'.$image_url.'" /><br />
 		<button class="z_upload_image_button button">' . __('add image', 'sakura') /*添加图像*/. '</button>
 		<button class="z_remove_image_button button">' . __('remove image', 'sakura') /*删除图像*/. '</button>
 		</td>

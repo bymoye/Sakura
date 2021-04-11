@@ -157,7 +157,7 @@ class Parsedown
                 continue;
             }
 
-            if (strpos($line, "\t") !== false)
+            if (str_contains($line, "\t"))
             {
                 $parts = explode("\t", $line);
 
@@ -294,7 +294,7 @@ class Parsedown
             }
 
             $markup .= "\n";
-            $markup .= isset($Block['markup']) ? $Block['markup'] : $this->element($Block['element']);
+            $markup .= $Block['markup'] ?? $this->element($Block['element']);
         }
 
         $markup .= "\n";
@@ -321,7 +321,7 @@ class Parsedown
     {
         if (isset($Block) and ! isset($Block['type']) and ! isset($Block['interrupted']))
         {
-            return;
+            return false;
         }
 
         if ($Line['indent'] >= 4)
@@ -586,7 +586,7 @@ class Parsedown
 
             unset($Block['li']);
 
-            $text = isset($matches[1]) ? $matches[1] : '';
+            $text = $matches[1] ?? '';
 
             $Block['li'] = array(
                 'name' => 'li',
@@ -847,7 +847,7 @@ class Parsedown
             return;
         }
 
-        if (strpos($Block['element']['text'], '|') !== false and chop($Line['text'], ' -:|') === '')
+        if (str_contains($Block['element']['text'], '|') and chop($Line['text'], ' -:|') === '')
         {
             $alignments = array();
 
@@ -1097,7 +1097,7 @@ class Parsedown
                 $markup .= $this->unmarkedText($unmarkedText);
 
                 # compile the inline
-                $markup .= isset($Inline['markup']) ? $Inline['markup'] : $this->element($Inline['element']);
+                $markup .= $Inline['markup'] ?? $this->element($Inline['element']);
 
                 # remove the examined text
                 $text = substr($text, $Inline['position'] + $Inline['extent']);
@@ -1144,7 +1144,7 @@ class Parsedown
 
     protected function inlineEmailTag($Excerpt)
     {
-        if (strpos($Excerpt['text'], '>') !== false and preg_match('/^<((mailto:)?\S+?@\S+?)>/i', $Excerpt['text'], $matches))
+        if (str_contains($Excerpt['text'], '>') and preg_match('/^<((mailto:)?\S+?@\S+?)>/i', $Excerpt['text'], $matches))
         {
             $url = $matches[1];
 
@@ -1317,7 +1317,7 @@ class Parsedown
 
     protected function inlineMarkup($Excerpt)
     {
-        if ($this->markupEscaped or $this->safeMode or strpos($Excerpt['text'], '>') === false)
+        if ($this->markupEscaped or $this->safeMode or !str_contains($Excerpt['text'], '>'))
         {
             return;
         }
@@ -1415,7 +1415,7 @@ class Parsedown
 
     protected function inlineUrlTag($Excerpt)
     {
-        if (strpos($Excerpt['text'], '>') !== false and preg_match('/^<(\w+:\/{2}[^ >]+)>/i', $Excerpt['text'], $matches))
+        if (str_contains($Excerpt['text'], '>') and preg_match('/^<(\w+:\/{2}[^ >]+)>/i', $Excerpt['text'], $matches))
         {
             $url = $matches[1];
 

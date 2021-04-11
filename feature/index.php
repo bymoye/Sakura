@@ -11,4 +11,4 @@ if($imgurl) {
 } else {
 	exit('error');
 }
-?>
+

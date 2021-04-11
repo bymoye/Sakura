@@ -203,8 +203,7 @@ function of_sanitize_hex( $hex, $default = '' ) {
 function of_recognized_font_sizes() {
 	$sizes = range( 12,24,2);
 	$sizes = apply_filters( 'of_recognized_font_sizes', $sizes );
-	$sizes = array_map( 'absint', $sizes );
-	return $sizes;
+    return array_map( 'absint', $sizes );
 }
 function of_recognized_font_faces() {
 	$default = array(
@@ -230,10 +229,10 @@ function of_recognized_font_styles() {
 }
 function of_validate_hex( $hex ) {
 	$hex = trim( $hex );
-	if ( 0 === strpos( $hex, '#' ) ) {
+	if (str_starts_with($hex, '#')) {
 		$hex = substr( $hex, 1 );
 	}
-	elseif ( 0 === strpos( $hex, '%23' ) ) {
+	elseif (str_starts_with($hex, '%23')) {
 		$hex = substr( $hex, 3 );
 	}
 	if ( 0 === preg_match( '/^[0-9a-fA-F]{6}$/', $hex ) ) {

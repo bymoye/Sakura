@@ -51,13 +51,13 @@ function resizeImage(id) {
 	o.style.opacity = "1";
 }
 function fadeOut(el){
-	document.head.insertAdjacentHTML("afterbegin",'<style type="text/css">.show{opacity:1;}.hide{opacity:0;transition: opacity 400ms;}</style>');
+	document.head.insertAdjacentHTML("afterbegin",'<style>.show{opacity:1;}.hide{opacity:0;transition: opacity 400ms;}</style>');
 	el.classList.add('hide');
 	el.classList.remove('show');
 	el.addEventListener("transitionend",()=>{el.style.display="none"});
 }
 
-let ready=function(fn){
+const ready=function(fn){
     if (typeof fn !== 'function') return;
     if (document.readyState==='complete') {
         return fn();
@@ -75,7 +75,7 @@ function sxyz(){
         str1 = "";
     function reset() {
         //画点
-        for (var i = 0; i < 25; i++) {
+        for (let i = 0; i < 25; i++) {
             ctx.beginPath();
             ctx.fillStyle = randomColor(120, 220);
             ctx.arc(getRandom(2, 118), getRandom(2, 38), 1, 0, Math.PI * 2);
@@ -92,7 +92,7 @@ function sxyz(){
         }
         //文字
         for (let i = 0; i < 4; i++) {
-            var text = content[getRandom(0, content.length - 1)];
+            let text = content[getRandom(0, content.length - 1)];
             str += text;
             str1 += text.toUpperCase();
             let dushu = getRandom(-30, 30);

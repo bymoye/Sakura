@@ -1,6 +1,6 @@
 <?php
 function customizer_css() { ?>
-<style type="text/css">
+<style>
 <?php // Style Settings
 if ( akina_option('shownav') ) { ?>
 .site-top .lower nav {display: block !important;}

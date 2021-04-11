@@ -6,6 +6,7 @@ include_once('classes/Bilibili.php');
 include_once('classes/Cache.php');
 include_once('classes/Images.php');
 
+use Sakura\API\Bilibili;
 use Sakura\API\Images;
 use Sakura\API\Cache;
 
@@ -56,7 +57,7 @@ function upload_image(WP_REST_Request $request) {
         return $result;
     }
 
-    $images = new \Sakura\API\Images();
+    $images = new Images();
     switch (akina_option("img_upload_api")) {
         case 'imgur':
             $image = file_get_contents($_FILES["cmt_img_file"]["tmp_name"]);
@@ -113,7 +114,7 @@ function bgm_bilibili() {
         $response = new WP_REST_Response($output, 403);
     } else {
         $page = $_GET["page"] ?: 2;
-        $bgm = new \Sakura\API\Bilibili();
+        $bgm = new Bilibili();
         $html = preg_replace("/\s+|\n+|\r/", ' ', $bgm->get_bgm_items($page));
         $response = new WP_REST_Response($html, 200);
     }

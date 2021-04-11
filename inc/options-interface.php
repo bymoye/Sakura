@@ -38,9 +38,9 @@ function optionsframework_fields() {
 	}
 	else {
 		$option_name = 'options_framework_theme';
-	};
+	}
 
-	$settings = get_option($option_name);
+    $settings = get_option($option_name);
 	$options =& _optionsframework_options();
 
 	$counter = 0;

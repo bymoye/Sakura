@@ -37,14 +37,13 @@ class Images
             $success = true;
             $message = "success";
             $link = $reply->image->image->url;
-            $proxy = akina_option('cmt_image_proxy') . $link;
         } else {
             $status = $reply->status_code;
             $success = false;
             $message = $reply->error->message;
             $link = 'https://view.moezx.cc/images/2019/10/28/default_d_h_large.gif';
-            $proxy = akina_option('cmt_image_proxy') . $link;
         }
+        $proxy = akina_option('cmt_image_proxy') . $link;
         return array(
             'status' => $status,
             'success' => $success,
@@ -78,14 +77,13 @@ class Images
             $success = true;
             $message = "success";
             $link = $reply->data->link;
-            $proxy = akina_option('cmt_image_proxy') . $link;
         } else {
             $status = $reply->status;
             $success = false;
             $message = $reply->data->error;
             $link = 'https://view.moezx.cc/images/2019/10/28/default_d_h_large.gif';
-            $proxy = akina_option('cmt_image_proxy') . $link;
         }
+        $proxy = akina_option('cmt_image_proxy') . $link;
         return array(
             'status' => $status,
             'success' => $success,

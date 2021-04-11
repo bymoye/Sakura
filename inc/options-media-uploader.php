@@ -22,7 +22,7 @@ function optionsframework_uploader( $_id, $_value, $_desc = '', $_name = '' ) {
 	}
 	else {
 		$option_name = 'options_framework_theme';
-	};
+	}
 
 	$output = '';
 	$id = '';
