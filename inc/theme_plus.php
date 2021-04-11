@@ -5,8 +5,6 @@
 */
 
 // 允许分类、标签描述添加html代码
-use JetBrains\PhpStorm\NoReturn;
-
 remove_filter('pre_term_description', 'wp_filter_kses');
 remove_filter('term_description', 'wp_kses_data');
 // 去除顶部工具栏
@@ -139,7 +137,7 @@ add_filter( 'comment_text' , 'comment_add_at', 20, 2);
 if ( version_compare( $GLOBALS['wp_version'], '4.4-alpha', '<' ) ) { wp_die(__('Please upgrade wordpress to version 4.4+','sakura')); }/*请升级到4.4以上版本*/
 // 提示
 if(!function_exists('siren_ajax_comment_err')) {
-    #[NoReturn] function siren_ajax_comment_err($t) {
+    function siren_ajax_comment_err($t) {
         header('HTTP/1.0 500 Internal Server Error');
         header('Content-Type: text/plain;charset=UTF-8');
         echo $t;
