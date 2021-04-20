@@ -9,7 +9,7 @@
 
 
 const SAKURA_VERSION = '3.3.2';
-const NMX_VERSION = '1.1.7';
+const NMX_VERSION = '1.1.8';
 const BUILD_VERSION = '3';
 
 //error_reporting(E_ALL);   
@@ -181,7 +181,7 @@ function sakura_scripts() {
         wp_enqueue_style( 'saukra_css', get_stylesheet_uri(), array(), NMX_VERSION );
         wp_enqueue_script( 'app', get_template_directory_uri() . '/js/sakura-app.js', array(), NMX_VERSION, true );
     } else {
-        wp_enqueue_style( 'saukra_css', 'https://cdn.jsdelivr.net/combine/gh/bymoye/Sakura@' . NMX_VERSION . '/style.min.css,gh/bymoye/Sakura/cdn/css/icon.min.css', array(), NMX_VERSION );
+        wp_enqueue_style( 'saukra_css', 'https://cdn.jsdelivr.net/combine/gh/bymoye/Sakura@' . NMX_VERSION . '/style.min.css,gh/bymoye/Sakura/cdn/css/icon.min.css,gh/bymoye/Sakura/cdn/css/sitelogo.min.css', array(), NMX_VERSION );
         wp_enqueue_script( 'app', 'https://cdn.jsdelivr.net/combine/gh/bymoye/Sakura@' . NMX_VERSION . '/js/sakura-app.min.js,gh/bymoye/cdn@1.1.5/sakura/cdn/js/widget.min.js', array(), NMX_VERSION, true );
     } 
 

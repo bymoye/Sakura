@@ -35,7 +35,7 @@ Tags: 樱花庄的白猫
 .post-list,
 .post-list-thumb,
 .top-feature {
-    animation: main .6s
+    animation: main .5s
 }
 
 @keyframes header {
@@ -723,6 +723,7 @@ a:hover {
     backdrop-filter:blur(var(--blur,15px)) saturate(var(--saturate,60%));
     -webkit-backdrop-filter:blur(var(--blur,15px)) saturate(var(--saturate,60%));
     transition: top .5s cubic-bezier(0.4, 0, 1, 1),background-color .5s;
+    display:flex;
 }
 
 .pattern-center:hover header.pattern-header {
@@ -3649,13 +3650,11 @@ li.feature-2 {
 
 .focusinfo {
     position: relative;
-    max-width: 900px;
     padding: 0 10px;
-    /* top: 49.3%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    -webkit-transform: translate(-50%, -50%); */
+    min-width: 200px;
+    width: 800px;
     text-align: center;
+    z-index: 99;
     -webkit-transition: .4s ease all;
     -moz-transition: .4s ease all;
     -o-transition: .4s ease all;
