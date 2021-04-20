@@ -5,11 +5,12 @@
 include_once('classes/Bilibili.php');
 include_once('classes/Cache.php');
 include_once('classes/Images.php');
+include_once('classes/CAPTCHA.php');
 
 use Sakura\API\Bilibili;
 use Sakura\API\Images;
 use Sakura\API\Cache;
-
+use Sakura\API\CAPTCHA;
 /**
  * Router
  */
@@ -25,6 +26,10 @@ add_action('rest_api_init', function () {
     register_rest_route('sakura/v1', '/bangumi/bilibili', array(
         'methods' => 'POST',
         'callback' => 'bgm_bilibili',
+    ));
+    register_rest_route('sakura/v1', '/captcha/create', array(
+        'methods' => 'GET',
+        'callback' => 'create_CAPTCHA',
     ));
 });
 
@@ -118,5 +123,13 @@ function bgm_bilibili() {
         $html = preg_replace("/\s+|\n+|\r/", ' ', $bgm->get_bgm_items($page));
         $response = new WP_REST_Response($html, 200);
     }
+    return $response;
+}
+
+function create_CAPTCHA(){
+    $CAPTCHA = new CAPTCHA();
+    $response = new WP_REST_Response($CAPTCHA->create_captcha_img());
+    $response->set_status(200);
+    $response->set_headers(array('Content-Type' => 'application/json'));
     return $response;
 }

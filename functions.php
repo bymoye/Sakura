@@ -177,6 +177,7 @@ function sakura_scripts() {
     }
     if (akina_option('app_no_jsdelivr_cdn')) {
         wp_enqueue_style( 'icon_css', get_template_directory_uri() . '/cdn/css/icon.css', array(), NMX_VERSION );
+        wp_enqueue_style( 'site_css', get_template_directory_uri() . '/cdn/css/sitelogo.css', array(), NMX_VERSION );
         wp_enqueue_style( 'saukra_css', get_stylesheet_uri(), array(), NMX_VERSION );
         wp_enqueue_script( 'app', get_template_directory_uri() . '/js/sakura-app.js', array(), NMX_VERSION, true );
     } else {
@@ -730,7 +731,7 @@ add_action('login_head', 'custom_login');
 function custom_headertitle ( $title ) {
 	return get_bloginfo('name');
 }
-add_filter('login_headertitle','custom_headertitle');
+add_filter('login_headertext','custom_headertitle');
 
 //Login Page Link
 function custom_loginlogo_url($url) {
@@ -740,39 +741,19 @@ add_filter( 'login_headerurl', 'custom_loginlogo_url' );
 
 //Login Page Footer
 function custom_html() {
-	if ( akina_option('login_bg') ) {
-		$loginbg = akina_option('login_bg'); 
-	}else{
-		$loginbg = 'https://cdn.jsdelivr.net/gh/mashirozx/Sakura@3.2.7/images/hd.png';
-	}
+    $loginbg = akina_option('login_bg') ?: 'https://cdn.jsdelivr.net/gh/mashirozx/Sakura@3.2.7/images/hd.png';
 	echo '<script type="text/javascript" src="'.get_template_directory_uri().'/js/login.js"></script>'."\n";
-	echo '<script type="text/javascript">'."\n";
-    echo 'document.body.insertAdjacentHTML("afterbegin","<div class=\"loading\"><img src=\"https://cdn.jsdelivr.net/gh/moezx/cdn@3.1.9/img/Sakura/images/login_loading.gif\" width=\"58\" height=\"10\"></div><div id=\"bg\"><img /></div>");'."\n";
-    echo 'let bg_img = document.querySelector("#bg img");'."\n";
-    echo 'bg_img.setAttribute("src","'.$loginbg. '");'."\n";
-    echo 'bg_img.addEventListener("load",function(){'."\n";
+	echo '<script type="text/javascript">',"\n";
+    echo 'document.body.insertAdjacentHTML("afterbegin","<div class=\"loading\"><img src=\"https://cdn.jsdelivr.net/gh/moezx/cdn@3.1.9/img/Sakura/images/login_loading.gif\" width=\"58\" height=\"10\"></div><div id=\"bg\"><img /></div>");',"\n";
+    echo 'let bg_img = document.querySelector("#bg img");',"\n";
+    echo 'bg_img.setAttribute("src","'.$loginbg. '");',"\n";
+    echo 'bg_img.addEventListener("load",function(){',"\n";
 	echo '	resizeImage(\'bg\');'."\n";
-    echo '  window.onresize = ()=>{resizeImage("bg");}'."\n";
-    echo '  fadeOut(document.querySelector(".loading"))'."\n";
+    echo '  window.onresize = ()=>{resizeImage("bg");}',"\n";
+    echo '  fadeOut(document.querySelector(".loading"))',"\n";
 	echo '});';
-	echo '</script>'."\n";
-	echo '<script>
-	ready(()=>{
-        document.querySelector("h1 a").style.backgroundImage = "url(\''.akina_option('logo_img').'\')";
-        // reg_passmail
-        let a = \'<div class="yzq"><canvas id="wzyzm" width="120" height="40"></canvas><input type="text" id="yzm" placeholder="请输入验证码"></div>\';
-        let b = \'<p class="forgetmenot">Remember Me<input name="rememberme" id="rememberme" value="forever" type="checkbox"><label for="rememberme" style="float: right;margin-top: 5px;transform: scale(2);margin-right: -10px;"></label></p>\';
-        if (document.querySelector(".forgetmenot") != null){
-            document.querySelector(".forgetmenot").outerHTML = a+b;
-        }else if(document.querySelector("#reg_passmail") != null) {
-            document.querySelector("#reg_passmail").insertAdjacentHTML(\'beforebegin\', a);
-        }else{
-            document.querySelector("#wp-submit").insertAdjacentHTML(\'beforebegin\', a);
-            document.querySelector(".yzq").style.padding = "0";
-        }
-        sxyz();
-	});
-	</script>';
+    echo 'document.querySelector(".forgetmenot").outerHTML = \'<p class="forgetmenot">Remember Me<input name="rememberme" id="rememberme" value="forever" type="checkbox"><label for="rememberme" style="float: right;margin-top: 5px;transform: scale(2);margin-right: -10px;"></label></p>\';';
+	echo '</script>',"\n";
 }
 add_action('login_footer', 'custom_html');
 
@@ -1627,7 +1608,62 @@ function remove_xmlrpc_pingback_ping( $methods ) {
 unset( $methods['pingback.ping'] );
 return $methods;
 }
-
+/**
+ * 登录/注册页添加验证码
+ */
+function login_CAPTCHA() {
+    include_once('inc/classes/CAPTCHA.php');
+    $img = new Sakura\API\CAPTCHA;
+    $test = $img->create_captcha_img();
+    //最终网页中的具体内容
+    echo '<p><label for="captcha" class="captcha">验证码<br><img id="captchaimg" width="120" height="40" src="', $test['data'] ,'"><input type="text" name="yzm" id="yzm" class="input" value="" size="20" tabindex="4" placeholder="请输入验证码">'
+    ."</label></p>";
+}
+add_action('login_form','login_CAPTCHA');
+add_action('register_form','login_CAPTCHA' );
+/**
+ * 登录界面验证码验证
+ */
+function CAPTCHA_CHECK($user, $username, $password) {
+    if (empty($_POST)) {
+        return new WP_Error();
+    }
+    if(isset($_POST['yzm']) && !empty(trim($_POST['yzm']))){
+        include_once('inc/classes/CAPTCHA.php');
+        $img = new Sakura\API\CAPTCHA;
+        $check = $img->check_CAPTCHA($_POST['yzm']);
+        if($check['code'] == 5){
+            return $user;
+        }else{
+            return new WP_Error('prooffail', '<strong>错误</strong>：'.$check['msg']);
+            //return home_url('/wp-admin/');
+        }
+    }else{
+        return new WP_Error('prooffail', '<strong>错误</strong>：验证码为空！');
+    }
+}
+add_filter( 'authenticate','CAPTCHA_CHECK',20,3);
+/** 
+*   注册界面验证码验证
+*/
+function registration_CAPTCHA_CHECK($errors, $sanitized_user_login, $user_email) {
+    if (empty($_POST)) {
+        return new WP_Error();
+    }
+    if(isset($_POST['yzm']) && !empty(trim($_POST['yzm']))){
+        include_once('inc/classes/CAPTCHA.php');
+        $img = new Sakura\API\CAPTCHA;
+        $check = $img->check_CAPTCHA($_POST['yzm']);
+        if($check['code'] == 5){
+            return $errors;
+        }else{
+            return new WP_Error('prooffail', '<strong>错误</strong>：'.$check['msg']);
+        }
+    }else{
+        return new WP_Error('prooffail', '<strong>错误</strong>：验证码为空！');
+    }
+}
+add_filter( 'registration_errors', 'registration_CAPTCHA_CHECK', 2, 3 );
 /**
  * 禁用 embeds
  */

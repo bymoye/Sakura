@@ -74,7 +74,13 @@ if (akina_option('akina_meta') == true) {
 						</div>
 						<?php }elseif($site_url == 'localhost' or $site_url == 'nmxc.ltd'){ ?>
 							<div class="site-title">
-							<a href="<?php bloginfo('url');?>" class="sitelogo"></a>
+							<a href="<?php bloginfo('url');?>">
+							<i class="nmxc_logo" style="--svg-name: var(--sitelogo_mi);--size:35px;"></i>
+							<i class="nmxc_logo sitelogo-de" style="--svg-name: var(--sitelogo_de);"></i>
+							<i class="nmxc_logo" style="--svg-name: var(--sitelogo_ni);"></i>
+							<i class="nmxc_logo" style="--svg-name: var(--sitelogo_ming);"></i>
+							<i class="nmxc_logo" style="--svg-name: var(--sitelogo_xin);"></i>
+							</a>
 						</div>
 						<?php }else{ ?>
 						<span class="site-title">

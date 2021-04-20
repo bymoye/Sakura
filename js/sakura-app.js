@@ -9,11 +9,16 @@ let addComment;
 mashiro_global.variables = new function () {
     this.has_hls = false;
 };
-
 (()=>{
     const version_list = { Firefox: 84, Edg: 88, Chrome: 88, Opera: 74, Version: 9 },
-        reg = /(Firefox|Chrome|Version|Opera)\/(\d+)/i,
-        version = navigator.userAgent.match(reg);
+        UA = navigator.userAgent;
+    let reg;
+    if (UA.indexOf('Chrome')!=-1){
+        reg = /(Chrome)\/(\d+)/i;
+    }else {
+        reg = /(Firefox|Chrome|Version|Opera)\/(\d+)/i;
+    }
+    const version = UA.match(reg);
     if (version && version[2] >= version_list[version[1]] && Poi.pjax) {
         console.log("%c PJAX | BLUR ON! ", "background:#5ad5e8; color:#ffffff;font-size:15px");
         Poi.pjax = true;
@@ -129,15 +134,15 @@ function code_highlight_style() {
         code = document.querySelectorAll("pre code");
     if (!pre.length)return;
     const gen_top_bar=(i)=>{
-        let attributes = {
+        const attributes = {
             'autocomplete': 'off',
             'autocorrect': 'off',
             'autocapitalize': 'off',
             'spellcheck': 'false',
             'contenteditable': 'false',
             'design': 'by Miym'
-        },
-            ele_name = pre[i].children[0].className,
+        };
+        let ele_name = pre[i].children[0].className,
             lang = ele_name.substr(0, ele_name.indexOf(" ")).replace('language-', ''),
             code_a = code[i];
         if (lang.toLowerCase() == "hljs") lang = code_a.className.replace('hljs', '') ? code_a.className.replace('hljs', '') : "text";
@@ -161,19 +166,6 @@ try {
     code_highlight_style();
 } catch{}
 
-const cm_click = (e)=>{
-    if (e.target.classList.contains("comment-reply-link")) {
-        e.stopPropagation();
-        e.preventDefault();
-        let data_commentid = e.target.getAttribute("data-commentid");
-        addComment.moveForm("comment-" + data_commentid, data_commentid, "respond", e.target.getAttribute("data-postid"));
-        //return false;
-    }
-}
-if (Poi.reply_link_version == 'new') {
-    const cm = document.querySelector(".comments-main");
-    if (cm)cm.addEventListener("click", cm_click);
-}
 
 function attach_image() {
     const cached = document.querySelector(".insert-image-tips"),
@@ -234,11 +226,11 @@ function clean_upload_images() {
 }
 
 function add_upload_tips() {
-    let form_subit = document.querySelector('.form-submit #submit');
+    const form_subit = document.querySelector('.form-submit #submit');
     if (!form_subit) return;
     form_subit.insertAdjacentHTML('afterend', '<div class="insert-image-tips popup"><i class="post_icon_svg" style="--svg-name: var(--svg_picture);--size: 20px;--color:#5d646c;position: absolute;left: 50%;top:50%;transform: translate(-50%,-50%);margin: 0;"></i><span class="insert-img-popuptext" id="uploadTipPopup">上传图片</span></div><input id="upload-img-file" type="file" accept="image/*" multiple="multiple" class="insert-image-button">');
     attach_image();
-    let file_subit = document.getElementById('upload-img-file'),
+    const file_subit = document.getElementById('upload-img-file'),
         hover = document.getElementsByClassName('insert-image-tips')[0],
         Tip = document.getElementById('uploadTipPopup');
     if (!file_subit)return;
@@ -257,7 +249,7 @@ add_upload_tips();
 function click_to_view_image() {
     const comment_inline = document.getElementsByClassName('comment_inline_img');
     if (!comment_inline.length) return;
-    document.getElementsByClassName("comments-main")[0].addEventListener("click", function (e) {
+    document.querySelector(".comments-main").addEventListener("click", function (e) {
         if (e.target.classList.contains("comment_inline_img")) {
             let temp_url = e.target.src;
             window.open(temp_url);
@@ -285,10 +277,10 @@ function cmt_showPopup(ele) {
     }
 }
 function scrollBar() {
-    let cached = document.getElementById('bar'),
+    const cached = document.getElementById('bar'),
         f = document.querySelector(".toc-container"),
-        sc = document.querySelector(".site-content"),
-        blur_rs,
+        sc = document.querySelector(".site-content");
+    let blur_rs,
         s = 0, a, b, c, result;
     if (Poi.pjax) {
         let flag = false,
@@ -342,31 +334,6 @@ function scrollBar() {
 }
 
 function iconsvg() {
-    const sitelogo = document.getElementsByClassName('sitelogo');
-    // iconsvg == null ? document.body.insertAdjacentHTML('beforeend', "<div id='iconsvg' style='display:none;'></div>") : null;
-    // if (document.getElementById('iconsvg').children.length == 0) {
-    //     let xhr = new XMLHttpRequest();
-    //    xhr.open("get", "https://cdn.jsdelivr.net/gh/bymoye/sakura/images/icon.svg", true);
-    //     xhr.onreadystatechange = function () {
-    //         if (xhr.readyState == 4 && (xhr.status == 200 || xhr.status == 304)) {
-    //             document.getElementById('iconsvg').insertAdjacentHTML('afterbegin', xhr.responseText);
-    //         }
-    //     }
-    //     xhr.send();
-    // }
-    if (document.getElementsByClassName('sitelogo')[0].children.length == 0) {
-        let xhr = new XMLHttpRequest();
-        xhr.open("get", "https://cdn.jsdelivr.net/gh/bymoye/sakura/images/nmx.svg", true);
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState == 4 && (xhr.status == 200 || xhr.status == 304)) {
-                for (let i = 0; i < sitelogo.length; i++) {
-                    if (sitelogo[i].children.length == 0)
-                        sitelogo[i].insertAdjacentHTML('afterbegin', xhr.responseText);
-                }
-            }
-        }
-        xhr.send();
-    }
     if (!document.getElementById("svg_blurfilter")) {
         const a = "http://www.w3.org/2000/svg",
             svg = document.createElementNS(a, "svg"),
@@ -392,14 +359,13 @@ function iconsvg() {
         svg.append(image);
         document.body.insertBefore(svg, document.body.firstChild);
     }
-    document.getElementsByClassName('openNav')[0].classList.remove('exbit');
-    document.getElementsByClassName('site-header')[0].classList.remove('exbit');
+    document.querySelector('.openNav').classList.remove('exbit');
+    document.querySelector('.site-header').classList.remove('exbit');
 }
 
 
-
 function no_right_click() {
-    let pri = document.getElementById("primary");
+    const pri = document.getElementById("primary");
     if(!pri)return;
     pri.addEventListener("contextmenu", function (e) {
         if (e.target.nodeName.toLowerCase() == "img") {
@@ -479,15 +445,6 @@ function timeSeriesReload(flag) {
                         slideToogle(el, 500, 'show');
                         return false;
                     })
-                }
-                if (false) {
-                    for (let i = 0; i < al_post_list.length; i++) {
-                        let el = al_post_list[i];
-                        el.parentNode.addEventListener('mouseover', function () {
-                            slideToogle(el, 500, 'hide');
-                            return false;
-                        })
-                    }
                 }
                 let al_expand_collapse_click = 0;
                 al_expand_collapse.addEventListener('click', function () {
@@ -600,13 +557,13 @@ function copy_code_block() {
 function tableOfContentScroll(flag) {
     if (document.body.clientWidth <= 1200) {
         return;
-    } else if (document.querySelector("div.have-toc") == null && document.querySelector("div.has-toc") == null) {
-        let ele = document.getElementsByClassName("toc-container")[0];
-        if (ele != null) ele.remove();
+    } else if (!document.querySelector("div.have-toc") && !document.querySelector("div.has-toc")) {
+        let ele = document.querySelector(".toc-container");
+        if (ele) ele.remove();
     } else {
         if (flag) {
             let id = 1,
-                heading_fix = mashiro_option.entry_content_theme == "sakura" ? (document.querySelector("article.type-post") != null ? (document.querySelector("div.pattern-attachment-img") != null ? -75 : 200) : 375) : window.innerHeight / 2;
+                heading_fix = mashiro_option.entry_content_theme == "sakura" ? (document.querySelector("article.type-post") ? (document.querySelector("div.pattern-attachment-img") ? -75 : 200) : 375) : window.innerHeight / 2;
             let _els = document.querySelectorAll('.entry-content,.links');
                 for(let i = 0;i<_els.length;i++){
                     let _el = _els[i].querySelectorAll('h1,h2,h3,h4,h5');
@@ -656,10 +613,24 @@ const pjaxInit = function () {
     tableOfContentScroll(true);
 }
 
+const cm_click = (e)=>{
+    if (e.target.classList.contains("comment-reply-link")) {
+        e.stopPropagation();
+        e.preventDefault();
+        let data_commentid = e.target.getAttribute("data-commentid");
+        addComment.moveForm("comment-" + data_commentid, data_commentid, "respond", e.target.getAttribute("data-postid"));
+        //return false;
+    }
+}
+
 function sm() {
-    let sm = document.getElementsByClassName('sm'),
+
+    const sm = document.getElementsByClassName('sm'),
         cm = document.querySelector(".comments-main");
     if (!sm.length) return;
+    if (Poi.reply_link_version == 'new' && cm) {
+        cm.addEventListener("click",cm_click);
+    }
     cm && cm.addEventListener("click",(e)=>{
         let list = e.target.parentNode;
         if(list.classList.contains("sm")){
@@ -714,7 +685,7 @@ const ready=function(fn){
 };
 
 function smileBoxToggle() {
-    let et = document.getElementById("emotion-toggle");
+    const et = document.getElementById("emotion-toggle");
     et && et.addEventListener('click', function () {
         document.querySelector('.emotion-toggle-off').classList.toggle("emotion-hide");
         document.querySelector('.emotion-toggle-on').classList.toggle("emotion-show");
@@ -788,10 +759,12 @@ function getqqinfo() {
         url = document.getElementById("url"),
         qq_check = document.getElementsByClassName("qq-check")[0],
         gravatar_check = document.getElementsByClassName("gravatar-check")[0],
+        temp,
         user_avatar_img = document.querySelector("div.comment-user-avatar img");
         if (author == null) return;
     if (!getCookie('user_qq') && !getCookie('user_qq_email') && !getCookie('user_author')) {
         qq.value = author.value = email.value = url.value = "";
+        imgError(user_avatar_img,2);
     }
     if (getCookie('user_avatar') && getCookie('user_qq') && getCookie('user_qq_email')) {
         user_avatar_img.setAttribute('src', getCookie('user_avatar'));
@@ -808,8 +781,14 @@ function getqqinfo() {
     }
     let emailAddressFlag = email.value;
     author.addEventListener("blur", function () {
+        if (temp==author.value){
+            return;
+        }else{
+            temp=author.value;
+        }
         let qq = author.value,
             xhr = new XMLHttpRequest();
+
         xhr.onreadystatechange = function () {
             if (xhr.readyState == 4 && (xhr.status == 200 || xhr.status == 304)) {
                 let res = JSON.parse(xhr.responseText);
@@ -820,7 +799,7 @@ function getqqinfo() {
                 }
                 user_avatar_img.setAttribute("src", "https://q2.qlogo.cn/headimg_dl?dst_uin=" + qq + "&spec=100");
                 is_get_by_qq = true;
-                qq.value = qq.trim();
+                qq = qq.trim();
                 qq_check.style.display = "block";
                 gravatar_check.style.display = "none";
                 setCookie('user_author', res[qq][6], 30);
@@ -829,11 +808,13 @@ function getqqinfo() {
                 setCookie('user_qq_email', qq + '@qq.com', 30);
                 setCookie('user_email', qq + '@qq.com', 30);
                 emailAddressFlag = email.value;
+                temp=author.value;
             } else if (xhr.readyState == 4) {
-                qq.value = "";
+                qq = "";
                 qq_check.style.display = "none";
                 gravatar_check.style.display = "block";
-                if (!email.value) {
+                imgError(user_avatar_img,2);
+                if (email.value && is_get_by_qq==false) {
                     user_avatar_img.setAttribute("src", get_gravatar(email.value, 80));
                     setCookie('user_qq', '', 30);
                     setCookie('user_email', email.value, 30);
@@ -888,13 +869,14 @@ function getqqinfo() {
     }
     email.addEventListener("blur", function () {
         let emailAddress = email.value;
+        if (!emailAddress)return;
         if (is_get_by_qq == false || emailAddressFlag != emailAddress) {
             user_avatar_img.setAttribute("src", get_gravatar(emailAddress, 80));
             setCookie('user_avatar', get_gravatar(emailAddress, 80), 30);
             setCookie('user_email', emailAddress, 30);
             setCookie('user_qq_email', '', 30);
             setCookie('is_user_qq', 'no', 30);
-            qq.value = '';
+            //qq.value = '';
             if (!qq.value) {
                 qq_check.style.display = "none";
                 gravatar_check.style.display = "block";
@@ -1103,7 +1085,6 @@ let s = document.getElementById("bgvideo"),
         AH: function () {
             if (Poi.windowheight == 'auto' && mashiro_option.windowheight == 'auto') {
                 if (document.querySelector(".main-title")) {
-                    //let _height = document.documentElement.clientHeight + "px";
                     document.getElementById("centerbg").style.height = "100vh";
                     document.getElementById("bgvideo").style.minHeight = "100vh";
                 }
@@ -1117,17 +1098,11 @@ let s = document.getElementById("bgvideo"),
                 let headertop = document.querySelector(".headertop"),
                     blank = document.querySelector(".blank");
                 if (document.querySelector(".main-title")) {
-                    try {
-                        blank.style.paddingTop = "0px";
-                    } catch (e) { }
-                    headertop.style.height = "auto";
+                     if(blank) blank.style.paddingTop = "0px";
                     headertop.style.display = "";
                     if (Poi.movies.live == 'open') Siren.liveplay();
                 } else {
-                    try {
-                        blank.style.paddingTop = "75px";
-                    } catch (e) {}
-                    headertop.style.height = "0px";
+                    if(blank) blank.style.paddingTop = "75px";
                     headertop.style.display = "none";
                     Siren.livepause();
                 }
@@ -1233,7 +1208,7 @@ let s = document.getElementById("bgvideo"),
                     }
 
                     function div_href() {
-                        let ins_selectable = document.getElementsByClassName("ins-selectable");
+                        const ins_selectable = document.getElementsByClassName("ins-selectable");
                         for(let i=0;i<ins_selectable.length;i++){
                             let a = ins_selectable[i];
                             a.addEventListener("click", function () {
@@ -1438,9 +1413,7 @@ let s = document.getElementById("bgvideo"),
             }
         },
         XCS: function () {
-            let __cancel = document.getElementById("cancel-comment-reply-link"),
-                __cancel_text = __cancel && __cancel.textContent,
-                __list = "commentwrap";
+            let __list = "commentwrap";
             document.body.addEventListener('submit', function (e) {
                 if (e.target == document.querySelector("form#commentform.comment-form")) {
                     e.preventDefault();
@@ -1463,7 +1436,7 @@ let s = document.getElementById("bgvideo"),
                                 cancel = document.getElementById('cancel-comment-reply-link'),
                                 temp = document.getElementById('wp-temp-form-div'),
                                 respond = document.getElementById(t.respondId),
-                                post = document.getElementById('comment_post_ID').value,
+                               // post = document.getElementById('comment_post_ID').value,
                                 parent = document.getElementById('comment_parent').value;
                             if (parent != '0') {
                                 document.getElementById("respond").insertAdjacentHTML('beforebegin', '<ol class="children">' + data + '</ol>');
@@ -1508,7 +1481,6 @@ let s = document.getElementById("bgvideo"),
                         parent = document.getElementById('comment_parent'),
                         //post = document.getElementById('comment_post_ID'),
                         temp;
-                    __cancel.textContent = __cancel_text;
                     t.respondId = respondId;
                     if (!document.getElementById('wp-temp-form-div')) {
                         div = document.createElement('div');
@@ -1517,7 +1489,7 @@ let s = document.getElementById("bgvideo"),
                         respond.parentNode.insertBefore(div, respond)
                     }
                     !comm ? (temp = document.getElementById('wp-temp-form-div'), document.getElementById('comment_parent').value = '0', temp.parentNode.insertBefore(respond, temp), temp.remove()) : comm.parentNode.insertBefore(respond, comm.nextSibling);
-                    let _respond = document.getElementById("respond");
+                    const _respond = document.getElementById("respond");
                     window.scrollTo({
                         top: _respond.getBoundingClientRect().top + window.pageYOffset - _respond.clientTop - 100,
                         behavior: "smooth"
@@ -1629,7 +1601,7 @@ let s = document.getElementById("bgvideo"),
             document.body.addEventListener('input', POWERMODE)
         },
         FDT: function () {
-            let _header = document.querySelector(".pattern-header");
+            const _header = document.querySelector(".pattern-header");
             if (!_header) return;
             let top,
                 _center = document.querySelector(".pattern-center"),
@@ -1641,15 +1613,15 @@ let s = document.getElementById("bgvideo"),
                     flag=true;
                     switch(top){
                         case "0px":g > 60 ? g -= 0.5 : g = 60;
-                                   i < 15 ? i += 0.4 : i = 15;
+                                   i < 15 ? i += 0.1 : i = 15;
                                    break;
                         case "60%":g < 100 ? g +=0.5 : g = 100;
-                                   i > 5 ? i -= 0.4 : i = 5;
+                                   i > 5 ? i -= 0.1 : i = 5;
                                    break;
                     }
                     _header.style.setProperty("--blur",i+"px");
                     _header.style.setProperty("--saturate",g+"%");
-                    if ((top == "0px" && i!=15) || (top == "60%" && i!=5)) {
+                    if ((top == "0px" && (i!=15 || g!=60)) || (top == "60%" && (i!=5 || g!=100))) {
                         flag=false;
                         e = requestAnimationFrame(_headertoggle);
                     }

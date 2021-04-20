@@ -12,22 +12,22 @@ Text Domain: sakura
 Tags: 樱花庄的白猫
 */
 #content {
-    animation: header 1s;
+    animation: header .5s;
 }
 
 .headertop,
 .pattern-center {
-    animation: header 1s
+    animation: header .5s
 }
 
 .site-branding {
-    animation: sitetop 1s
+    animation: sitetop .5s
 }
 
 .header-user-avatar,
 .searchbox,
 .site-top .lower {
-    animation: searchbox 1s
+    animation: searchbox .5s
 }
 
 .comments,
@@ -621,7 +621,6 @@ a:hover {
     margin: 0;
     padding: 0;
     min-width: 99.999%;
-    min-height: 550px;
     z-index: 0
 }
 
@@ -739,7 +738,7 @@ a:hover {
     width: 80%;
     margin: auto;
     border: 0;
-    padding-top: 10%;
+    /* padding-top: 10%; */
     transition:padding .5s linear;
 }
 
@@ -761,14 +760,14 @@ a:hover {
     backdrop-filter:blur(var(--blur,15px)) saturate(var(--saturate,60%));
     -webkit-backdrop-filter:blur(var(--blur,15px)) saturate(var(--saturate,60%));
     background-color: rgba(0, 0, 0, 0.376);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
 }
 
 
-.single-center .single-header h1.entry-title {
-    margin: 0;
-    font-size: 32px;
-    width: 100%
-}
+
 
 .single-center .entry-census {
     color: #fff;
@@ -829,9 +828,6 @@ a:hover {
     }
     .pattern-center-blank {
         padding-top: 0
-    }
-    .pattern-center h1.cat-title, .pattern-center h1.entry-title{
-        padding-top: 15%;
     }
 }
 
@@ -927,16 +923,11 @@ a:hover {
     position: fixed;
     background: rgba(255, 255, 255, .8);
     box-shadow: 0 1px 40px -8px rgba(0, 0, 0, .5);
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
 }
-
 .exbit {
     transform: translateY(-200px);
 }
-.exbit svg{
-    animation: none;
-}
+
 .site-header:hover {
     background-color: rgba(255,255,255,.8)
 }
@@ -3616,7 +3607,7 @@ li.feature-2 {
 .headertop {
     position: relative;
     overflow: hidden;
-    height: 0
+    height: 100%;
 }
 
 
@@ -3634,10 +3625,13 @@ li.feature-2 {
 
 #centerbg {
     width: 100%;
-    height: 550px;
     margin: 0;
     padding: 0;
-    z-index: -1
+    z-index: -1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height:100vh;
 }
 
 @media (max-width:860px) {
@@ -3657,12 +3651,11 @@ li.feature-2 {
     position: relative;
     max-width: 900px;
     padding: 0 10px;
-    top: 49.3%;
+    /* top: 49.3%;
     left: 50%;
     transform: translate(-50%, -50%);
-    -webkit-transform: translate(-50%, -50%);
+    -webkit-transform: translate(-50%, -50%); */
     text-align: center;
-    z-index: 99;
     -webkit-transition: .4s ease all;
     -moz-transition: .4s ease all;
     -o-transition: .4s ease all;
@@ -4851,7 +4844,8 @@ i.iconfont.down {
         position: relative
     }
     #mo-nav.open {
-        width: 250px
+        transform: translateX(0px);
+        /* width: 250px */
     }
     .wrapper section {
         max-width: 600px
@@ -4927,8 +4921,7 @@ i.iconfont.down {
         background: #FFF
     }
     #mo-nav {
-        width: 0;
-        max-width: 250px !important;
+        width: 250px;
         height: 100%;
         z-index: 999;
         position: absolute;
@@ -4937,9 +4930,11 @@ i.iconfont.down {
         display: block;
         overflow-x: hidden !important;
         overflow-y: auto;
-        /*backdrop-filter: blur(7px);
-        -webkit-backdrop-filter: blur(7px);*/
+        backdrop-filter: blur(7px);
+        -webkit-backdrop-filter: blur(7px);
         background: rgba(255,255,255,.5);
+        transition: transform .5s;
+        transform: translateX(-250px);
     }
     #mo-nav .m-avatar {
         position: relative;
@@ -6742,7 +6737,8 @@ a.toc-link {
         padding-top: 10px;
         width: 45px;
         height: 55px;
-        right: 11%
+        right: 11%;
+        z-index: 99;
     }
     .comment-user-avatar .socila-check {
         width: 1.5em;
@@ -7119,8 +7115,8 @@ a.toc-link {
 }
 
 .highlight-wrap code {
-    background: #1d1f21 impor !important;
-    color: #fff import !important;
+    background: #1d1f21 !important;
+    color: #fff !important;
     word-break: break-word;
     font-family: 'Source Code Pro', monospace, Helvetica, Tahoma, Arial, STXihei, "STHeiti Light", "Microsoft YaHei", sans-serif;
     padding: 2px;
@@ -7513,30 +7509,22 @@ p.comment-form-cookies-consent {
     transform: translateX(20%);
 }
 
-.sitelogo_svg {
-    height: 30px;
-    transform: translateY(10px);
-    animation:logofill 40s infinite;
-}
 
 .site-title:hover .sitelogo-de{
     transform: rotate(-360deg);
     -webkit-transform: rotate(-360deg);
-    /*animation: sitede 5s linear infinite;*/
-}
-.sitelogo-de {
-    transition: transform 5s;
-    transform: rotate(0deg);
-    -webkit-transform: rotate(0deg);
-    transform-origin: 31% 60%;
 }
 
-@keyframes logofill{
-    0%{fill:#000000;}
-    25%{fill:rgb(218, 79, 37);}
-    50%{fill:rgb(53, 153, 179);}
-    75%{fill:#16a085;}
-    100% {fill:#000000;}}
+.site-title .sitelogo-de{
+    transition: transform 5s;
+}
+
+@keyframes logocolor{
+    0%{color:#000000;}
+    25%{color:rgb(218, 79, 37);}
+    50%{color:rgb(53, 153, 179);}
+    75%{color:#16a085;}
+    100% {color:#000000;}}
 
     .bili-container img{
         width: 32px;
@@ -7837,10 +7825,6 @@ p.comment-form-cookies-consent {
 
     }
 
-    .pattern-center:hover h1.cat-title, .pattern-center:hover h1.entry-title{
-        padding-top:0%;
-    }
-
     .single-center .entry-census span img {
         float: none;
         vertical-align: middle;
@@ -7969,4 +7953,19 @@ p.comment-form-cookies-consent {
 
     .comment-edit-link:hover .post_icon_svg{
         --color:var(--themecolor) !important;
+    }
+
+    .nmxc_logo{
+        --size: 28px;
+        mask: 0 0/var(--size) var(--size);
+        -webkit-mask: 0 0/var(--size) var(--size);
+        color: var(--color);
+        width: var(--size);
+        height: var(--size);
+        display: inline-block;
+        background-color: currentColor;
+        vertical-align: middle;
+        mask-image: var(--svg-name);
+        -webkit-mask-image: var(--svg-name);
+        animation:logocolor 40s infinite;
     }

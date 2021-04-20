@@ -332,6 +332,13 @@ function optionsframework_options() {
 		'type' => 'textarea');
 	
 	$options[] = array(
+		'name' => __('logo code', 'sakura'),/*页脚信息*/
+		'desc' => __('以代码的方式显示标题', 'sakura'),/*页脚说明文字，支持HTML代码*/
+		'id' => 'logo_code',
+		'std' => 'test',
+		'type' => 'textarea');
+
+	$options[] = array(
 		'name' => __('页脚显示数据库查询次数', 'sakura'),
 		'desc' => __('默认关闭，勾选开启', 'sakura'),
 		'id' => 'data_query',
