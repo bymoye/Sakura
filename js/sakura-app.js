@@ -6,9 +6,11 @@
  */
 "use strict";
 let addComment;
+
 mashiro_global.variables = new function () {
     this.has_hls = false;
 };
+
 (()=>{
     const version_list = { Firefox: 84, Edg: 88, Chrome: 88, Opera: 74, Version: 9 },
         UA = navigator.userAgent;
@@ -336,15 +338,8 @@ function scrollBar() {
 function iconsvg() {
     if (!document.getElementById("svg_blurfilter")) {
         const a = "http://www.w3.org/2000/svg",
-            svg = document.createElementNS(a, "svg"),
-            image = document.createElementNS(a, "image");
-        svg.style.cssText = "position: fixed;width: 100%;height: 100%;z-index:-999";
-        image.setAttribute("href", mashiro_option.themebg);
-        image.setAttribute("x", "-5");
-        image.setAttribute("y", "-5");
-        image.setAttribute("height", "102%");
-        image.setAttribute("width", "102%");
-        image.setAttribute("preserveAspectRatio", "xMidYMid slice");
+            svg = document.querySelector("svg"),
+            image = document.querySelector("svg image");
         if (Poi.pjax) {
             const filter = document.createElementNS(a, "filter"),
                 fe = document.createElementNS(a, "feGaussianBlur");
@@ -357,7 +352,6 @@ function iconsvg() {
         }
         // image.setAttribute("filter", "url(#svg_blurfilter)");
         svg.append(image);
-        document.body.insertBefore(svg, document.body.firstChild);
     }
     document.querySelector('.openNav').classList.remove('exbit');
     document.querySelector('.site-header').classList.remove('exbit');

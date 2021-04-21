@@ -171,7 +171,6 @@ add_action( 'after_setup_theme', 'akina_content_width', 0 );
 function sakura_scripts() {
     if(akina_option('jsdelivr_cdn_test')){ 
         wp_enqueue_script( 'js_lib', get_template_directory_uri() . '/cdn/js/lib.js', array(), NMX_VERSION.akina_option('cookie_version', ''), true );
-       // wp_enqueue_script( 'js_lightgallery', get_template_directory_uri() . '/cdn/js/src/lightgallery.min.js', array(), NMX_VERSION.akina_option('cookie_version', ''), true );
     } else { 
         wp_enqueue_script( 'js_lib', 'https://cdn.jsdelivr.net/gh/bymoye/Sakura@' . NMX_VERSION . '/cdn/js/lib.min.js', array(), NMX_VERSION, true );
     }
@@ -538,9 +537,7 @@ function get_post_views($post_id) {
 
 
 function is_webp(){
-    $webp = strpos($_SERVER['HTTP_ACCEPT'], 'image/webp');
-    $webp === false ? $webp=0 : $webp=1;
-    return $webp;
+    return strpos($_SERVER['HTTP_ACCEPT'], 'image/webp') ? true : false;
 }
 /*
  * 友情链接
@@ -929,7 +926,7 @@ if ( !get_option('use_smilies'))
     $return_smiles = '';
     for($i=0;$i<count($tiebaname);$i++){
       $tieba_Name=$tiebaname[$i];
-      if (is_webp() == 1){
+      if (is_webp()){
           $tiebaimgdir="tiebawebp/";
           $smiliesgs=".webp";
       }else{
@@ -1008,7 +1005,7 @@ function push_bili_smilies(){
   $return_smiles = '';
   for($i=0;$i<count($name);$i++){
     $smilies_Name=$name[$i];
-    if (is_webp() == 1){
+    if (is_webp()){
         $biliimgdir="biliwebp/";
         $smiliesgs=".webp";
     }else{
@@ -1043,7 +1040,7 @@ add_filter('the_content_feed', 'featuredtoRSS');
 
 //
 function bili_smile_filter_rss($content) {
-    if (is_webp() == 1){
+    if (is_webp()){
         $biliimgdir="biliwebp/";
         $smiliesgs=".webp";
     }else{
@@ -1460,14 +1457,19 @@ function change_avatar($avatar){
 }
 
 function get_random_image_url(){
-    $randomurl_file = get_template_directory() .'/inc/random_url.Dat';
+    $randomurl_file = get_template_directory() .'/inc/result.txt';
+    // $randomurl_file = get_template_directory() .'/inc/random_url.Dat';
     $randomurl_list = file($randomurl_file);
     $k = array_rand($randomurl_list);
-    $html = explode(",",$randomurl_list[$k]);
-    is_webp() == 1 ? $gs = "webp" : $gs = "jpeg";
-    $md = 'https://fp1.fghrsh.net/' . $html[0] . '.jpg!q80.150p.' . $gs;
-    $th = 'https://fp1.fghrsh.net/' . $html[0] . '.jpg!q80.300i.' . $gs;
-    $webp = 'https://fp1.fghrsh.net/' . $html[0] . '.jpg!q80.' . $gs;
+    // $html = explode(",",$randomurl_list[$k]);
+    $gs = is_webp() ? 'webp' : 'jpg';
+    // $md = 'https://fp1.fghrsh.net/' . $html[0] . '.jpg!q80.150p.' . $gs;
+    // $th = 'https://fp1.fghrsh.net/' . $html[0] . '.jpg!q80.300i.' . $gs;
+    // $webp = 'https://fp1.fghrsh.net/' . $html[0] . '.jpg!q80.' . $gs;
+    $address = str_replace(PHP_EOL, '',$randomurl_list[$k]);
+    $md = $address . '!/fw/150/quality/80/format/' . $gs;
+    $th = $address . '!/fh/300/quality/80/format/' . $gs;
+    $webp = $address . '!/quality/80/format/' . $gs;
     return array($md,$th,$webp);
 }
 

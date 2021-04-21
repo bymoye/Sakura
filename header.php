@@ -55,6 +55,9 @@ if (akina_option('akina_meta') == true) {
 <script type="text/javascript">if (!!window.ActiveXObject || "ActiveXObject" in window) {alert('朋友，IE浏览器未适配哦~\n如果是 360、QQ 等双核浏览器，请关闭 IE 模式！');}</script>
 </head>
 <body <?php body_class(); ?>>
+	<svg style="position: fixed; width: 100%; height: 100%; z-index: -999;">
+		<image href="<?php $img = get_random_bg_url();echo is_array($img) ? $img[2] : $img; ?>" x="-5" y="-5" height="102%" width="102%" preserveAspectRatio="xMidYMid slice"></image>
+	</svg>
     <div class="scrollbar" id="bar"></div>
 	<section id="main-container">
 		<?php 

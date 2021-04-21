@@ -63,19 +63,6 @@ function z_edit_texonomy_field($taxonomy) {
 // 上传图像
 function z_script() {
 	return '<script type="text/javascript">
-	// var ready=function(fn){
-	// 	if (typeof fn !== \'function\') return;
-	// 	if (document.readyState===\'complete\') {
-	// 		return fn();
-	// 	}
-	// 	document.addEventListener(\'DOMContentLoaded\', fn, false);
-	// };
-	// ready(()=>{
-	// 	let upload_button,
-	// 		upload_image_button;
-		
-		
-	// })
 	    jQuery(document).ready(function($) {
 			var  upload_button;
 			$(".z_upload_image_button").click(function(event) {
