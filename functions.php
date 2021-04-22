@@ -195,7 +195,7 @@ function sakura_scripts() {
 	$auto_height = akina_option('focus_height') ? 'fixed' : 'auto';
 	$code_lamp = 'close';
 	//if(wp_is_mobile()) $auto_height = 'fixed'; //拦截移动端
-    version_compare( $GLOBALS['wp_version'], '5.1', '>=' ) ? $reply_link_version = 'new' : $reply_link_version = 'old';
+    $reply_link_version = version_compare( $GLOBALS['wp_version'], '5.1', '>=' ) ? 'new' : 'old';
 	wp_localize_script('app', 'Poi' , array(
 		'pjax' => akina_option('poi_pjax'),
 		'movies' => $movies,
@@ -465,20 +465,15 @@ if(!function_exists('akina_comment_format')){
         global $wpdb;
         $author_count = count($wpdb->get_results(
         "SELECT comment_ID as author_count FROM $wpdb->comments WHERE comment_author_email = '$comment_author_email' "));
-        if($author_count>=1 && $author_count< 5 )//数字可自行修改，代表评论次数。
-            echo '<i class="post_icon_svg" style="--svg-name: var(--svg_level_0);--size:1.5em;--color:#BFBFBF;margin: 0 3px;"></i>';
-        else if($author_count>=6 && $author_count< 10)
-            echo '<i class="post_icon_svg" style="--svg-name: var(--svg_level_1);--size:1.5em;--color:#BFBFBF;margin: 0 3px;"></i>';
-        else if($author_count>=10 && $author_count< 20)
-            echo '<i class="post_icon_svg" style="--svg-name: var(--svg_level_2);--size:1.5em;--color:#95DDB2;margin: 0 3px;"></i>';
-        else if($author_count>=20 && $author_count< 40)
-            echo '<i class="post_icon_svg" style="--svg-name: var(--svg_level_3);--size:1.5em;--color:#92D1E5;margin: 0 3px;"></i>';
-        else if($author_count>=40 && $author_count< 80)
-            echo '<i class="post_icon_svg" style="--svg-name: var(--svg_level_4);--size:1.5em;--color:#FFB37C;margin: 0 3px;"></i>';
-        else if($author_count>=80 && $author_count< 160)
-            echo '<i class="post_icon_svg" style="--svg-name: var(--svg_level_5);--size:1.5em;--color:#FF6C00;margin: 0 3px;"></i>';
-        else if($author_count>=160)
-            echo '<i class="post_icon_svg" style="--svg-name: var(--svg_level_6);--size:1.5em;--color:red;margin: 0 3px;"></i>';
+        echo match(true){
+            $author_count < 5 => '<i class="post_icon_svg" style="--svg-name: var(--svg_level_0);--size:1.5em;--color:#BFBFBF;margin: 0 3px;"></i>',
+            $author_count < 10 => '<i class="post_icon_svg" style="--svg-name: var(--svg_level_1);--size:1.5em;--color:#BFBFBF;margin: 0 3px;"></i>',
+            $author_count < 20 => '<i class="post_icon_svg" style="--svg-name: var(--svg_level_2);--size:1.5em;--color:#95DDB2;margin: 0 3px;"></i>',
+            $author_count < 40 => '<i class="post_icon_svg" style="--svg-name: var(--svg_level_3);--size:1.5em;--color:#92D1E5;margin: 0 3px;"></i>',
+            $author_count < 80 => '<i class="post_icon_svg" style="--svg-name: var(--svg_level_4);--size:1.5em;--color:#FFB37C;margin: 0 3px;"></i>',
+            $author_count < 160 => '<i class="post_icon_svg" style="--svg-name: var(--svg_level_5);--size:1.5em;--color:#FF6C00;margin: 0 3px;"></i>',
+            default => '<i class="post_icon_svg" style="--svg-name: var(--svg_level_6);--size:1.5em;--color:red;margin: 0 3px;"></i>',
+        };
     }
 
 /**
@@ -487,20 +482,12 @@ if(!function_exists('akina_comment_format')){
  * @return string
  */
 function restyle_text($number) {
-    switch (akina_option('statistics_format')) {
-        case "type_2": //23,333 次访问
-            return number_format($number);
-        case "type_3": //23 333 次访问
-            return number_format($number, 0, '.', ' ');
-        case "type_4": //23k 次访问
-            if($number >= 1000) {
-                return round($number/1000,2) . 'k';
-            }else{
-                return $number;
-            }
-        default:
-            return $number;
-    }
+    return match(akina_option('statistics_format')){
+        "type_2" => number_format($number),
+        "type_3" => number_format($number, 0, '.', ' '),
+        "type_4" => ($number >= 1000 ? round($number/1000,2) . 'k' : $number),
+        default => $number,
+    };
 }
 
 function set_post_views() {
@@ -629,17 +616,17 @@ add_filter( 'body_class', 'akina_body_classes' );
  * 删除自带小工具
 */
 function unregister_default_widgets() {
- 	unregister_widget("WP_Widget_Pages");
- 	unregister_widget("WP_Widget_Calendar");
- 	unregister_widget("WP_Widget_Archives");
- 	unregister_widget("WP_Widget_Links");
- 	unregister_widget("WP_Widget_Meta");
- 	unregister_widget("WP_Widget_Search");
- 	unregister_widget("WP_Widget_Categories");
- 	unregister_widget("WP_Widget_Recent_Posts");
- 	unregister_widget("WP_Nav_Menu_Widget");
+ 	unregister_widget('WP_Widget_Pages');
+ 	unregister_widget('WP_Widget_Calendar');
+ 	unregister_widget('WP_Widget_Archives');
+ 	unregister_widget('WP_Widget_Links');
+ 	unregister_widget('WP_Widget_Meta');
+ 	unregister_widget('WP_Widget_Search');
+ 	unregister_widget('WP_Widget_Categories');
+ 	unregister_widget('WP_Widget_Recent_Posts');
+ 	unregister_widget('WP_Nav_Menu_Widget');
 }
-add_action("widgets_init", "unregister_default_widgets", 11);
+add_action('widgets_init', 'unregister_default_widgets', 11);
 
 
 /**
@@ -693,13 +680,13 @@ function enable_more_buttons($buttons) {
 	$buttons[] = 'backcolor'; 
 	return $buttons;
 } 
-add_filter("mce_buttons_3", "enable_more_buttons");
+add_filter('mce_buttons_3', 'enable_more_buttons');
 // 下载按钮
 function download($atts, $content = null) {  
 return '<a class="download" href="'.$content.'" rel="external"  
 target="_blank" title="下载地址">  
 <span><i class="post_icon_svg" style="--svg-name: var(--svg_pull_down);--size: 18px;"></i>Download</span></a>';}  
-add_shortcode("download", "download"); 
+add_shortcode('download', 'download'); 
 
 add_action('after_wp_tiny_mce', 'bolo_after_wp_tiny_mce');  
 function bolo_after_wp_tiny_mce($mce_settings) {  
@@ -717,9 +704,7 @@ QTags.addButton( 'download', '下载按钮', "[download]下载地址[/download]"
 //Login Page style
 function custom_login() {
 	//echo '<link rel="stylesheet" type="text/css" href="' . get_bloginfo('template_directory') . '/inc/login.css" />'."\n";
-	echo '<link rel="stylesheet" type="text/css" href="'.get_template_directory_uri().'/inc/login.css?'.SAKURA_VERSION.'" />'."\n";
-	//echo '<script type="text/javascript" src="'.get_bloginfo('template_directory').'/js/jquery.min.js"></script>'."\n";
-	//echo '<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/jquery/jquery@1.9.0/jquery.min.js"></script>' . "\n";
+	echo '<link rel="stylesheet" type="text/css" href="',get_template_directory_uri(),'/inc/login.css?',SAKURA_VERSION,'" />',"\n";
 }
 
 add_action('login_head', 'custom_login');
@@ -740,17 +725,17 @@ add_filter( 'login_headerurl', 'custom_loginlogo_url' );
 function custom_html() {
     $loginbg = akina_option('login_bg') ?: 'https://cdn.jsdelivr.net/gh/mashirozx/Sakura@3.2.7/images/hd.png';
 	echo '<script type="text/javascript" src="'.get_template_directory_uri().'/js/login.js"></script>'."\n";
-	echo '<script type="text/javascript">',"\n";
-    echo 'document.body.insertAdjacentHTML("afterbegin","<div class=\"loading\"><img src=\"https://cdn.jsdelivr.net/gh/moezx/cdn@3.1.9/img/Sakura/images/login_loading.gif\" width=\"58\" height=\"10\"></div><div id=\"bg\"><img /></div>");',"\n";
-    echo 'let bg_img = document.querySelector("#bg img");',"\n";
-    echo 'bg_img.setAttribute("src","'.$loginbg. '");',"\n";
-    echo 'bg_img.addEventListener("load",function(){',"\n";
-	echo '	resizeImage(\'bg\');'."\n";
-    echo '  window.onresize = ()=>{resizeImage("bg");}',"\n";
-    echo '  fadeOut(document.querySelector(".loading"))',"\n";
-	echo '});';
-    echo 'document.querySelector(".forgetmenot").outerHTML = \'<p class="forgetmenot">Remember Me<input name="rememberme" id="rememberme" value="forever" type="checkbox"><label for="rememberme" style="float: right;margin-top: 5px;transform: scale(2);margin-right: -10px;"></label></p>\';';
-	echo '</script>',"\n";
+	echo '<script type="text/javascript">
+    document.body.insertAdjacentHTML("afterbegin","<div class=\"loading\"><img src=\"https://cdn.jsdelivr.net/gh/moezx/cdn@3.1.9/img/Sakura/images/login_loading.gif\" width=\"58\" height=\"10\"></div><div id=\"bg\"><img /></div>");
+    const bg_img = document.querySelector("#bg img");
+    bg_img.setAttribute("src","',$loginbg, '");
+    bg_img.addEventListener("load",function(){
+        resizeImage(\'bg\');
+        window.onresize = ()=>{resizeImage("bg");}
+        fadeOut(document.querySelector(".loading"))
+    });
+    document.querySelector(".forgetmenot").outerHTML = \'<p class="forgetmenot">Remember Me<input name="rememberme" id="rememberme" value="forever" type="checkbox"><label for="rememberme" style="float: right;margin-top: 5px;transform: scale(2);margin-right: -10px;"></label></p>\';
+    </script>',"\n";
 }
 add_action('login_footer', 'custom_html');
 
@@ -767,17 +752,16 @@ function smallenvelop_login_message( $message ) {
 
 //Fix password reset bug </>
 function resetpassword_message_fix( $message ) {
-    $message = str_replace("<", "", $message);
-    return str_replace(">", "", $message);
+    return str_replace(['<','>'], '', $message);
 }
 add_filter( 'retrieve_password_message', 'resetpassword_message_fix' );
 
 //Fix register email bug </>
 function new_user_message_fix( $message ) {
-    $show_register_ip = "注册IP | Registration IP: ".get_the_user_ip()." (".convertip(get_the_user_ip()).")\r\n\r\n如非本人操作请忽略此邮件 | Please ignore this email if this was not your operation.\r\n\r\n";
-    $message = str_replace("To set your password, visit the following address:", $show_register_ip."在此设置密码 | To set your password, visit the following address:", $message);
-	$message = str_replace("<", "", $message);
-    return str_replace(">", "\r\n\r\n设置密码后在此登陆 | Login here after setting password: ", $message);
+    $show_register_ip = '注册IP | Registration IP: '.get_the_user_ip()." (".convertip(get_the_user_ip()).")\r\n\r\n如非本人操作请忽略此邮件 | Please ignore this email if this was not your operation.\r\n\r\n";
+    $message = str_replace('To set your password, visit the following address:', $show_register_ip.'在此设置密码 | To set your password, visit the following address:', $message);
+	$message = str_replace('<', '', $message);
+    return str_replace('>', "\r\n\r\n设置密码后在此登陆 | Login here after setting password: ", $message);
 }
 add_filter( 'wp_new_user_notification_email', 'new_user_message_fix' );
 
@@ -785,7 +769,7 @@ add_filter( 'wp_new_user_notification_email', 'new_user_message_fix' );
  * 评论邮件回复
  */
 function comment_mail_notify($comment_id){
-	$mail_user_name = akina_option('mail_user_name') ? akina_option('mail_user_name') : 'poi';
+	$mail_user_name = akina_option('mail_user_name') ?: 'poi';
     $comment = get_comment($comment_id);
     $parent_id = $comment->comment_parent ?: '';
     $spam_confirmed = $comment->comment_approved;

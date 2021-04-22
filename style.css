@@ -664,7 +664,6 @@ a:hover {
 
 .video-stu {
     position: absolute;
-    bottom: -100px;
     left: 0;
     right: 0;
     margin: auto;
@@ -3649,7 +3648,6 @@ li.feature-2 {
 }
 
 .focusinfo {
-    position: relative;
     padding: 0 10px;
     min-width: 200px;
     width: 800px;

@@ -985,14 +985,15 @@ let s = document.getElementById("bgvideo"),
             }
         },
         splay: function () {
-                let video_btn = document.getElementById("video-btn");
+                const video_btn = document.getElementById("video-btn");
                 if (!video_btn)return;
                 video_btn.classList.add("video-pause");
                 video_btn.classList.remove("video-play");
                 try{
                 video_btn.style.display = "";
-                document.querySelector(".video-stu").style.bottom = "-100px";
-                document.querySelector(".focusinfo").style.top = "-999px";
+                document.querySelector(".video-stu").style.transform = "translateY(0px)";
+                //document.querySelector(".video-stu").style.bottom = "-100px";
+                document.querySelector(".focusinfo").style.transform = "translateY(-999px)";
                 }catch{}
             try {
                 for (let i = 0; i < ap.length; i++) {
@@ -1011,7 +1012,7 @@ let s = document.getElementById("bgvideo"),
                 let video_btn = document.getElementById("video-btn");
                 video_btn.classList.add("video-play");
                 video_btn.classList.remove("video-pause");
-                document.getElementsByClassName("focusinfo")[0].style.top = "49.3%";
+                document.querySelector(".focusinfo").style.transform = "";
             } catch{}
             s.pause();
 
@@ -1027,15 +1028,15 @@ let s = document.getElementById("bgvideo"),
             if (s.oncanplay != undefined && document.querySelector(".haslive") != null) {
                 Siren.spause();
                 let video_stu = document.getElementsByClassName("video-stu")[0];
-                video_stu.style.bottom = "0px";
+                video_stu.style.transform = "";
                 video_stu.innerHTML = "已暂停 ...";
             }
         },
         addsource: function () {
-            let video_stu = document.getElementsByClassName("video-stu")[0];
+            const video_stu = document.getElementsByClassName("video-stu")[0];
             video_stu.innerHTML = "正在载入视频 ...";
-            video_stu.style.bottom = "0px";
-            let t = Poi.movies.name.split(","),
+            video_stu.style.transform = "translateY(-39px)";
+            const t = Poi.movies.name.split(","),
                 _t = t[Math.floor(Math.random() * t.length)],
                 bgvideo = document.getElementById("bgvideo");
             bgvideo.setAttribute("src", Poi.movies.url + '/' + _t + '.mp4');
@@ -1057,7 +1058,7 @@ let s = document.getElementById("bgvideo"),
                     if (this.classList.contains("video-pause")) {
                         Siren.spause();
                         _btn.classList.remove("videolive");
-                        document.getElementsByClassName("video-stu")[0].style.bottom = "0px";
+                        document.getElementsByClassName("video-stu")[0].style.transform = "translateY(-39px)";
                         document.getElementsByClassName("video-stu")[0].innerHTML = "已暂停 ...";
                     } else {
                         Siren.splay();
@@ -1069,7 +1070,7 @@ let s = document.getElementById("bgvideo"),
                     document.getElementById("video-add").style.display = "none";
                     _btn.classList.add("loadvideo");
                     _btn.classList.remove("video-pause", "videolive", "haslive");
-                    document.querySelector(".focusinfo").style.top = "49.3%";
+                    document.querySelector(".focusinfo").style.transform = "";
                 }
             });
             document.getElementById("video-add").addEventListener("click", ()=> {

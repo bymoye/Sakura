@@ -50,9 +50,9 @@ function get_random_bg_url(){
     }
 }*/
 function get_random_bg_url(){
-  if (akina_option('cover_cdn_options') == "type_2"){
+  if (akina_option('cover_cdn_options') == 'type_2'){
     return get_template_directory_uri() . '/feature/index.php?' . rand(1,1000);
-  }elseif(akina_option('cover_cdn_options') == "type_1"){
+  }elseif(akina_option('cover_cdn_options') == 'type_1'){
     return get_random_image_url();
   }}
 /*
@@ -122,7 +122,7 @@ if(akina_option('classify_display')){
  */
 function comment_add_at( $comment_text, $comment = '') {
   if( $comment->comment_parent > 0) {
-       if(substr($comment_text, 0, 3) === "<p>") 
+       if(substr($comment_text, 0, 3) === '<p>') 
         $comment_text = str_replace(substr($comment_text, 0, 3), '<p><a href="#comment-' . $comment->comment_parent . '" class="comment-at">@'.get_comment_author( $comment->comment_parent ) . '</a>&nbsp;', $comment_text);
       else $comment_text = '<a href="#comment-' . $comment->comment_parent . '" class="comment-at">@'.get_comment_author( $comment->comment_parent ) . '</a>&nbsp;' . $comment_text;
   }
@@ -300,7 +300,7 @@ function the_headPattern(){
     if (have_posts()) : while (have_posts()) : the_post();
     $center = 'single-center';
     $header = 'single-header';
-    $ava = akina_option('focus_logo', '') ? akina_option('focus_logo', '') : get_avatar_url(get_the_author_meta('user_email'));
+    $ava = akina_option('focus_logo', '') ?: get_avatar_url(get_the_author_meta('user_email'));
     global $user_ID; 
     if($user_ID && current_user_can('level_10')) {
         $edit_this_post_link = '<span class="bull">·</span><a href="'.get_edit_post_link().'">EDIT</a>';
@@ -389,7 +389,7 @@ function the_video_headPattern_hls(){
     if (have_posts()) : while (have_posts()) : the_post();
     $center = 'single-center';
     $header = 'single-header';
-    $ava = akina_option('focus_logo', '') ? akina_option('focus_logo', '') : get_avatar_url(get_the_author_meta('user_email'));
+    $ava = akina_option('focus_logo', '') ?: get_avatar_url(get_the_author_meta('user_email'));
     global $user_ID; 
     if($user_ID && current_user_can('level_10')) {
         $edit_this_post_link = '<span class="bull">·</span><a href="'.get_edit_post_link().'">EDIT</a>';
@@ -445,7 +445,7 @@ function the_video_headPattern_normal(){
     $video_cover_thumb = get_post_meta(get_the_ID(), 'video_cover_thumb', true);
     // 检查这个字段是否有值
     if (empty ( $video_cover_thumb )) { //如果值为空，输出默认值
-        $video_poster_attr = "";
+        $video_poster_attr = '';
     } else {
         $video_poster_attr = ' poster="' . $video_cover_thumb . '" ';
     }
@@ -530,7 +530,7 @@ function header_user_menu(){
     </div>
   <?php
   }else{ 
-    $login_url = akina_option('new_login_url') ? akina_option('new_login_url') : get_bloginfo('url').'/wp-login.php';
+    $login_url = akina_option('new_login_url') ?: get_bloginfo('url').'/wp-login.php';
   ?>
   <div class="header-user-avatar">
     <a href="<?php echo $login_url; ?>">

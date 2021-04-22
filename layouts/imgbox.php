@@ -9,9 +9,9 @@ $icon_Version = 'icon_' . $Version . '_svg';
         <?php if (akina_option('focus_logo_text')):?>
         <h1 class="center-text glitch is-glitching Ubuntu-font" data-text="<?php echo akina_option('focus_logo_text', ''); ?>"><?php echo akina_option('focus_logo_text', ''); ?></h1>
    		<?php elseif (akina_option('focus_logo')):?>
-	     <div class="header-tou"><a href="<?php bloginfo('url');?>" ><img src="<?php echo akina_option('focus_logo', ''); ?>"></a></div>
+	     <div class="header-tou"><a href="<?php bloginfo('url');?>" ><img src="<?php echo akina_option('focus_logo', ''); ?>" alt=""></a></div>
 	  	<?php else :?>
-         <div class="header-tou"><a href="<?php bloginfo('url');?>"><img src="<?php bloginfo('template_url'); ?>/images/avatar.jpg"></a></div>	
+         <div class="header-tou"><a href="<?php bloginfo('url');?>"><img src="<?php bloginfo('template_url'); ?>/images/avatar.jpg" alt=""></a></div>	
       	<?php endif; ?>
 		<div class="header-info">
             <p><?php echo akina_option('admin_des'); ?></p>
