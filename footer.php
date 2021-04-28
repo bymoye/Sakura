@@ -13,11 +13,7 @@
 	</div><!-- #content -->
 	<?php 
 		$site_url = $_SERVER['SERVER_NAME'];
-		if(akina_option('general_disqus_plugin_support')){
-			get_template_part('layouts/duoshuo');
-		}else{
-			comments_template('', true); 
-		}
+		comments_template('', true);
 	?>
 	</div><!-- #page Pjax container-->
 	<footer id="colophon" class="site-footer" role="contentinfo">
@@ -27,9 +23,9 @@
 			</div>
 			<div class="footer-device">
 			<p style="font-family: 'Ubuntu', sans-serif;">
-					<span style="color: #b9b9b9;">
+					<span style="color: #666;">
 						<?php /* 能保留下面两个链接吗？算是我一个小小的心愿吧~ */ ?>
-						这是迷的匿名信 © 2018-2021 Theme <a href="https://github.com/bymoye/Sakura/" rel="noreferrer" target="_blank" style="color: #b9b9b9;text-decoration: underline dotted rgba(0, 0, 0, .1);">Sakura</a><br>
+						这是迷的匿名信 © 2018-2021 Theme <a href="https://github.com/bymoye/Sakura/" rel="noreferrer" target="_blank" style="color: #666;text-decoration: underline dotted rgba(0, 0, 0, .1);">Sakura</a><br>
 						<?php printf(' 耗时 %.3f 秒 | 查询 %d 次 | 内存 %.2f MB',timer_stop(0,3),get_num_queries(),memory_get_peak_usage() / 1024 / 1024);?>
 				</span>
 				</p>

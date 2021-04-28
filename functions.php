@@ -13,7 +13,6 @@ const NMX_VERSION = '1.1.9';
 const BUILD_VERSION = '3';
 
 //error_reporting(E_ALL);   
-error_reporting(E_ALL ^ E_NOTICE);
 
 if ( !function_exists('akina_setup')){
 /**
@@ -88,7 +87,7 @@ function akina_setup() {
     remove_action('wp_head', 'rsd_link');
     remove_action('wp_head', 'wlwmanifest_link');
     remove_action('wp_head', 'index_rel_link');
-    remove_action('wp_head', 'start_post_rel_link', 10, 0);
+    remove_action('wp_head', 'start_post_rel_link', 10);
     remove_action('wp_head', 'wp_generator');
     remove_filter('the_content', 'wptexturize'); //取消标点符号转义
     
@@ -177,10 +176,10 @@ function sakura_scripts() {
     if (akina_option('app_no_jsdelivr_cdn')) {
         wp_enqueue_style( 'icon_css', get_template_directory_uri() . '/cdn/css/icon.css', array(), NMX_VERSION );
         wp_enqueue_style( 'site_css', get_template_directory_uri() . '/cdn/css/sitelogo.css', array(), NMX_VERSION );
-        wp_enqueue_style( 'saukra_css', get_stylesheet_uri(), array(), NMX_VERSION );
+        wp_enqueue_style( 'sakura_css', get_stylesheet_uri(), array(), NMX_VERSION );
         wp_enqueue_script( 'app', get_template_directory_uri() . '/js/sakura-app.js', array(), NMX_VERSION, true );
     } else {
-        wp_enqueue_style( 'saukra_css', 'https://cdn.jsdelivr.net/combine/gh/bymoye/Sakura@' . NMX_VERSION . '/style.min.css,gh/bymoye/Sakura/cdn/css/icon.min.css,gh/bymoye/Sakura/cdn/css/sitelogo.min.css', array(), NMX_VERSION );
+        wp_enqueue_style( 'sakura_css', 'https://cdn.jsdelivr.net/combine/gh/bymoye/Sakura@' . NMX_VERSION . '/style.min.css,gh/bymoye/Sakura/cdn/css/icon.min.css,gh/bymoye/Sakura/cdn/css/sitelogo.min.css', array(), NMX_VERSION );
         wp_enqueue_script( 'app', 'https://cdn.jsdelivr.net/combine/gh/bymoye/Sakura@' . NMX_VERSION . '/js/sakura-app.min.js,gh/bymoye/cdn@1.1.5/sakura/cdn/js/widget.min.js', array(), NMX_VERSION, true );
     } 
 
@@ -238,7 +237,7 @@ require get_template_directory() . '/inc/categories-images.php';
 //Comment Location Start
 function convertip($ip)
 {
-    error_reporting(E_ALL ^ E_NOTICE);
+    //error_reporting(E_ALL ^ E_NOTICE);
     if (!filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) === false) {
         $file_contents = file_get_contents('https://ip.taobao.com/outGetIpInfo?accessKey=alibaba-inc&ip=' .$ip);
         $result = json_decode($file_contents,true);
@@ -411,7 +410,7 @@ if(!function_exists('akina_comment_format')){
 	function akina_comment_format($comment, $args, $depth){
         $GLOBALS['comment'] = $comment;
 		?>
-		<li <?php comment_class(); ?> id="comment-<?php echo esc_attr(comment_ID()); ?>">
+		<li <?php comment_class(); ?> id="comment-<?php echo esc_attr(get_comment_ID()); ?>">
 			<div class="contents">
 				<div class="comment-arrow">
 					<div class="main shadow">
@@ -734,7 +733,8 @@ function custom_html() {
         window.onresize = ()=>{resizeImage("bg");}
         fadeOut(document.querySelector(".loading"))
     });
-    document.querySelector(".forgetmenot").outerHTML = \'<p class="forgetmenot">Remember Me<input name="rememberme" id="rememberme" value="forever" type="checkbox"><label for="rememberme" style="float: right;margin-top: 5px;transform: scale(2);margin-right: -10px;"></label></p>\';
+    const forgetmenot = document.querySelector(".forgetmenot");
+    if(forgetmenot)forgetmenot.outerHTML = \'<p class="forgetmenot">Remember Me<input name="rememberme" id="rememberme" value="forever" type="checkbox"><label for="rememberme" style="float: right;margin-top: 5px;transform: scale(2);margin-right: -10px;"></label></p>\';
     </script>',"\n";
 }
 add_action('login_footer', 'custom_html');
@@ -742,11 +742,12 @@ add_action('login_footer', 'custom_html');
 //Login message
 //* Add custom message to WordPress login page
 function smallenvelop_login_message( $message ) {
-    if ( empty($message) ){
-        return '<p class="message"><strong>You may try 3 times for every 5 minutes!</strong></p>';
-    } else {
-        return $message;
-    }
+    return empty($message) ?: '<p class="message"><strong>You may try 3 times for every 5 minutes!</strong></p>';
+    // if ( empty($message) ){
+    //     return '<p class="message"><strong>You may try 3 times for every 5 minutes!</strong></p>';
+    // } else {
+    //     return $message;
+    // }
 }
 //add_filter( 'login_message', 'smallenvelop_login_message' );
 
@@ -911,11 +912,11 @@ if ( !get_option('use_smilies'))
     for($i=0;$i<count($tiebaname);$i++){
       $tieba_Name=$tiebaname[$i];
       if (is_webp()){
-          $tiebaimgdir="tiebawebp/";
-          $smiliesgs=".webp";
+          $tiebaimgdir='tiebawebp/';
+          $smiliesgs='.webp';
       }else{
-          $tiebaimgdir="tiebapng/";
-          $smiliesgs=".png";
+          $tiebaimgdir='tiebapng/';
+          $smiliesgs='.png';
       }
       // 选择面版
       $return_smiles = $return_smiles . '<span title="'.$tieba_Name.'" onclick="grin('."'".$tieba_Name."'".',type = \'tieba\')"><img src="https://cdn.jsdelivr.net/gh/bymoye/cdn@1.2/sakura/images/smilies/'. $tiebaimgdir .'icon_'. $tieba_Name . $smiliesgs.'" /></span>';
@@ -990,11 +991,11 @@ function push_bili_smilies(){
   for($i=0;$i<count($name);$i++){
     $smilies_Name=$name[$i];
     if (is_webp()){
-        $biliimgdir="biliwebp/";
-        $smiliesgs=".webp";
+        $biliimgdir='biliwebp/';
+        $smiliesgs='.webp';
     }else{
-        $biliimgdir="bilipng/";
-        $smiliesgs=".png";
+        $biliimgdir='bilipng/';
+        $smiliesgs='.png';
     }
     // 选择面版
     $return_smiles = $return_smiles . '<span title="'.$smilies_Name.'" onclick="grin('."'".$smilies_Name."'".',type = \'Math\')"><img src="https://cdn.jsdelivr.net/gh/bymoye/cdn@1.2/sakura/images/smilies/'. $biliimgdir .'emoji_'. $smilies_Name . $smiliesgs.'" /></span>';
@@ -1025,14 +1026,14 @@ add_filter('the_content_feed', 'featuredtoRSS');
 //
 function bili_smile_filter_rss($content) {
     if (is_webp()){
-        $biliimgdir="biliwebp/";
-        $smiliesgs=".webp";
+        $biliimgdir='biliwebp/';
+        $smiliesgs='.webp';
     }else{
-        $biliimgdir="bilipng/";
-        $smiliesgs=".png";
+        $biliimgdir='bilipng/';
+        $smiliesgs='.png';
     }
-    $content = str_replace("{{",'<img src="https://cdn.jsdelivr.net/gh/bymoye/cdn@1.2/sakura/images/smilies/'.$biliimgdir,$content);
-    $content = str_replace("}}",$smilesgs.'" alt="emoji" style="height: 2em; max-height: 2em;">',$content);
+    $content = str_replace('{{','<img src="https://cdn.jsdelivr.net/gh/bymoye/cdn@1.2/sakura/images/smilies/'.$biliimgdir,$content);
+    $content = str_replace('}}',$smilesgs.'" alt="emoji" style="height: 2em; max-height: 2em;">',$content);
     $content =  str_replace('[img]', '<img src="', $content);
     return str_replace('[/img]', '" style="display: block;margin-left: auto;margin-right: auto;">', $content);
 }
@@ -1086,16 +1087,12 @@ function hello_hero() {
 add_action('wp_ajax_nopriv_siren_private', 'siren_private');
 add_action('wp_ajax_siren_private', 'siren_private');
 function siren_private(){
-    $comment_id = $_POST["p_id"];
-    $action = $_POST["p_action"];
+    $comment_id = $_POST['p_id'];
+    $action = $_POST['p_action'];
     if ($action == 'set_private') {
         update_comment_meta($comment_id, '_private', 'true');
         $i_private = get_comment_meta($comment_ID, '_private', true);
-        if (!empty($i_private)) {
-            echo '否';
-        } else {
-            echo '是';
-        }
+        echo !empty($i_private) ? '否' : '是';
     }
     die;
 }
@@ -1276,29 +1273,29 @@ add_action( 'admin_init', 'scheme_tip_dismissed' );
 
 //dashboard scheme
 function dash_scheme($key, $name, $col1, $col2, $col3, $col4, $base, $focus, $current, $rules=""){
-    $hash = "color_1=".str_replace("#","",$col1).
-            "&color_2=".str_replace("#","",$col2).
-            "&color_3=".str_replace("#","",$col3).
-            "&color_4=".str_replace("#","",$col4).
-            "&rules=".urlencode($rules);
+    $hash = 'color_1='.str_replace('#','',$col1).
+            '&color_2='.str_replace('#','',$col2).
+            '&color_3='.str_replace('#','',$col3).
+            '&color_4='.str_replace('#','',$col4).
+            '&rules='.urlencode($rules);
 
     wp_admin_css_color(
         $key,
         $name,
-        get_template_directory_uri()."/inc/dash-scheme.php?".$hash,
+        get_template_directory_uri().'/inc/dash-scheme.php?'.$hash,
         array( $col1, $col2, $col3, $col4 ),
         array( 'base' => $base, 'focus' => $focus, 'current' => $current )
     );
 }
 
 //Sakura
-dash_scheme($key="sakura", $name="Sakura🌸", 
+dash_scheme($key='sakura', $name='Sakura🌸', 
             $col1='#8fbbb1', $col2='#bfd8d2', $col3='#fedcd2', $col4='#df744a', 
-            $base="#e5f8ff", $focus="#fff", $current="#fff",
-            $rules="#adminmenu .wp-has-current-submenu .wp-submenu a,#adminmenu .wp-has-current-submenu.opensub .wp-submenu a,#adminmenu .wp-submenu a,#adminmenu a.wp-has-current-submenu:focus+.wp-submenu a,#wpadminbar .ab-submenu .ab-item,#wpadminbar .quicklinks .menupop ul li a,#wpadminbar .quicklinks .menupop.hover ul li a,#wpadminbar.nojs .quicklinks .menupop:hover ul li a,.folded #adminmenu .wp-has-current-submenu .wp-submenu a{color:#f3f2f1}body{background-image:url(https://view.moezx.cc/images/2018/01/03/sakura.png);background-attachment:fixed;}#wpcontent{background:rgba(255,255,255,.0)}.wp-core-ui .button-primary{background:#bfd8d2!important;border-color:#8fbbb1 #8fbbb1 #8fbbb1!important;color:#fff!important;box-shadow:0 1px 0 #8fbbb1!important;text-shadow:0 -1px 1px #8fbbb1,1px 0 1px #8fbbb1,0 1px 1px #8fbbb1,-1px 0 1px #8fbbb1!important}");
+            $base='#e5f8ff', $focus='#fff', $current='#fff',
+            $rules='#adminmenu .wp-has-current-submenu .wp-submenu a,#adminmenu .wp-has-current-submenu.opensub .wp-submenu a,#adminmenu .wp-submenu a,#adminmenu a.wp-has-current-submenu:focus+.wp-submenu a,#wpadminbar .ab-submenu .ab-item,#wpadminbar .quicklinks .menupop ul li a,#wpadminbar .quicklinks .menupop.hover ul li a,#wpadminbar.nojs .quicklinks .menupop:hover ul li a,.folded #adminmenu .wp-has-current-submenu .wp-submenu a{color:#f3f2f1}body{background-image:url(https://view.moezx.cc/images/2018/01/03/sakura.png);background-attachment:fixed;}#wpcontent{background:rgba(255,255,255,.0)}.wp-core-ui .button-primary{background:#bfd8d2!important;border-color:#8fbbb1 #8fbbb1 #8fbbb1!important;color:#fff!important;box-shadow:0 1px 0 #8fbbb1!important;text-shadow:0 -1px 1px #8fbbb1,1px 0 1px #8fbbb1,0 1px 1px #8fbbb1,-1px 0 1px #8fbbb1!important}');
        
 //custom
-dash_scheme($key="custom", $name="Custom", 
+dash_scheme($key='custom', $name='Custom', 
             $col1=akina_option('dash_scheme_color_a'), $col2=akina_option('dash_scheme_color_b'), $col3=akina_option('dash_scheme_color_c'), $col4=akina_option('dash_scheme_color_d'), 
             $base=akina_option('dash_scheme_color_base'), $focus=akina_option('dash_scheme_color_focus'), $current=akina_option('dash_scheme_color_current'),
             $rules=akina_option('dash_scheme_css_rules'));
@@ -1458,9 +1455,9 @@ function get_random_image_url(){
 }
 
 function DEFAULT_FEATURE_IMAGE() {
-if (akina_option('cover_cdn_options') == "type_2"){
+if (akina_option('cover_cdn_options') == 'type_2'){
     return get_template_directory_uri() . '/feature/index.php?' . rand(1,1000);
-  }elseif(akina_option('cover_cdn_options') == "type_1"){
+  }elseif(akina_option('cover_cdn_options') == 'type_1'){
     return get_random_image_url();
   }
     return false;
@@ -1510,7 +1507,7 @@ function markdown_parser($incoming_comment) {
         $wpdb->query("ALTER TABLE wp_comments ADD comment_markdown text");
     }
     $comment_markdown_content = $incoming_comment['comment_content'];
-    include 'inc/Parsedown.php';
+    include 'inc/classes/Parsedown.php';
     $Parsedown = new Parsedown();
     $incoming_comment['comment_content'] = $Parsedown->setUrlsLinked(false)->text($incoming_comment['comment_content']);
     return $incoming_comment;
@@ -1560,28 +1557,33 @@ add_action('pre_comment_on_post', 'allow_more_tag_in_comment');
 
 //新建说说功能 
 add_action('init', 'my_custom_init');
-function my_custom_init()
-{ $labels = array( 'name' => '说说',
-'singular_name' => '说说', 
-'add_new' => '发表说说', 
-'add_new_item' => '发表说说',
-'edit_item' => '编辑说说', 
-'new_item' => '新说说',
-'view_item' => '查看说说',
-'search_items' => '搜索说说', 
-'not_found' => '暂无说说',
-'not_found_in_trash' => '没有已遗弃的说说',
-'parent_item_colon' => '', 'menu_name' => '说说' );
-$args = array( 'labels' => $labels,
-'public' => true, 
-'publicly_queryable' => true,
-'show_ui' => true,
-'show_in_menu' => true, 
-'exclude_from_search' =>true,
-'query_var' => true, 
-'rewrite' => true, 'capability_type' => 'post',
-'has_archive' => false, 'hierarchical' => false, 
-'menu_position' => null, 'supports' => array('editor','author','title', 'custom-fields') );
+function my_custom_init(){
+    $labels = array( 'name' => '说说',
+                    'singular_name' => '说说', 
+                    'add_new' => '发表说说', 
+                    'add_new_item' => '发表说说',
+                    'edit_item' => '编辑说说', 
+                    'new_item' => '新说说',
+                    'view_item' => '查看说说',
+                    'search_items' => '搜索说说', 
+                    'not_found' => '暂无说说',
+                    'not_found_in_trash' => '没有已遗弃的说说',
+                    'parent_item_colon' => '',
+                    'menu_name' => '说说' 
+                );
+    $args = array( 'labels' => $labels,
+                    'public' => true, 
+                    'publicly_queryable' => true,
+                    'show_ui' => true,
+                    'show_in_menu' => true, 
+                    'exclude_from_search' =>true,
+                    'query_var' => true, 
+                    'rewrite' => true,
+                    'capability_type' => 'post',
+                    'has_archive' => false, 'hierarchical' => false, 
+                    'menu_position' => null,
+                    'supports' => array('editor','author','title', 'custom-fields')
+                );
 register_post_type('shuoshuo',$args); 
 }
 
@@ -1591,8 +1593,8 @@ add_filter('xmlrpc_enabled', '__return_false');
 //禁用XML-RPC的pingback接口
 add_filter( 'xmlrpc_methods', 'remove_xmlrpc_pingback_ping' );
 function remove_xmlrpc_pingback_ping( $methods ) {
-unset( $methods['pingback.ping'] );
-return $methods;
+    unset( $methods['pingback.ping'] );
+    return $methods;
 }
 /**
  * 登录/注册页添加验证码
@@ -1607,6 +1609,7 @@ function login_CAPTCHA() {
 }
 add_action('login_form','login_CAPTCHA');
 add_action('register_form','login_CAPTCHA' );
+add_action('lostpassword_form','login_CAPTCHA');
 /**
  * 登录界面验证码验证
  */
@@ -1629,6 +1632,26 @@ function CAPTCHA_CHECK($user, $username, $password) {
     }
 }
 add_filter( 'authenticate','CAPTCHA_CHECK',20,3);
+/**
+ * 忘记密码界面验证码验证
+ */
+function lostpassword_CHECK( $errors ) {
+    if (empty($_POST)) {
+        return false;
+    }
+    if(isset($_POST['yzm']) && !empty(trim($_POST['yzm']))){
+        include_once('inc/classes/CAPTCHA.php');
+        $img = new Sakura\API\CAPTCHA;
+        $check = $img->check_CAPTCHA($_POST['yzm']);
+        if($check['code'] != 5){
+            return $errors->add( 'invalid_department ', '<strong>错误</strong>：'.$check['msg']);
+        }
+    }else{
+        return $errors->add('invalid_department', '<strong>错误</strong>：验证码为空！');
+    }
+}
+ 
+add_action( 'lostpassword_post', 'lostpassword_CHECK' );
 /** 
 *   注册界面验证码验证
 */
@@ -1700,7 +1723,8 @@ function new_from_name($email){
 }
  
 function new_from_email($email) {
-    return 'no-reply@nmxc.ltd';
+    return 'no-reply@' . str_replace(['http://','https://'],'',esc_url(home_url()));
+    //return 'no-reply@' . akina_option('email_domain');
 }
  
 add_filter('wp_mail_from_name', 'new_from_name');

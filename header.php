@@ -52,7 +52,6 @@ if (akina_option('akina_meta') == true) {
 <meta name="theme-color" content="<?php echo akina_option('theme_skin', ''); ?>">
 <meta http-equiv="x-dns-prefetch-control" content="on">
 <?php wp_head(); ?>
-<script type="text/javascript">if (!!window.ActiveXObject || "ActiveXObject" in window) {alert('朋友，IE浏览器未适配哦~\n如果是 360、QQ 等双核浏览器，请关闭 IE 模式！');}</script>
 </head>
 <body <?php body_class(); ?>>
 	<svg style="position: fixed; width: 100%; height: 100%; z-index: -999;">

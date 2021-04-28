@@ -4,9 +4,9 @@ namespace Sakura\API;
 
 class CAPTCHA
 {
-    private $font;
-    private $timestamp;
-    private $uniqid;
+    private string $font;
+    private int $timestamp;
+    private string $uniqid;
     /**
      * CAPTCHA constructor.
      */
@@ -82,12 +82,12 @@ class CAPTCHA
         imagedestroy($img);
         // 以json格式输出
         $captchaimg = 'data:image/png;base64,' . base64_encode($captchaimg);
-        $json = array(
+        $result = array(
             'code' => 0,
             'data' => $captchaimg,
             'msg' => ''
         ); 
-        return $json;
+        return $result;
     }
 
     
@@ -95,7 +95,7 @@ class CAPTCHA
      * check_CAPTCHA
      *
      * @param  string $captcha
-     * @return json
+     * @return array
      */
     public function check_CAPTCHA(string $captcha){
         $temp = time();
@@ -104,7 +104,7 @@ class CAPTCHA
             $code = 3;
             $msg = '非法请求';
         }
-        elseif (!$captcha || isset($captcha{5}) || !isset($captcha{4})){
+        elseif (!$captcha || isset($captcha[5]) || !isset($captcha[4])){
             $code = 3;
             $msg = '请输入正确的验证码!';
         }
@@ -125,11 +125,11 @@ class CAPTCHA
             $code = 1;
             $msg = '错误!';
         }
-        $json = array(
+        $result = array(
             'code' => $code,
             'data' => '',
             'msg' => $msg
         ); 
-        return $json;
+        return $result;
     }
 }

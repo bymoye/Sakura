@@ -701,15 +701,6 @@ a:hover {
     position: absolute
 }
 
-.pattern-attachment-img {
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center center;
-    background-origin: border-box;
-    width: 100%;
-    height: 300px
-}
-
 .pattern-center header.pattern-header {
     position: absolute;
     top: 0;
@@ -752,9 +743,6 @@ a:hover {
 }
 
 .pattern-center header.single-header {
-    max-width: 900px;
-    margin-left: auto;
-    margin-right: auto;
     text-align: left;
     top: 0;
     backdrop-filter:blur(var(--blur,15px)) saturate(var(--saturate,60%));
@@ -1189,10 +1177,7 @@ a:hover {
 }
 
 .site-content {
-    max-width: 900px;
     padding: 0 20px;
-    margin-left: auto;
-    margin-right: auto;
     background-color: rgba(255, 255, 255, .8)
 }
 
@@ -1365,18 +1350,9 @@ i.iconfont.hotpost {
     margin-top: 20px
 }
 
-@media (max-width:860px) {
-    .site-main {
-        padding: 15px 0 0
-    }
-}
 
 .post-list-thumb {
     will-change: transform,opacity;
-    float: left;
-    width: 100%;
-    height: 300px;
-    position: relative;
     margin: 20px 0 20px;
     border-radius: 10px;
     background-color: rgba(255, 255, 255, .5);
@@ -1392,7 +1368,6 @@ i.iconfont.hotpost {
 @media (max-width:860px) {
     .post-list-thumb {
         margin: 10px 0 10px;
-        height: auto
     }
 }
 
@@ -1775,14 +1750,12 @@ h1.page-title.mb- {
     background-color: rgba(255,255,255,.5);
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
-    color: #404040;
     cursor: pointer;
     padding: 15px;
-    border-radius: 10px;
     border-radius: 12px;
     box-shadow: 0 0 2px 0 rgba(0, 0, 0, .12), 0 2px 2px 0 rgba(0, 0, 0, .24);
     transform: scale(0);
-    transition:transform .3s
+    transition:transform .3s,opacity .3s,background-color .3s;
 }
 
 #GoTop:hover {
@@ -2877,7 +2850,6 @@ a.page-numbers {
 }
 
 .comments {
-    clear: both;
     overflow: hidden;
     width: 100%;
     padding: 60px 0 80px;
@@ -2885,8 +2857,6 @@ a.page-numbers {
     background: rgba(255, 255, 255, .8);
     padding: 0 10px;
     max-width: 900px;
-    margin-left: auto;
-    margin-right: auto
 }
 
 .comments .commentwrap {
@@ -3635,9 +3605,6 @@ li.feature-2 {
 }
 
 @media (max-width:860px) {
-    #centerbg {
-        height: 500px;
-    }
     #video-container {
         display: none
     }
@@ -4843,9 +4810,6 @@ i.iconfont.down {
     #mo-nav.open {
         transform: translateX(0px);
         /* width: 250px */
-    }
-    .wrapper section {
-        max-width: 600px
     }
     .wrapper section h1 {
         font-weight: 300;
@@ -6610,7 +6574,16 @@ a.toc-link {
     margin-bottom: 5px;
     border-radius: 5px
 }
-
+@media (min-width:900px) {
+    .site-content{
+        width:900px
+    }
+}
+@media (max-width:900px) {
+    .site-content{
+        width:100vw;
+    }
+}
 @media (max-width:860px) {
     .wp-smiley {
         height:20px !important;
@@ -7965,4 +7938,15 @@ p.comment-form-cookies-consent {
         mask-image: var(--svg-name);
         -webkit-mask-image: var(--svg-name);
         animation:logocolor 40s infinite;
+    }
+
+    #main-container,#content,#main {
+        display:flex;
+        flex-direction: column;
+    }
+
+    #page{
+        display:flex;
+        flex-direction: column;
+        align-items: center;
     }

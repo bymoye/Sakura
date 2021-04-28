@@ -578,11 +578,16 @@ function get_prev_thumbnail_url() {
 // 下一篇
 function get_next_thumbnail_url() { 
   $next_post = get_next_post(); 
-  ini_set("display_errors", 0);
-  error_reporting(E_ALL ^ E_WARNING);
-  if ( has_post_thumbnail($next_post->ID) ) { 
+  //ini_set("display_errors", 0);
+  //error_reporting(E_ALL ^ E_WARNING);
+  if (isset($next_post->ID)){
+  if (has_post_thumbnail($next_post->ID) ) { 
     $img_src = wp_get_attachment_image_src( get_post_thumbnail_id( $next_post->ID ), 'large');
-    return $img_src[0]; 
+    if ($img_src){
+      return $img_src[0];
+    }else {
+      return get_random_bg_url();
+    }
   } 
   else { 
     $content = $next_post->post_content; 
@@ -594,6 +599,7 @@ function get_next_thumbnail_url() {
       return get_random_bg_url();
     } 
   } 
+}
 }
 
 /**

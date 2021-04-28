@@ -94,54 +94,6 @@ if( !empty($_POST['register_reg']) ) {
 		<?php endif; ?>
 		</main><!-- #main -->
 	</div><!-- #primary -->
-<style>
-#slider {
-	margin: 0 auto 20px auto;
-	width: 300px;
-	height: 46px;
-	position: relative;
-	border-radius: 3px;
-	background-color: #eee;
-	overflow: hidden;
-	text-align: center;
-	user-select: none;
-	-moz-user-select: none;
-	-webkit-user-select: none;
-}
-
-#slider_bg {
-	position: absolute;
-	left: 0;
-	top: 0;
-	height: 100%;
-	background-color: #444;
-	z-index: 1;
-	border-radius: 3px 0 0 3px;
-}
-
-#label {
-	width: 46px;
-	position: absolute;
-	left: 0;
-	top: 0;
-	height: 46px;
-	line-height: 38px;
-	border: 1px solid #ddd;
-	background: #fff;
-	z-index: 3;
-	cursor: move;
-	color: #E67474;
-	font-size: 38px;
-	font-weight: 900;
-	border-radius: 3px;
-}
-#verification-slider{
-	margin: 1em;
-}
-#verification-ok{
-	color: #777;
-}
-</style>
 
 <?php
 get_footer();

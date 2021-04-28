@@ -69,11 +69,11 @@
                         <div class="emotion-box no-select">
                             <table class="motion-switcher-table">
                                 <tr>
-                                    <th onclick="motionSwitch(\'.bili\')" 
+                                    <th onclick="motionSwitch(`.bili`)" 
                                         class="bili-bar on-hover">bilibili~</th>
-                                    <th onclick="motionSwitch(\'.menhera\')"
+                                    <th onclick="motionSwitch(`.menhera`)"
                                         class="menhera-bar">(=・ω・=)</th>
-                                    <th onclick="motionSwitch(\'.tieba\')"
+                                    <th onclick="motionSwitch(`.tieba`)"
                                         class="tieba-bar">Tieba</th>
                                 </tr>
                             </table>

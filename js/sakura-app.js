@@ -53,31 +53,6 @@ mashiro_global.ini = new function () {
     }
 }
 
-function setCookie(name, value, days) {
-    let expires = "";
-    if (days) {
-        let date = new Date();
-        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-        expires = "; expires=" + date.toUTCString();
-    }
-    document.cookie = name + mashiro_option.cookie_version_control + "=" + (value || "") + expires + "; path=/";
-}
-
-function getCookie(name) {
-    let nameEQ = name + mashiro_option.cookie_version_control + "=",
-        ca = document.cookie.split(';');
-    for (let i = 0; i < ca.length; i++) {
-        let c = ca[i];
-        while (c.charAt(0) == ' ') c = c.substring(1, c.length);
-        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
-    }
-    return null;
-}
-
-function removeCookie(name) {
-    document.cookie = name + mashiro_option.cookie_version_control + '=; Max-Age=-99999999;';
-}
-
 function imgError(ele, type) {
     switch (type) {
         case 1:
@@ -185,7 +160,7 @@ function attach_image() {
             }
         }
         for (let i = 0; i < this.files.length; i++) {
-            let f = this.files[i],
+            const f = this.files[i],
                 formData = new FormData(),
                 xhr = new XMLHttpRequest();
             formData.append('cmt_img_file', f);
@@ -203,7 +178,7 @@ function attach_image() {
                     }, 1000);
                     let res = JSON.parse(xhr.responseText);
                     if (res.status == 200) {
-                        let get_the_url = res.proxy;
+                        const get_the_url = res.proxy;
                         document.getElementById("upload-img-show").insertAdjacentHTML('afterend', '<img class="lazyload upload-image-preview" src="https://cdn.jsdelivr.net/gh/moezx/cdn@3.0.2/img/svg/loader/trans.ajax-spinner-preloader.svg" data-src="' + get_the_url + '" onclick="window.open(\'' + get_the_url + '\')" onerror="imgError(this)"  alt=""/>');
                         lazyload();
                         addComment.createButterbar("图片上传成功~<br>Uploaded successfully~");
@@ -253,8 +228,7 @@ function click_to_view_image() {
     if (!comment_inline.length) return;
     document.querySelector(".comments-main").addEventListener("click", function (e) {
         if (e.target.classList.contains("comment_inline_img")) {
-            let temp_url = e.target.src;
-            window.open(temp_url);
+            window.open(e.target.src);
         }
     })
 }
@@ -344,7 +318,7 @@ function iconsvg() {
             const filter = document.createElementNS(a, "filter"),
                 fe = document.createElementNS(a, "feGaussianBlur");
             filter.id = "svg_blurfilter";
-            fe.setAttribute("stdDeviation", "5");
+            fe.setAttribute("stdDeviation", "0");
             fe.setAttribute("color-interpolation-filters", "sRGB");
             image.style.filter = "url(#svg_blurfilter)";
             filter.append(fe);
@@ -419,7 +393,7 @@ function timeSeriesReload(flag) {
                 a.style.cursor = "s-resize";
                 a.querySelector('#post-num').textContent = num;
             }
-            let al_post_list = archives.getElementsByClassName("al_post_list"),
+            const al_post_list = archives.getElementsByClassName("al_post_list"),
                 al_post_list_f = al_post_list[0];
             for (let i = 0; i < al_post_list.length; i++) {
                 slideToogle(al_post_list[i], 500, 'hide', function () {
@@ -496,7 +470,7 @@ function killCoverVideo() {
 }
 
 function loadHls() {
-    let video = document.getElementById('coverVideo'),
+    const video = document.getElementById('coverVideo'),
         video_src = document.getElementById("coverVideo").getAttribute("data-src");
     if (Hls.isSupported()) {
         let hls = new Hls();
@@ -514,7 +488,7 @@ function loadHls() {
 }
 
 function loadJS(url, callback) {
-    let script = document.createElement("script"),
+    const script = document.createElement("script"),
         fn = callback || function () { };
     script.type = "text/javascript";
     script.onload = function () {
@@ -525,7 +499,7 @@ function loadJS(url, callback) {
 }
 
 function coverVideoIni() {
-    let video = document.getElementsByTagName('video')[0];
+    const video = document.getElementsByTagName('video')[0];
     if (video && video.classList.contains('hls')) {
         if (mashiro_global.variables.has_hls) {
             loadHls();
@@ -540,7 +514,7 @@ function coverVideoIni() {
 }
 
 function copy_code_block() {
-    let ele = document.querySelectorAll("pre code");
+    const ele = document.querySelectorAll("pre code");
     for (let j = 0; j < ele.length; j++) {
         ele[j].setAttribute('id', 'hljs-' + j);
         ele[j].insertAdjacentHTML('afterend', '<a class="copy-code" href="javascript:" data-clipboard-target="#hljs-' + j + '" title="拷贝代码"><i class="post_icon_svg" style="--svg-name: var(--svg_clipboard);--size: 14px;"></i></a>');
@@ -552,15 +526,15 @@ function tableOfContentScroll(flag) {
     if (document.body.clientWidth <= 1200) {
         return;
     } else if (!document.querySelector("div.have-toc") && !document.querySelector("div.has-toc")) {
-        let ele = document.querySelector(".toc-container");
+        const ele = document.querySelector(".toc-container");
         if (ele) ele.remove();
     } else {
         if (flag) {
             let id = 1,
                 heading_fix = mashiro_option.entry_content_theme == "sakura" ? (document.querySelector("article.type-post") ? (document.querySelector("div.pattern-attachment-img") ? -75 : 200) : 375) : window.innerHeight / 2;
-            let _els = document.querySelectorAll('.entry-content,.links');
+            const _els = document.querySelectorAll('.entry-content,.links');
                 for(let i = 0;i<_els.length;i++){
-                    let _el = _els[i].querySelectorAll('h1,h2,h3,h4,h5');
+                    const _el = _els[i].querySelectorAll('h1,h2,h3,h4,h5');
                     for(let j = 0 ;j<_el.length;j++){
                         _el[j].id = "toc-head-" + id;
                         id++;
@@ -581,7 +555,7 @@ const pjaxInit = function () {
     no_right_click();
     click_to_view_image();
     original_emoji_click();
-    let _p = document.getElementsByTagName("p");
+    const _p = document.getElementsByTagName("p");
     for(let i=0;i<_p.length;i++){
         _p[i].classList.remove("head-copyright");
     }
@@ -592,12 +566,12 @@ const pjaxInit = function () {
         getqqinfo();
     } catch {}
     lazyload();
-    let iconflat = document.getElementsByClassName("iconflat");
+    const iconflat = document.getElementsByClassName("iconflat");
     if (iconflat.length != 0) {
         iconflat[0].style.width = '50px';
         iconflat[0].style.height = '50px';
     }
-    let openNav = document.getElementsByClassName("openNav");
+    const openNav = document.getElementsByClassName("openNav");
     if (openNav.length != 0) {
         openNav[0].style.height = '50px';
     }
@@ -611,38 +585,35 @@ const cm_click = (e)=>{
     if (e.target.classList.contains("comment-reply-link")) {
         e.stopPropagation();
         e.preventDefault();
-        let data_commentid = e.target.getAttribute("data-commentid");
+        const data_commentid = e.target.getAttribute("data-commentid");
         addComment.moveForm("comment-" + data_commentid, data_commentid, "respond", e.target.getAttribute("data-postid"));
         //return false;
     }
 }
 
 function sm() {
-
     const sm = document.getElementsByClassName('sm'),
         cm = document.querySelector(".comments-main");
+        if (Poi.reply_link_version == 'new' && cm) {
+            console.log("hi");
+            cm.addEventListener("click",cm_click);
+        }
     if (!sm.length) return;
-    if (Poi.reply_link_version == 'new' && cm) {
-        cm.addEventListener("click",cm_click);
-    }
     cm && cm.addEventListener("click",(e)=>{
-        let list = e.target.parentNode;
+        const list = e.target.parentNode;
         if(list.classList.contains("sm")){
-            let msg = "您真的要设为私密吗？";
+            const msg = "您真的要设为私密吗？";
             if (confirm(msg) == true) {
                 if (list.classList.contains('private_now')) {
                     alert('您之前已设过私密评论');
                     return false;
                 } else {
                     list.classList.add('private_now');
-                    let idp = list.getAttribute("data-idp"),
-                        actionp = list.getAttribute("data-actionp"),
-                        rateHolderp = list.getElementsByClassName('has_set_private')[0];
-                    let ajax_data = "action=siren_private&p_id=" + idp + "&p_action=" + actionp;
-                    let request = new XMLHttpRequest();
+                    const ajax_data = "action=siren_private&p_id=" + list.getAttribute("data-idp") + "&p_action=" + list.getAttribute("data-actionp"),
+                        request = new XMLHttpRequest();
                     request.onreadystatechange = function () {
                         if (this.readyState == 4 && this.status == 200) {
-                            rateHolderp.innerHTML = request.responseText + ' <i class="post_icon_svg" style="--svg-name: var(--svg_lock);--size: 12px;--color:#7E8892;"></i>';
+                            list.getElementsByClassName('has_set_private')[0].innerHTML = request.responseText + ' <i class="post_icon_svg" style="--svg-name: var(--svg_lock);--size: 12px;--color:#7E8892;"></i>';
                         }
                     };
                     request.open('POST', '/wp-admin/admin-ajax.php', true);
@@ -756,17 +727,17 @@ function getqqinfo() {
         temp,
         user_avatar_img = document.querySelector("div.comment-user-avatar img");
         if (author == null) return;
-    if (!getCookie('user_qq') && !getCookie('user_qq_email') && !getCookie('user_author')) {
+    if (!localStorage.getItem('user_qq') && !localStorage.getItem('user_qq_email') && !localStorage.getItem('user_author')) {
         qq.value = author.value = email.value = url.value = "";
         imgError(user_avatar_img,2);
     }
-    if (getCookie('user_avatar') && getCookie('user_qq') && getCookie('user_qq_email')) {
-        user_avatar_img.setAttribute('src', getCookie('user_avatar'));
-        author.value = getCookie('user_author');
-        email.value = getCookie('user_qq') + '@qq.com';
-        qq.value = getCookie('user_qq');
+    if (localStorage.getItem('user_avatar') && localStorage.getItem('user_qq') && localStorage.getItem('user_qq_email')) {
+        user_avatar_img.setAttribute('src', localStorage.getItem('user_avatar'));
+        author.value = localStorage.getItem('user_author');
+        email.value = localStorage.getItem('user_qq') + '@qq.com';
+        qq.value = localStorage.getItem('user_qq');
         if (mashiro_option.qzone_autocomplete) {
-            url.value = 'https://user.qzone.qq.com/' + getCookie('user_qq');
+            url.value = 'https://user.qzone.qq.com/' + localStorage.getItem('user_qq');
         }
         if (qq.value) {
             qq_check.style.display = "block";
@@ -796,11 +767,11 @@ function getqqinfo() {
                 qq = qq.trim();
                 qq_check.style.display = "block";
                 gravatar_check.style.display = "none";
-                setCookie('user_author', res[qq][6], 30);
-                setCookie('user_qq', qq, 30);
-                setCookie('is_user_qq', 'yes', 30);
-                setCookie('user_qq_email', qq + '@qq.com', 30);
-                setCookie('user_email', qq + '@qq.com', 30);
+                localStorage.setItem('user_author', res[qq][6]);
+                localStorage.setItem('user_qq', qq);
+                localStorage.setItem('is_user_qq', 'yes');
+                localStorage.setItem('user_qq_email', qq + '@qq.com');
+                localStorage.setItem('user_email', qq + '@qq.com');
                 emailAddressFlag = email.value;
                 temp=author.value;
             } else if (xhr.readyState == 4) {
@@ -810,9 +781,9 @@ function getqqinfo() {
                 imgError(user_avatar_img,2);
                 if (email.value && is_get_by_qq==false) {
                     user_avatar_img.setAttribute("src", get_gravatar(email.value, 80));
-                    setCookie('user_qq', '', 30);
-                    setCookie('user_email', email.value, 30);
-                    setCookie('user_avatar', get_gravatar(email.value, 80), 30);
+                    localStorage.setItem('user_qq', '');
+                    localStorage.setItem('user_email', email.value);
+                    localStorage.setItem('user_avatar', get_gravatar(email.value, 80));
                 }
             }
         }
@@ -830,15 +801,15 @@ function getqqinfo() {
             if (xhr2.readyState == 4 && (xhr2.status == 200 || xhr2.status == 304)) {
                 let res = JSON.parse(xhr2.responseText);
                 user_avatar_img.setAttribute("src", res[qq]);
-                setCookie('user_avatar', res[qq], 30);
+                localStorage.setItem('user_avatar', res[qq]);
             } else if (xhr2.readyState == 4) {
                 if (!qq.value) {
                     qq_check.style.display = "none";
                     gravatar_check.style.display = "block";
-                    setCookie("user_qq", "", 30);
+                    localStorage.setItem("user_qq", "", 30);
                     if (!email.value) {
                         user_avatar_img.setAttribute("src", get_gravatar(email.value, 80));
-                        setCookie('user_avatar', get_gravatar(email.value, 80), 30);
+                        localStorage.setItem('user_avatar', get_gravatar(email.value, 80), 30);
                     }
                 }
             }
@@ -852,9 +823,9 @@ function getqqinfo() {
             xhr2.send();
         }
     })
-    if (getCookie('user_avatar') && getCookie('user_email') && getCookie('is_user_qq') == 'no' && !getCookie('user_qq_email')) {
-        user_avatar_img.setAttribute("src", getCookie('user_avatar'));
-        email.value = getCookie('user_mail');
+    if (localStorage.getItem('user_avatar') && localStorage.getItem('user_email') && localStorage.getItem('is_user_qq') == 'no' && !localStorage.getItem('user_qq_email')) {
+        user_avatar_img.setAttribute("src", localStorage.getItem('user_avatar'));
+        email.value = localStorage.getItem('user_mail');
         qq.value = '';
         if (!qq.value) {
             qq_check.style.display = "none";
@@ -866,10 +837,10 @@ function getqqinfo() {
         if (!emailAddress)return;
         if (is_get_by_qq == false || emailAddressFlag != emailAddress) {
             user_avatar_img.setAttribute("src", get_gravatar(emailAddress, 80));
-            setCookie('user_avatar', get_gravatar(emailAddress, 80), 30);
-            setCookie('user_email', emailAddress, 30);
-            setCookie('user_qq_email', '', 30);
-            setCookie('is_user_qq', 'no', 30);
+            localStorage.setItem('user_avatar', get_gravatar(emailAddress, 80));
+            localStorage.setItem('user_email', emailAddress);
+            localStorage.setItem('user_qq_email', '');
+            localStorage.setItem('is_user_qq', 'no');
             //qq.value = '';
             if (!qq.value) {
                 qq_check.style.display = "none";
@@ -877,21 +848,21 @@ function getqqinfo() {
             }
         }
     });
-    if (getCookie('user_url')) {
-        url.value = getCookie("user_url");
+    if (localStorage.getItem('user_url')) {
+        url.value = localStorage.getItem("user_url");
     }
     url.addEventListener("blur", function () {
         let URL_Address = url.value;
         url.value = URL_Address;
-        setCookie('user_url', URL_Address, 30);
+        localStorage.setItem('user_url', URL_Address, 30);
     });
-    if (getCookie('user_author')) {
-        author.value = getCookie('user_author');
+    if (localStorage.getItem('user_author')) {
+        author.value = localStorage.getItem('user_author');
     }
     author.addEventListener("blur", function () {
         let user_name = author.value;
         author.value = user_name;
-        setCookie('user_author', user_name, 30);
+        localStorage.setItem('user_author', user_name, 30);
     });
 }
 
@@ -928,21 +899,19 @@ function load_bangumi() {
             document.addEventListener('click', function (e) {
                 let target = e.target;
                 if (target === document.querySelector("#bangumi-pagination a")) {
-                    let bgpa = document.querySelector("#bangumi-pagination a");
-                    bgpa.classList.add("loading");
-                    bgpa.textContent = "";
-                    let xhr = new XMLHttpRequest();
+                    e.preventDefault();
+                    e.stopPropagation();
+                    target.classList.add("loading");
+                    target.textContent = "";
+                    const xhr = new XMLHttpRequest();
                     xhr.open('POST', target.href + "&_wpnonce=" + Poi.nonce, true);
                     xhr.onreadystatechange = function () {
                         if (xhr.readyState == 4 && xhr.status == 200) {
-                            let html = JSON.parse(xhr.responseText),
-                                bfan = document.getElementById("bangumi-pagination"),
-                                row = document.getElementsByClassName("row")[0];
-                            bfan.remove();
-                            row.insertAdjacentHTML('beforeend', html);
+                            document.getElementById("bangumi-pagination").remove();
+                            document.querySelector(".row").insertAdjacentHTML('beforeend', JSON.parse(xhr.responseText));
                         } else {
-                            bgpa.classList.remove("loading");
-                            bgpa.innerHTML = '<i class="post_icon_svg" style="--svg-name: var(--svg_exclamation-triangle);--size: 35px;vertical-align: -0.1em;"></i>ERROR ';
+                            target.classList.remove("loading");
+                            target.innerHTML = '<i class="post_icon_svg" style="--svg-name: var(--svg_exclamation-triangle);--size: 35px;vertical-align: -0.1em;"></i>ERROR ';
                         }
                     };
                     xhr.send();
@@ -956,9 +925,9 @@ loadCSS(mashiro_option.jsdelivr_css_src);
 loadCSS(mashiro_option.entry_content_theme_src);
 
 function serialize(form) {
-    let formData = new FormData(form),
-        getValue = formData.entries(),
-        parts = [];
+    const formData = new FormData(form),
+        getValue = formData.entries();
+    let parts = [];
     for (let pair of getValue) {
         parts.push(pair[0] + "=" + encodeURIComponent(pair[1]));
     }
@@ -968,7 +937,7 @@ function serialize(form) {
 let s = document.getElementById("bgvideo"),
     Siren = {
         MN: function () {
-            let icf = document.getElementsByClassName("iconflat")[0];
+            const icf = document.getElementsByClassName("iconflat")[0];
             icf && icf.addEventListener("click", ()=>{
                 document.body.classList.toggle("navOpen");
                 document.getElementById("main-container").classList.toggle("open");
@@ -1009,7 +978,7 @@ let s = document.getElementById("bgvideo"),
         },
         spause: function () {
             try {
-                let video_btn = document.getElementById("video-btn");
+                const video_btn = document.getElementById("video-btn");
                 video_btn.classList.add("video-play");
                 video_btn.classList.remove("video-pause");
                 document.querySelector(".focusinfo").style.transform = "";
@@ -1027,7 +996,7 @@ let s = document.getElementById("bgvideo"),
         livepause: function () {
             if (s.oncanplay != undefined && document.querySelector(".haslive") != null) {
                 Siren.spause();
-                let video_stu = document.getElementsByClassName("video-stu")[0];
+                const video_stu = document.getElementsByClassName("video-stu")[0];
                 video_stu.style.transform = "";
                 video_stu.innerHTML = "已暂停 ...";
             }
@@ -1043,7 +1012,7 @@ let s = document.getElementById("bgvideo"),
             bgvideo.setAttribute("video-name", _t);
         },
         LV: function () {
-            let _btn = document.getElementById("video-btn");
+            const _btn = document.getElementById("video-btn");
             _btn && _btn.addEventListener("click", function () {
                 if (this.classList.contains("loadvideo")) {
                     this.classList.add("video-pause");
@@ -1084,13 +1053,13 @@ let s = document.getElementById("bgvideo"),
                     document.getElementById("bgvideo").style.minHeight = "100vh";
                 }
             } else {
-                let headertop = document.querySelector(".headertop");
+                const headertop = document.querySelector(".headertop");
                 headertop && headertop.classList.add("headertop-bar");
             }
         },
         PE: function () {
             if (document.querySelector(".headertop")) {
-                let headertop = document.querySelector(".headertop"),
+                const headertop = document.querySelector(".headertop"),
                     blank = document.querySelector(".blank");
                 if (document.querySelector(".main-title")) {
                      if(blank) blank.style.paddingTop = "0px";
@@ -1104,9 +1073,9 @@ let s = document.getElementById("bgvideo"),
             }
         },
         CE: function () {
-            let comments_hidden = document.querySelector(".comments-hidden");
-            let comments_main = document.querySelector(".comments-main");
-            if (comments_hidden != null) {
+            const comments_hidden = document.querySelector(".comments-hidden"),
+                comments_main = document.querySelector(".comments-main");
+            if (comments_hidden) {
                 comments_hidden.style.display = "block";
                 comments_main.style.display = "none";
                 comments_hidden.addEventListener("click", function () {
@@ -1114,13 +1083,13 @@ let s = document.getElementById("bgvideo"),
                     comments_hidden.style.display = "none";
                 });
             }
-            let archives = document.getElementsByClassName("archives");
+            const archives = document.getElementsByClassName("archives");
             if (archives.length > 0) {
                 for (let i =0;i<archives.length;i++){
                     archives[i].style.display = "none";
                 }
                 archives[0].style.display = "";
-                let h3 = document.getElementById("archives-temp").getElementsByTagName("h3");
+                const h3 = document.getElementById("archives-temp").getElementsByTagName("h3");
                 for(let i=0;i<h3.length;i++){
                     h3[i].addEventListener("click",(e)=>{
                         e.preventDefault();
@@ -1164,7 +1133,7 @@ let s = document.getElementById("bgvideo"),
                             query(QueryStorage, document.getElementById("search-input").value, Record);
                             div_href();
                         } else {
-                            let _xhr = new XMLHttpRequest();
+                            const _xhr = new XMLHttpRequest();
                             _xhr.open("GET", val, true)
                             _xhr.send();
                             _xhr.onreadystatechange = function () {
@@ -1263,16 +1232,16 @@ let s = document.getElementById("bgvideo"),
                     }
                 }
             });
-            let searc = document.querySelector(".search_close");
+            const searc = document.querySelector(".search_close");
             searc && searc.addEventListener("click", function () {
-                let js_search = document.getElementsByClassName("js-search")[0];
+                const js_search = document.getElementsByClassName("js-search")[0];
                 if (js_search.classList.contains("is-visible")) {
                     document.getElementsByClassName("js-toggle-search")[0].classList.toggle("is-active");
                     js_search.classList.toggle("is-visible");
                     document.documentElement.style.overflowY = "unset";
                 }
             });
-                let show_Nav = document.getElementById("show-nav"),
+                const show_Nav = document.getElementById("show-nav"),
                     stln = document.querySelector(".site-top .lower nav"),
                     loading = document.getElementById("loading");
                 show_Nav && show_Nav.addEventListener("click", function () {
@@ -1292,8 +1261,8 @@ let s = document.getElementById("bgvideo"),
                 });
         },
         NH: function () {
-            let t = window.innerHeight / 4,
-                i = document.documentElement.scrollTop || window.pageYOffset,
+            let i = document.documentElement.scrollTop || window.pageYOffset;
+            const t = window.innerHeight / 4,
                  _add = (_class) => {
                     document.querySelector(".site-header").classList.add(_class);
                     document.querySelector(".openNav").classList.add(_class);
@@ -1320,13 +1289,13 @@ let s = document.getElementById("bgvideo"),
         },
         XLS: function () {
             let load_post_timer;
-            let intersectionObserver = new IntersectionObserver(entries => {
+            const intersectionObserver = new IntersectionObserver(entries => {
                 if (entries[0].intersectionRatio <= 0) return;
-                let pagination = document.querySelector("#pagination a"),
-                    page_next = pagination != null ? pagination.getAttribute("href") : undefined,
+                const pagination = document.querySelector("#pagination a"),
+                    page_next = pagination ? pagination.getAttribute("href") : undefined,
                     load_key = document.getElementById("add_post_time");
                 if (page_next != undefined && load_key) {
-                    let load_time = document.getElementById("add_post_time").title;
+                    const load_time = document.getElementById("add_post_time").title;
                     if (load_time != "233") {
                         console.log("%c 自动加载时倒计时 %c", "background:#9a9da2; color:#ffffff; border-radius:4px;", "", "", load_time);
                         load_post_timer = setTimeout(function () {
@@ -1349,11 +1318,11 @@ let s = document.getElementById("bgvideo"),
                 }
             })
             function load_post() {
-                let pagination = document.querySelector("#pagination a");
-                if (pagination != null) {
+                const pagination = document.querySelector("#pagination a");
+                if (pagination) {
                     pagination.classList.add("loading");
                     pagination.innerHTML = "";
-                    let _xhr = new XMLHttpRequest();
+                    const _xhr = new XMLHttpRequest();
                     _xhr.open("GET", pagination.getAttribute("href") + "#main", true);
                     _xhr.responseType = "document";
                     _xhr.onreadystatechange = function () {
@@ -1366,9 +1335,8 @@ let s = document.getElementById("bgvideo"),
                                     let b = result[i];
                                     document.getElementById("main").insertAdjacentHTML('beforeend', b.outerHTML);
                                 }
-                            let content = document.querySelector("#content");
-                            if(Poi.pjax)_pjax.refresh(content);
-                            let dpga = document.querySelector("#pagination a"),
+                            if(Poi.pjax)_pjax.refresh(document.querySelector("#content"));
+                            const dpga = document.querySelector("#pagination a"),
                                 addps = document.querySelector("#add_post span");
                             if (dpga){
                                 dpga.classList.remove("loading");
@@ -1408,13 +1376,13 @@ let s = document.getElementById("bgvideo"),
             }
         },
         XCS: function () {
-            let __list = "commentwrap";
+            const __list = "commentwrap";
             document.body.addEventListener('submit', function (e) {
                 if (e.target == document.querySelector("form#commentform.comment-form")) {
                     e.preventDefault();
                     e.stopPropagation();
-                    let from_Data = document.querySelector("form#commentform.comment-form");
-                    let xhr = new XMLHttpRequest();
+                    const from_Data = document.querySelector("form#commentform.comment-form");
+                    const xhr = new XMLHttpRequest();
                     xhr.open('POST', Poi.ajaxurl, true);
                     xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
                     xhr.onloadstart = function () {
@@ -1425,15 +1393,13 @@ let s = document.getElementById("bgvideo"),
                     };
                     xhr.onreadystatechange = function () {
                         if (xhr.readyState == 4 && xhr.status == 200) {
-                            let data = xhr.responseText;
+                            const data = xhr.responseText;
                             document.getElementById("comment").value = "";
-                            let t = addComment,
-                                cancel = document.getElementById('cancel-comment-reply-link'),
+                            const cancel = document.getElementById('cancel-comment-reply-link'),
                                 temp = document.getElementById('wp-temp-form-div'),
-                                respond = document.getElementById(t.respondId),
+                                respond = document.getElementById(addComment.respondId);
                                // post = document.getElementById('comment_post_ID').value,
-                                parent = document.getElementById('comment_parent').value;
-                            if (parent != '0') {
+                            if (document.getElementById('comment_parent').value != '0') {
                                 document.getElementById("respond").insertAdjacentHTML('beforebegin', '<ol class="children">' + data + '</ol>');
                             } else if (!document.getElementsByClassName(__list).length) {
                                 if (Poi.formpostion == 'bottom') {
@@ -1448,7 +1414,7 @@ let s = document.getElementById("bgvideo"),
                                     document.getElementsByClassName("commentwrap")[1].insertAdjacentHTML('afterbegin', data);
                                 }
                             }
-                            t.createButterbar("提交成功(Succeed)");
+                            addComment.createButterbar("提交成功(Succeed)");
                             lazyload();
                             code_highlight_style();
                             click_to_view_image();
@@ -1543,7 +1509,7 @@ let s = document.getElementById("bgvideo"),
                 if (e.target.parentNode == document.getElementById("comments-navi") && e.target.nodeName.toLowerCase() == "a") {
                     e.preventDefault();
                     e.stopPropagation();
-                    let _this = e.target,
+                    const _this = e.target,
                         path = _this.pathname,
                         _xhr = new XMLHttpRequest();
                     _xhr.open("GET", _this.getAttribute('href'), true);
@@ -1723,7 +1689,7 @@ ready(()=>{
 });
 
 {
-    let isWebkit = navigator.userAgent.toLowerCase().indexOf('webkit') > -1,
+    const isWebkit = navigator.userAgent.toLowerCase().indexOf('webkit') > -1,
         isOpera = navigator.userAgent.toLowerCase().indexOf('opera') > -1,
         isIe = navigator.userAgent.toLowerCase().indexOf('msie') > -1;
     if ((isWebkit || isOpera || isIe) && document.getElementById && window.addEventListener) {
