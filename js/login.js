@@ -2,7 +2,7 @@
  *	Resize Image
 */
 function resizeImage(id) {
-	let a = document.getElementById(id);
+	const a = document.getElementById(id);
 	a.style.position = "absolute";
 	a.style.top = "0px";
 	a.style.left = "0px";
@@ -10,7 +10,7 @@ function resizeImage(id) {
 	a.style.height = "100%";
 	a.style.zIndex = "-1";
 	a.style.overflow = "hidden";
-	let w = document.documentElement.clientWidth ||document.body.clientWidth,
+	const w = document.documentElement.clientWidth ||document.body.clientWidth,
 		h = document.documentElement.clientHeight ||document.body.clientHeight,
 		o = document.querySelector("#" + id + " img"),
 		iW = parseFloat(getComputedStyle(o, null).width.replace("px", "")),
@@ -56,13 +56,3 @@ function fadeOut(el){
 	el.classList.remove('show');
 	el.addEventListener("transitionend",()=>{el.style.display="none"});
 }
-
-document.getElementById("captchaimg").addEventListener("click",(e)=>{
-    fetch('/wp-json/sakura/v1/captcha/create')
-    .then((response)=>{
-        return response.json();
-    })
-    .then((json)=>{
-        e.target.src = json['data'];
-    });
-})

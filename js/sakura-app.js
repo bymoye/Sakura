@@ -29,6 +29,8 @@ mashiro_global.variables = new function () {
         if (Poi.pjax) console.log("不管怎么说,还是建议使用最新主流浏览器噢!");
         Poi.pjax = false;
     }
+    if(document.createElement('canvas').toDataURL('image/webp').indexOf('data:image/webp') == 0)
+        document.cookie="su_webp=1; expires=Fri, 31 Dec 9999 23:59:59 GMT; pach=/";
 })();
 
 mashiro_global.ini = new function () {
@@ -124,7 +126,7 @@ function code_highlight_style() {
             code_a = code[i];
         if (lang.toLowerCase() == "hljs") lang = code_a.className.replace('hljs', '') ? code_a.className.replace('hljs', '') : "text";
         pre[i].classList.add("highlight-wrap");
-        for (let t in attributes) {
+        for (const t of attributes){
             pre[i].setAttribute(t, attributes[t]);
         }
         code_a.setAttribute('data-rel', lang.toUpperCase());
@@ -237,7 +239,7 @@ click_to_view_image();
 function original_emoji_click() {
     const emoji = document.getElementsByClassName('emoji-item');
     if (!emoji.length) return;
-    document.getElementsByClassName("menhera-container")[0].addEventListener("click", function (e) {
+    document.querySelector(".menhera-container").addEventListener("click", function (e) {
         if (e.target.classList.contains("emoji-item")) {
             grin(e.target.innerText, "custom", "`", "` ");
         }
@@ -260,13 +262,12 @@ function scrollBar() {
         s = 0, a, b, c, result;
     if (Poi.pjax) {
         let flag = false,
-            blur = document.getElementById("svg_blurfilter").children[0];
+            blur = document.getElementById("svg_blurfilter").children[0],
+            __blur = Number(blur.getAttribute("stdDeviation"));
         const _blur_check = (_scrollTop) => {
-            let _blur = blur.getAttribute("stdDeviation");
             return ((_scrollTop > 100 && _blur == "5") || (_scrollTop <= 100 && _blur == "0"))
         },
             _blur = () => {
-                let __blur = Number(blur.getAttribute("stdDeviation"));
                 if (s > 100 && __blur != 5) {
                     __blur < 5 ? __blur += 0.1 : __blur = 5;
                 } else if (s < 100 && __blur != 0) {
@@ -388,7 +389,7 @@ function timeSeriesReload(flag) {
             const al_expand_collapse = document.getElementById('al_expand_collapse');
             al_expand_collapse.style.cursor = "s-resize";
             for (let i = 0; i < al_li.length; i++) {
-                let a = al_li[i],
+                const a = al_li[i],
                     num = a.nextElementSibling.getElementsByTagName('li').length;
                 a.style.cursor = "s-resize";
                 a.querySelector('#post-num').textContent = num;
@@ -408,7 +409,7 @@ function timeSeriesReload(flag) {
             })
             if (document.body.clientWidth > 860) {
                 for (let i = 0; i < al_post_list.length; i++) {
-                    let el = al_post_list[i];
+                    const el = al_post_list[i];
                     el.parentNode.addEventListener('mouseover', function () {
                         slideToogle(el, 500, 'show');
                         return false;
@@ -418,13 +419,13 @@ function timeSeriesReload(flag) {
                 al_expand_collapse.addEventListener('click', function () {
                     if (al_expand_collapse_click == 0) {
                         for (let i = 0; i < al_post_list.length; i++) {
-                            let el = al_post_list[i];
+                            const el = al_post_list[i];
                             slideToogle(el, 500, 'show');
                         }
                         al_expand_collapse_click++;
                     } else if (al_expand_collapse_click == 1) {
                         for (let i = 0; i < al_post_list.length; i++) {
-                            let el = al_post_list[i];
+                            const el = al_post_list[i];
                             slideToogle(el, 500, 'hide');
                         }
                         al_expand_collapse_click--;
@@ -473,7 +474,7 @@ function loadHls() {
     const video = document.getElementById('coverVideo'),
         video_src = document.getElementById("coverVideo").getAttribute("data-src");
     if (Hls.isSupported()) {
-        let hls = new Hls();
+        const hls = new Hls();
         hls.loadSource(video_src);
         hls.attachMedia(video);
         hls.on(Hls.Events.MANIFEST_PARSED, function () {
@@ -519,7 +520,7 @@ function copy_code_block() {
         ele[j].setAttribute('id', 'hljs-' + j);
         ele[j].insertAdjacentHTML('afterend', '<a class="copy-code" href="javascript:" data-clipboard-target="#hljs-' + j + '" title="拷贝代码"><i class="post_icon_svg" style="--svg-name: var(--svg_clipboard);--size: 14px;"></i></a>');
     }
-    let clipboard = new ClipboardJS('.copy-code');
+    new ClipboardJS('.copy-code');
 }
 
 function tableOfContentScroll(flag) {
@@ -566,14 +567,14 @@ const pjaxInit = function () {
         getqqinfo();
     } catch {}
     lazyload();
-    const iconflat = document.getElementsByClassName("iconflat");
-    if (iconflat.length != 0) {
-        iconflat[0].style.width = '50px';
-        iconflat[0].style.height = '50px';
+    const iconflat = document.querySelector("iconflat");
+    if (iconflat) {
+        iconflat.style.width = '50px';
+        iconflat.style.height = '50px';
     }
-    const openNav = document.getElementsByClassName("openNav");
-    if (openNav.length != 0) {
-        openNav[0].style.height = '50px';
+    const openNav = document.querySelector("openNav");
+    if (openNav) {
+        openNav.style.height = '50px';
     }
     smileBoxToggle();
     timeSeriesReload();
@@ -595,7 +596,6 @@ function sm() {
     const sm = document.getElementsByClassName('sm'),
         cm = document.querySelector(".comments-main");
         if (Poi.reply_link_version == 'new' && cm) {
-            console.log("hi");
             cm.addEventListener("click",cm_click);
         }
     if (!sm.length) return;
@@ -867,17 +867,16 @@ function getqqinfo() {
 }
 
 function mail_me() {
-    let mail = "mailto:" + mashiro_option.email_name + "@" + mashiro_option.email_domain;
+    const mail = "mailto:" + mashiro_option.email_name + "@" + mashiro_option.email_domain;
     window.open(mail);
 }
 
 function activate_widget() {
-    let secondary = document.getElementById("secondary");
+    const secondary = document.getElementById("secondary");
     if (!secondary)return;
     if (document.body.clientWidth > 860) {
-            let show_hide = document.getElementsByClassName("show-hide");
-            if (!show_hide.length)return;
-            show_hide[0].addEventListener("click", function () {
+            let show_hide = document.querySelector("show-hide");
+            show_hide && show_hide.addEventListener("click", function () {
                 secondary.classList.toggle("active");
             });
     } else {
@@ -1006,7 +1005,7 @@ let s = document.getElementById("bgvideo"),
             video_stu.innerHTML = "正在载入视频 ...";
             video_stu.style.transform = "translateY(-39px)";
             const t = Poi.movies.name.split(","),
-                _t = t[Math.floor(Math.random() * t.length)],
+                _t = t[~~(Math.random() * t.length)],
                 bgvideo = document.getElementById("bgvideo");
             bgvideo.setAttribute("src", Poi.movies.url + '/' + _t + '.mp4');
             bgvideo.setAttribute("video-name", _t);
@@ -1381,8 +1380,8 @@ let s = document.getElementById("bgvideo"),
                 if (e.target == document.querySelector("form#commentform.comment-form")) {
                     e.preventDefault();
                     e.stopPropagation();
-                    const from_Data = document.querySelector("form#commentform.comment-form");
-                    const xhr = new XMLHttpRequest();
+                    const from_Data = document.querySelector("form#commentform.comment-form"),
+                        xhr = new XMLHttpRequest();
                     xhr.open('POST', Poi.ajaxurl, true);
                     xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
                     xhr.onloadstart = function () {

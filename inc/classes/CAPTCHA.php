@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 namespace Sakura\API;
 
 class CAPTCHA
@@ -19,12 +19,13 @@ class CAPTCHA
     /**
      * create_CAPTCHA
      *
-     * @param  string $time
+     * @param  int $time
      * @param  string $iqid 
      * @return string
      */    
-    private function create_CAPTCHA(string $time,string $iqid) {
-        mt_srand(hexdec($iqid)+$time);
+    private static function create_CAPTCHA(int $time,string $iqid): string {
+        $seed = hexdec($iqid) + $time;
+        mt_srand($seed);
         $arr = array_merge(range('a', 'z'), range('A', 'Z'), range(0, 9));
         shuffle( $arr );
         $rand_keys = array_rand( $arr, 5 );
@@ -40,11 +41,11 @@ class CAPTCHA
      *
      * @return array
      */
-    public function create_captcha_img() {
+    public function create_captcha_img(): array {
         //创建画布
         $img = imagecreatetruecolor(120, 40);
-        setcookie('timestamp',$this->timestamp,$this->timestamp+60,'/');
-        setcookie('id',$this->uniqid,$this->timestamp+60,'/');
+        //setcookie('timestamp',$this->timestamp,$this->timestamp+60,'/');
+        //setcookie('id',$this->uniqid,$this->timestamp+60,'/');
         //填充背景色
         $backcolor = imagecolorallocate($img, mt_rand(200, 255), mt_rand(200, 255), mt_rand(0, 255));
         imagefill($img, 0, 0, $backcolor);
@@ -53,7 +54,7 @@ class CAPTCHA
         $str = $this->create_CAPTCHA($this->timestamp,$this->uniqid);
         //绘制文字
         for ( $i = 1; $i <= 5; $i++ ) {
-            $span = floor(50 / 2.5);
+            $span = 20;
             $stringcolor = imagecolorallocate($img, mt_rand(0, 255), mt_rand(0, 100), mt_rand(0, 80));
             $file = $this->font;
             imagefttext( $img, 25, 2, $i*$span, 30, $stringcolor, $file, $str[$i-1] );
@@ -82,12 +83,13 @@ class CAPTCHA
         imagedestroy($img);
         // 以json格式输出
         $captchaimg = 'data:image/png;base64,' . base64_encode($captchaimg);
-        $result = array(
+        return array(
             'code' => 0,
             'data' => $captchaimg,
-            'msg' => ''
-        ); 
-        return $result;
+            'msg' => '',
+            'time' => $this->timestamp,
+            'id' => $this->uniqid
+        );
     }
 
     
@@ -95,12 +97,14 @@ class CAPTCHA
      * check_CAPTCHA
      *
      * @param  string $captcha
+     * @param  int $timestamp
+     * @param  string $id
      * @return array
      */
-    public function check_CAPTCHA(string $captcha){
+    public static function check_CAPTCHA(string $captcha,?int $timestamp,?string $id): array{
         $temp = time();
         $temp1 = $temp-60;
-        if (!isset($_COOKIE["timestamp"]) || !isset($_COOKIE['id']) || !ctype_xdigit($_COOKIE['id']) || !ctype_digit($_COOKIE["timestamp"])){
+        if (!isset($timestamp) || !isset($id) || !ctype_xdigit($id) || !ctype_digit($timestamp)){
             $code = 3;
             $msg = '非法请求';
         }
@@ -108,12 +112,12 @@ class CAPTCHA
             $code = 3;
             $msg = '请输入正确的验证码!';
         }
-        elseif($_COOKIE["timestamp"] < $temp1){
+        elseif($timestamp < $temp1){
             $code = 2;
             $msg = '超时!';
         }
-        elseif($_COOKIE["timestamp"] >= $temp1 && $_COOKIE["timestamp"] <= $temp){
-            $comparison = $this->create_CAPTCHA($_COOKIE['timestamp'],$_COOKIE['id']);
+        elseif($timestamp >= $temp1 && $timestamp <= $temp){
+            $comparison = CAPTCHA::create_CAPTCHA($timestamp,$id);
             if (strtolower($captcha) === strtolower($comparison)){
                 $code = 5;
                 $msg = '验证码正确!';
@@ -125,11 +129,10 @@ class CAPTCHA
             $code = 1;
             $msg = '错误!';
         }
-        $result = array(
+        return array(
             'code' => $code,
             'data' => '',
             'msg' => $msg
         ); 
-        return $result;
     }
 }

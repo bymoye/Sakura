@@ -5219,16 +5219,9 @@ i.iconfont.down {
 
 .ex-login,
 .ex-register {
-    margin: auto;
-    width: 400px;
     text-align: center;
-    background-color: rgba(255, 255, 255, 0)
 }
 
-.ex-login {
-    padding: 20px 0;
-    background-color: rgba(255, 255, 255, 0)
-}
 
 .ex-login p,
 .ex-register p {
@@ -6436,11 +6429,24 @@ a.toc-link {
 }
 
 
-
+.ex-login form,.ex-register form{
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    vertical-align: middle;
+}
+.ex-login #captchaimg,.ex-register #captchaimg {
+    vertical-align: middle;
+}
+.ex-login #yzm,.ex-register #yzm {
+    width: 180px;
+}
 
 .ex-login,
 .ex-register {
-    width: auto !important
+    display: flex;
+    align-items: center;
+    flex-direction: column;
 }
 
 .bili-container,

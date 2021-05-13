@@ -513,17 +513,16 @@ function get_post_views($post_id) {
         }
     } else {
         $views = get_post_meta($post_id, 'views', true);
-        if($views == '') {
-            return 0;
-        }else{
-            return restyle_text($views);
-        }
+        return $views=='' ? 0 : restyle_text($views);
+        // if($views == '') {
+        //     return 0;
+        // }else{
+        //     return restyle_text($views);
+        // }
     }
 } 
-
-
-function is_webp(){
-    return strpos($_SERVER['HTTP_ACCEPT'], 'image/webp') ? true : false;
+function is_webp():bool{
+    return (isset($_COOKIE["su_webp"]) || strpos($_SERVER['HTTP_ACCEPT'], 'image/webp'));
 }
 /*
  * 友情链接
@@ -736,13 +735,27 @@ function custom_html() {
     const forgetmenot = document.querySelector(".forgetmenot");
     if(forgetmenot)forgetmenot.outerHTML = \'<p class="forgetmenot">Remember Me<input name="rememberme" id="rememberme" value="forever" type="checkbox"><label for="rememberme" style="float: right;margin-top: 5px;transform: scale(2);margin-right: -10px;"></label></p>\';
     </script>',"\n";
+    echo '<script>
+    document.addEventListener("DOMContentLoaded", ()=>{
+        const captchaimg = document.getElementById("captchaimg");
+        captchaimg && captchaimg.addEventListener("click",(e)=>{
+            fetch("',rest_url('sakura/v1/captcha/create'),'")
+            .then(response=>response.json())
+            .then(json=>{
+                e.target.src = json["data"];
+                document.querySelector("input[name=\'timestamp\']").value = json["time"];
+                document.querySelector("input[name=\'id\']").value = json["id"];
+            });
+        })
+    }, false);  
+    </script>';
 }
 add_action('login_footer', 'custom_html');
 
 //Login message
 //* Add custom message to WordPress login page
 function smallenvelop_login_message( $message ) {
-    return empty($message) ?: '<p class="message"><strong>You may try 3 times for every 5 minutes!</strong></p>';
+    return $message ?: '<p class="message"><strong>You may try 3 times for every 5 minutes!</strong></p>';
     // if ( empty($message) ){
     //     return '<p class="message"><strong>You may try 3 times for every 5 minutes!</strong></p>';
     // } else {
@@ -905,25 +918,19 @@ $wpsmiliestrans = array();
 function push_tieba_smilies() {
 global $wpsmiliestrans;
 // don't bother setting up smilies if they are disabled
-if ( !get_option('use_smilies'))
-    return false;
+if ( !get_option('use_smilies'))return false;
     $tiebaname = array('good','han','spray','Grievance','shui','reluctantly','anger','tongue','se','haha','rmb','doubt','tear','surprised2','Happy','ku','surprised','theblackline','smilingeyes','spit','huaji','bbd','hu','shame','naive','rbq','britan','aa','niconiconi','niconiconi_t','niconiconit','awesome');
     $return_smiles = '';
-    for($i=0;$i<count($tiebaname);$i++){
-      $tieba_Name=$tiebaname[$i];
-      if (is_webp()){
-          $tiebaimgdir='tiebawebp/';
-          $smiliesgs='.webp';
-      }else{
-          $tiebaimgdir='tiebapng/';
-          $smiliesgs='.png';
-      }
+    $type = is_webp() ? 'webp' : 'png';
+    $tiebaimgdir = 'tieba' . $type . '/';
+    $smiliesgs='.' . $type;
+    foreach ($tiebaname as $tieba_Name){
       // 选择面版
       $return_smiles = $return_smiles . '<span title="'.$tieba_Name.'" onclick="grin('."'".$tieba_Name."'".',type = \'tieba\')"><img src="https://cdn.jsdelivr.net/gh/bymoye/cdn@1.2/sakura/images/smilies/'. $tiebaimgdir .'icon_'. $tieba_Name . $smiliesgs.'" /></span>';
       // 正文转换
       $wpsmiliestrans['::' . $tieba_Name . '::'] = '<span title="'. $tieba_Name .'" onclick="grin('."'". $tieba_Name ."'".',type = \'tieba\')"><img src="https://cdn.jsdelivr.net/gh/bymoye/cdn@1.2/sakura/images/smilies/'.$tiebaimgdir.'icon_'. $tieba_Name .$smiliesgs.'" /></span>';
-      }
-      return $return_smiles;
+    }
+    return $return_smiles;
   }
   push_tieba_smilies();
 
@@ -988,15 +995,10 @@ function push_bili_smilies(){
   global $bilismiliestrans;
   $name = array('baiyan','bishi','bizui','chan','dai','daku','dalao','dalian','dianzan','doge','facai','fanu','ganga','guilian','guzhang','haixiu','heirenwenhao','huaixiao','jingxia','keai','koubizi','kun','lengmo','liubixue','liuhan','liulei','miantian','mudengkoudai','nanguo','outu','qinqin','se','shengbing','shengqi','shuizhao','sikao','tiaokan','tiaopi','touxiao','tuxue','weiqu','weixiao','wunai','xiaoku','xieyanxiao','yiwen','yun','zaijian','zhoumei','zhuakuang');
   $return_smiles = '';
-  for($i=0;$i<count($name);$i++){
-    $smilies_Name=$name[$i];
-    if (is_webp()){
-        $biliimgdir='biliwebp/';
-        $smiliesgs='.webp';
-    }else{
-        $biliimgdir='bilipng/';
-        $smiliesgs='.png';
-    }
+  $type = is_webp() ? 'webp' : 'png';
+  $biliimgdir = 'bili' . $type . '/';
+  $smiliesgs='.' . $type;
+  foreach($name as $smilies_Name){
     // 选择面版
     $return_smiles = $return_smiles . '<span title="'.$smilies_Name.'" onclick="grin('."'".$smilies_Name."'".',type = \'Math\')"><img src="https://cdn.jsdelivr.net/gh/bymoye/cdn@1.2/sakura/images/smilies/'. $biliimgdir .'emoji_'. $smilies_Name . $smiliesgs.'" /></span>';
     // 正文转换
@@ -1025,13 +1027,9 @@ add_filter('the_content_feed', 'featuredtoRSS');
 
 //
 function bili_smile_filter_rss($content) {
-    if (is_webp()){
-        $biliimgdir='biliwebp/';
-        $smiliesgs='.webp';
-    }else{
-        $biliimgdir='bilipng/';
-        $smiliesgs='.png';
-    }
+    $type = is_webp() ? 'webp' : 'png';
+    $biliimgdir = 'bili' . $type . '/';
+    $smiliesgs='.' . $type;
     $content = str_replace('{{','<img src="https://cdn.jsdelivr.net/gh/bymoye/cdn@1.2/sakura/images/smilies/'.$biliimgdir,$content);
     $content = str_replace('}}',$smilesgs.'" alt="emoji" style="height: 2em; max-height: 2em;">',$content);
     $content =  str_replace('[img]', '<img src="', $content);
@@ -1353,9 +1351,8 @@ function codecheese_register_post( $sanitized_user_login, $user_email, $errors )
         
 	// Get visitor email domain
         $email = explode( '@', $user_email );
-        
 	// Check and display error message for the registration form if exists
-	if( in_array( $email[1], $domains ) )
+	if( empty($email) && in_array( $email[1], $domains ) )
 		$errors->add('invalid_email', __('<b>ERROR</b>: This email domain (<b>@'.$email[1].'</b>) has been blocked. Please use another email.'));
 }
 
@@ -1602,10 +1599,9 @@ function remove_xmlrpc_pingback_ping( $methods ) {
 function login_CAPTCHA() {
     include_once('inc/classes/CAPTCHA.php');
     $img = new Sakura\API\CAPTCHA;
-    $test = $img->create_captcha_img();
+    $captcha = $img->create_captcha_img();
     //最终网页中的具体内容
-    echo '<p><label for="captcha" class="captcha">验证码<br><img id="captchaimg" width="120" height="40" src="', $test['data'] ,'"><input type="text" name="yzm" id="yzm" class="input" value="" size="20" tabindex="4" placeholder="请输入验证码">'
-    ."</label></p>";
+    echo '<p><label for="captcha" class="captcha">验证码<br><img id="captchaimg" width="120" height="40" src="', $captcha['data'] ,'"><input type="text" name="yzm" id="yzm" class="input" value="" size="20" tabindex="4" placeholder="请输入验证码"><input type="hidden" name="timestamp" value="',$captcha['time'],'"><input type="hidden" name="id" value="',$captcha['id'],'"></label></p>';
 }
 add_action('login_form','login_CAPTCHA');
 add_action('register_form','login_CAPTCHA' );
@@ -1618,9 +1614,11 @@ function CAPTCHA_CHECK($user, $username, $password) {
         return new WP_Error();
     }
     if(isset($_POST['yzm']) && !empty(trim($_POST['yzm']))){
+        if (!isset($_POST['timestamp']) || !isset($_POST['id']) || !ctype_xdigit($_POST['id']) || !ctype_digit($_POST['timestamp'])){
+            return new WP_Error('prooffail', '<strong>错误</strong>：非法数据');
+        }
         include_once('inc/classes/CAPTCHA.php');
-        $img = new Sakura\API\CAPTCHA;
-        $check = $img->check_CAPTCHA($_POST['yzm']);
+        $check = Sakura\API\CAPTCHA::check_CAPTCHA($_POST['yzm'],$_POST['timestamp'],$_POST['id']);
         if($check['code'] == 5){
             return $user;
         }else{
@@ -1640,9 +1638,11 @@ function lostpassword_CHECK( $errors ) {
         return false;
     }
     if(isset($_POST['yzm']) && !empty(trim($_POST['yzm']))){
+        if (!isset($_POST['timestamp']) || !isset($_POST['id']) || !ctype_xdigit($_POST['id']) || !ctype_digit($_POST['timestamp'])){
+            return new WP_Error('prooffail', '<strong>错误</strong>：非法数据');
+        }
         include_once('inc/classes/CAPTCHA.php');
-        $img = new Sakura\API\CAPTCHA;
-        $check = $img->check_CAPTCHA($_POST['yzm']);
+        $check = Sakura\API\CAPTCHA::check_CAPTCHA($_POST['yzm'],$_POST['timestamp'],$_POST['id']);
         if($check['code'] != 5){
             return $errors->add( 'invalid_department ', '<strong>错误</strong>：'.$check['msg']);
         }
@@ -1660,9 +1660,12 @@ function registration_CAPTCHA_CHECK($errors, $sanitized_user_login, $user_email)
         return new WP_Error();
     }
     if(isset($_POST['yzm']) && !empty(trim($_POST['yzm']))){
+        if (!isset($_POST['timestamp']) || !isset($_POST['id']) || !ctype_xdigit($_POST['id']) || !ctype_digit($_POST['timestamp'])){
+            return new WP_Error('prooffail', '<strong>错误</strong>：非法数据');
+        }
         include_once('inc/classes/CAPTCHA.php');
-        $img = new Sakura\API\CAPTCHA;
-        $check = $img->check_CAPTCHA($_POST['yzm']);
+        // $img = new Sakura\API\CAPTCHA;
+        $check = Sakura\API\CAPTCHA::check_CAPTCHA($_POST['yzm'],$_POST['timestamp'],$_POST['id']);
         if($check['code'] == 5){
             return $errors;
         }else{
