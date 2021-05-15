@@ -30,13 +30,13 @@ function bgvideo(){
 /*
  * 使用本地图片作为头像，防止外源抽风问题
  */
-function get_avatar_profile_url(){ 
-  if(akina_option('focus_logo')){
-    $avatar = akina_option('focus_logo');
-  }else{
-    $avatar = get_avatar_url(get_the_author_meta( 'ID' ));
-  }
-  return $avatar;
+function get_avatar_profile_url(){
+  // if(akina_option('focus_logo')){
+  //   $avatar = akina_option('focus_logo');
+  // }else{
+  //   $avatar = get_avatar_url(get_the_author_meta( 'ID' ));
+  // }
+  return akina_option('focus_logo') ?: get_avatar_url(get_the_author_meta( 'ID' ));
 }
 
 
@@ -64,35 +64,35 @@ function get_random_bg_url(){
  * poi_time_since(strtotime($comment->comment_date), true );
  */
 function poi_time_since( $older_date, $comment_date = false, $text = false ) {
-  $chunks = array(
-    array( 24 * 60 * 60, __('days ago','sakura')),/*天前*/
-    array( 60 * 60 , __('hours ago','sakura')),/*小时前*/
-    array( 60 , __('minutes ago','sakura')),/*分钟前*/
-    array( 1, __('seconds ago','sakura'))/*秒前*/
-  );
+    $chunks = array(
+      array( 24 * 60 * 60, __('days ago','sakura')),/*天前*/
+      array( 60 * 60 , __('hours ago','sakura')),/*小时前*/
+      array( 60 , __('minutes ago','sakura')),/*分钟前*/
+      array( 1, __('seconds ago','sakura'))/*秒前*/
+    );
 
-  $newer_date = time() - (akina_option('time_zone_fix')*60*60);
-  $since = abs( $newer_date - $older_date );
-  if($text){
-    $output = '';
-  }else{
-    $output = __('Posted on ','sakura')/*发布于*/;
-  }
-
-  if ( $since < 30 * 24 * 60 * 60 ) {
-    for ( $i = 0, $j = count( $chunks ); $i < $j; $i ++ ) {
-      $seconds = $chunks[ $i ][0];
-      $name    = $chunks[ $i ][1];
-      if ( ( $count = floor( $since / $seconds ) ) != 0 ) {
-        break;
-      }
+    $newer_date = time() - (akina_option('time_zone_fix')*60*60);
+    $since = abs( $newer_date - $older_date );
+    if($text){
+      $output = '';
+    }else{
+      $output = __('Posted on ','sakura')/*发布于*/;
     }
-    $output .= $count . $name;
-  } else {
-    $output .= $comment_date ? date( 'Y-m-d H:i', $older_date ) : date( 'Y-m-d', $older_date );
-  }
 
-  return $output;
+    if ( $since < 30 * 24 * 60 * 60 ) {
+      foreach($chunks as $chunk){
+        $seconds = $chunk[0];
+        $name    = $chunk[1];
+        if ( ( $count = floor( $since / $seconds ) ) != 0 ) {
+          break;
+        }
+      }
+      $output .= $count . $name;
+    } else {
+      $output .= $comment_date ? date( 'Y-m-d H:i', $older_date ) : date( 'Y-m-d', $older_date );
+    }
+
+    return $output;
 }
 
 
@@ -627,10 +627,11 @@ function siren_auto_link_nofollow( $content ) {
   if(preg_match_all("/$regexp/siU", $content, $matches, PREG_SET_ORDER)) {
     if( !empty($matches) ) {
       $srcUrl = get_option('siteurl');
-      for ($i=0; $i < count($matches); $i++){
-        $tag = $matches[$i][0];
-        $tag2 = $matches[$i][0];
-        $url = $matches[$i][0];
+      foreach($matches as $matcha){
+      // for ($i=0; $i < count($matches); $i++){
+        $tag = $matcha[0];
+        $tag2 = $matcha[0];
+        $url = $matcha[0];
         $noFollow = '';
         $pattern = '/target\s*=\s*"\s*_blank\s*"/';
         preg_match($pattern, $tag2, $match, PREG_OFFSET_CAPTURE);

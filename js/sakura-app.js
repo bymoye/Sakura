@@ -29,8 +29,11 @@ mashiro_global.variables = new function () {
         if (Poi.pjax) console.log("不管怎么说,还是建议使用最新主流浏览器噢!");
         Poi.pjax = false;
     }
-    if(document.createElement('canvas').toDataURL('image/webp').indexOf('data:image/webp') == 0)
+    if(document.createElement('canvas').toDataURL('image/webp').indexOf('data:image/webp') === 0)
         document.cookie="su_webp=1; expires=Fri, 31 Dec 9999 23:59:59 GMT; pach=/";
+    document.querySelector("svg image").addEventListener("error",function(){
+        this.setAttribute("href","");
+    })
 })();
 
 mashiro_global.ini = new function () {
@@ -83,8 +86,7 @@ function post_list_show_animation() {
                             article.target.classList.add("post-list-show");
                             io.unobserve(article.target);
                         }
-                    } else {
-                        if (article.target.classList.contains("post-list-show")) {
+                    } else if(article.target.classList.contains("post-list-show")){
                             io.unobserve(article.target);
                         } else {
                             if (article.isIntersecting) {
@@ -93,8 +95,7 @@ function post_list_show_animation() {
                             }
                         }
                     }
-                }
-            },
+                },
             io = new IntersectionObserver(callback, options);
         for (let a = 0; a < articles.length; a++) {
             io.observe(articles[a]);
@@ -124,7 +125,7 @@ function code_highlight_style() {
         let ele_name = pre[i].children[0].className,
             lang = ele_name.substr(0, ele_name.indexOf(" ")).replace('language-', ''),
             code_a = code[i];
-        if (lang.toLowerCase() == "hljs") lang = code_a.className.replace('hljs', '') ? code_a.className.replace('hljs', '') : "text";
+        if (lang.toLowerCase() === "hljs") lang = code_a.className.replace('hljs', '') ? code_a.className.replace('hljs', '') : "text";
         pre[i].classList.add("highlight-wrap");
         for (const t of attributes){
             pre[i].setAttribute(t, attributes[t]);
@@ -173,13 +174,13 @@ function attach_image() {
             xhr.open("POST", Poi.api + 'sakura/v1/image/upload?_wpnonce=' + Poi.nonce, true);
             xhr.send(formData);
             xhr.onreadystatechange = function () {
-                if (xhr.readyState == 4 && (xhr.status == 200 || xhr.status == 304)) {
+                if (xhr.readyState === 4 && (xhr.status === 200 || xhr.status === 304)) {
                     cached.innerHTML = '<i class="picture_icon_svg" style="--svg-name: var(--svg_yes);"></i>';
                     setTimeout(function () {
                         cached.innerHTML = '<i class="picture_icon_svg" style="--svg-name: var(--svg_picture);"></i>';
                     }, 1000);
                     let res = JSON.parse(xhr.responseText);
-                    if (res.status == 200) {
+                    if (res.status === 200) {
                         const get_the_url = res.proxy;
                         document.getElementById("upload-img-show").insertAdjacentHTML('afterend', '<img class="lazyload upload-image-preview" src="https://cdn.jsdelivr.net/gh/moezx/cdn@3.0.2/img/svg/loader/trans.ajax-spinner-preloader.svg" data-src="' + get_the_url + '" onclick="window.open(\'' + get_the_url + '\')" onerror="imgError(this)"  alt=""/>');
                         lazyload();
@@ -188,7 +189,7 @@ function attach_image() {
                     } else {
                         addComment.createButterbar("上传失败！<br>Uploaded failed!<br> 文件名/Filename: " + f.name + "<br>code: " + res.status + "<br>" + res.message, 3000);
                     }
-                } else if (xhr.readyState == 4) {
+                } else if (xhr.readyState === 4) {
                     cached.innerHTML = '<i class="picture_icon_svg" style="--svg-name: var(--svg_no);"></i>';
                     alert("上传失败，请重试.\nUpload failed, please try again.");
                     setTimeout(function () {
@@ -265,13 +266,13 @@ function scrollBar() {
             blur = document.getElementById("svg_blurfilter").children[0],
             __blur = Number(blur.getAttribute("stdDeviation"));
         const _blur_check = (_scrollTop) => {
-            return ((_scrollTop > 100 && _blur == "5") || (_scrollTop <= 100 && _blur == "0"))
+            return ((_scrollTop > 100 && __blur === 5) || (_scrollTop <= 100 && __blur === 0))
         },
             _blur = () => {
                 if (s > 100 && __blur != 5) {
-                    __blur < 5 ? __blur += 0.1 : __blur = 5;
+                    __blur = parseFloat((__blur + 0.1).toFixed(10));
                 } else if (s < 100 && __blur != 0) {
-                    __blur > 0 ? __blur -= 0.1 : __blur = 0;
+                    __blur = parseFloat((__blur - 0.1).toFixed(10));
                 }
                 blur.setAttribute("stdDeviation", __blur);
                 if (!_blur_check(s)) {
@@ -300,7 +301,7 @@ function scrollBar() {
             case (result <= 59): c = '#85c440'; break;
             case (result <= 79): c = '#f2b63c'; break;
             case (result <= 99): c = '#FF0000'; break;
-            case (result == 100): c = '#5aaadb'; break;
+            case (result === 100): c = '#5aaadb'; break;
         }
         cached.style.setProperty("--barcolor", c);
         if (f && sc) {
@@ -319,7 +320,7 @@ function iconsvg() {
             const filter = document.createElementNS(a, "filter"),
                 fe = document.createElementNS(a, "feGaussianBlur");
             filter.id = "svg_blurfilter";
-            fe.setAttribute("stdDeviation", "0");
+            fe.setAttribute("stdDeviation", "5");
             fe.setAttribute("color-interpolation-filters", "sRGB");
             image.style.filter = "url(#svg_blurfilter)";
             filter.append(fe);
@@ -337,7 +338,7 @@ function no_right_click() {
     const pri = document.getElementById("primary");
     if(!pri)return;
     pri.addEventListener("contextmenu", function (e) {
-        if (e.target.nodeName.toLowerCase() == "img") {
+        if (e.target.nodeName.toLowerCase() === "img") {
             e.preventDefault();
             e.stopPropagation();
         }
@@ -349,7 +350,7 @@ function slideToogle(el, duration = 1000, mode = '', callback) {
     const dom = el;
     dom.status = dom.status || getComputedStyle(dom, null)['display'];
     const flag = dom.status != 'none';
-    if ((flag == 1 && mode == "show") || (flag == 0 && mode == "hide")) return;
+    if ((flag === 1 && mode === "show") || (flag === 0 && mode === "hide")) return;
     dom.status = flag ? 'none' : 'block';
     dom.style.transition = 'height ' + duration / 1000 + 's';
     dom.style.overflow = 'hidden';
@@ -376,7 +377,7 @@ function timeSeriesReload(flag) {
     const archives = document.getElementById('archives');
     if (!archives) return;
     const al_li = archives.getElementsByClassName('al_mon');
-    if (flag == true) {
+    if (flag) {
         archives.addEventListener("click", function (e) {
             if (e.target.classList.contains("al_mon")) {
                 slideToogle(e.target.nextElementSibling, 500);
@@ -595,7 +596,7 @@ const cm_click = (e)=>{
 function sm() {
     const sm = document.getElementsByClassName('sm'),
         cm = document.querySelector(".comments-main");
-        if (Poi.reply_link_version == 'new' && cm) {
+        if (Poi.reply_link_version === 'new' && cm) {
             cm.addEventListener("click",cm_click);
         }
     if (!sm.length) return;
@@ -986,14 +987,14 @@ let s = document.getElementById("bgvideo"),
 
         },
         liveplay: function () {
-            if (s.oncanplay != undefined && document.querySelector(".haslive") != null) {
-                if (document.querySelector(".videolive") != null) {
+            if (s.oncanplay != void 0 && document.querySelector(".haslive")) {
+                if (document.querySelector(".videolive")) {
                     Siren.splay();
                 }
             }
         },
         livepause: function () {
-            if (s.oncanplay != undefined && document.querySelector(".haslive") != null) {
+            if (s.oncanplay != void 0 && document.querySelector(".haslive")) {
                 Siren.spause();
                 const video_stu = document.getElementsByClassName("video-stu")[0];
                 video_stu.style.transform = "";
@@ -1127,7 +1128,7 @@ let s = document.getElementById("bgvideo"),
                     };
 
                     function search_a(val) {
-                        if (sessionStorage.getItem('search') != null) {
+                        if (sessionStorage.getItem('search')) {
                             QueryStorage = JSON.parse(sessionStorage.getItem('search'));
                             query(QueryStorage, document.getElementById("search-input").value, Record);
                             div_href();
@@ -1136,7 +1137,7 @@ let s = document.getElementById("bgvideo"),
                             _xhr.open("GET", val, true)
                             _xhr.send();
                             _xhr.onreadystatechange = function () {
-                                if (_xhr.readyState == 4 && _xhr.status == 200) {
+                                if (_xhr.readyState === 4 && _xhr.status === 200) {
                                     let json = _xhr.responseText;
                                     if (json != "") {
                                         sessionStorage.setItem('search', json);
@@ -1291,9 +1292,9 @@ let s = document.getElementById("bgvideo"),
             const intersectionObserver = new IntersectionObserver(entries => {
                 if (entries[0].intersectionRatio <= 0) return;
                 const pagination = document.querySelector("#pagination a"),
-                    page_next = pagination ? pagination.getAttribute("href") : undefined,
+                    page_next = pagination ? pagination.getAttribute("href") : void 0,
                     load_key = document.getElementById("add_post_time");
-                if (page_next != undefined && load_key) {
+                if (page_next != void 0 && load_key) {
                     const load_time = document.getElementById("add_post_time").title;
                     if (load_time != "233") {
                         console.log("%c 自动加载时倒计时 %c", "background:#9a9da2; color:#ffffff; border-radius:4px;", "", "", load_time);
@@ -1308,8 +1309,8 @@ let s = document.getElementById("bgvideo"),
             );
             document.body.removeEventListener("click", this.ZV);
             document.body.addEventListener("click", this.ZV);
-            document.body.addEventListener("click", function (e) {
-                if (e.target == document.querySelector("#pagination a")) {
+            document.body.addEventListener("click", (e)=>{
+                if (e.target === document.querySelector("#pagination a")) {
                     e.preventDefault();
                     e.stopPropagation();
                     clearTimeout(load_post_timer);
@@ -1347,10 +1348,10 @@ let s = document.getElementById("bgvideo"),
                             }
                             lazyload();
                             post_list_show_animation();
-                            if (nextHref != undefined) {
+                            if (nextHref != void 0) {
                                 let tempScrollTop = document.documentElement.scrollTop;
                                 window.scrollTo({
-                                    top: tempScrollTop + 100,
+                                    top: tempScrollTop - 100,
                                     behavior: "smooth"
                                 });
                                 document.querySelector("#pagination a").setAttribute("href", nextHref);
@@ -1563,11 +1564,8 @@ let s = document.getElementById("bgvideo"),
         FDT: function () {
             const _header = document.querySelector(".pattern-header");
             if (!_header) return;
-            let top,
-                _center = document.querySelector(".pattern-center"),
-                g = 60,
-                i = 15,
-                e,flag,
+            let top,g = 60,i = 15,e,flag;
+            const _center = document.querySelector(".pattern-center"),
                 _headertoggle = () => {
                     if (flag)return;
                     flag=true;
