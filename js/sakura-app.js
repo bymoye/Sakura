@@ -606,22 +606,31 @@ function sm() {
         }
     if (!sm.length) return;
     cm && cm.addEventListener("click",(e)=>{
-        const list = e.target.parentNode;
-        if(list.classList.contains("sm")){
+        let target = e.target,flag=false;
+        if (target.classList.contains("sm")){
+            flag=true;
+        }else if(target.parentNode.classList.contains("sm")){
+            target = target.parentNode;
+            flag=true;
+        }else if(target.parentNode.parentNode.classList.contains("sm")){
+            target = target.parentNode.parentNode;
+            flag=true;
+        }
+        if(flag){
             const msg = "您真的要设为私密吗？";
             if (confirm(msg)) {
-                if (list.classList.contains('private_now')) {
+                if (target.classList.contains('private_now')) {
                     alert('您之前已设过私密评论');
                     return false;
                 } else {
-                    list.classList.add('private_now');
-                    const ajax_data = "action=siren_private&p_id=" + list.getAttribute("data-idp") + "&p_action=" + list.getAttribute("data-actionp");
+                    target.classList.add('private_now');
+                    const ajax_data = "action=siren_private&p_id=" + target.getAttribute("data-idp") + "&p_action=" + target.getAttribute("data-actionp");
                     fetch("/wp-admin/admin-ajax.php",{
                         method:"POST",
                         headers:{"Content-type":"application/x-www-form-urlencoded"},
                         body:ajax_data
                     }).then(res=>res.text()).then(data=>{
-                        list.getElementsByClassName('has_set_private')[0].innerHTML = data + ' <i class="post_icon_svg" style="--svg-name: var(--svg_lock);--size: 12px;--color:#7E8892;"></i>';
+                        target.getElementsByClassName('has_set_private')[0].innerHTML = data + ' <i class="post_icon_svg" style="--svg-name: var(--svg_lock);--size: 12px;--color:#7E8892;"></i>';
                     })
                     return false;
                 }
