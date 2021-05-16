@@ -1747,8 +1747,6 @@ h1.page-title.mb- {
     border: 0;
     outline: 0;
     background-color: rgba(255,255,255,.5);
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
     cursor: pointer;
     padding: 15px;
     border-radius: 12px;
