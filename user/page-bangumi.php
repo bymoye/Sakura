@@ -10,7 +10,8 @@ get_header();
 ?>
 <meta name="referrer" content="same-origin">
 <style>
-#content,.comments,.site-footer{max-width:1200px;}
+@media (min-width: 900px){#content,.comments,.site-footer{width:100vw;}}
+@media (min-width: 1200px){#content,.comments,.site-footer{width:1200px;}}
 .comments{display: none}
 .pattern-center{max-width: 1200px;}
 </style>

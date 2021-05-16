@@ -112,7 +112,7 @@ class Images
         );
 
         $response = wp_remote_post($upload_url, $args);
-        if(empty($response)) return;
+        // if(empty($response)) return;
         $reply = json_decode($response["body"]);
 
         if ($reply->success && $reply->code == 'success') {

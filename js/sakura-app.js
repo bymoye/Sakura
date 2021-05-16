@@ -164,39 +164,44 @@ function attach_image() {
         }
         for (let i = 0; i < this.files.length; i++) {
             const f = this.files[i],
-                formData = new FormData(),
-                xhr = new XMLHttpRequest();
+                formData = new FormData();
             formData.append('cmt_img_file', f);
-            xhr.addEventListener('loadstart', function () {
-                cached.innerHTML = '<i class="picture_icon_svg" style="--svg-name: var(--svg_loading);"></i>';
-                addComment.createButterbar("上传中...<br>Uploading...");
-            });
-            xhr.open("POST", Poi.api + 'sakura/v1/image/upload?_wpnonce=' + Poi.nonce, true);
-            xhr.send(formData);
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState === 4 && (xhr.status === 200 || xhr.status === 304)) {
-                    cached.innerHTML = '<i class="picture_icon_svg" style="--svg-name: var(--svg_yes);"></i>';
-                    setTimeout(function () {
-                        cached.innerHTML = '<i class="picture_icon_svg" style="--svg-name: var(--svg_picture);"></i>';
-                    }, 1000);
-                    let res = JSON.parse(xhr.responseText);
-                    if (res.status === 200) {
-                        const get_the_url = res.proxy;
-                        document.getElementById("upload-img-show").insertAdjacentHTML('afterend', '<img class="lazyload upload-image-preview" src="https://cdn.jsdelivr.net/gh/moezx/cdn@3.0.2/img/svg/loader/trans.ajax-spinner-preloader.svg" data-src="' + get_the_url + '" onclick="window.open(\'' + get_the_url + '\')" onerror="imgError(this)"  alt=""/>');
-                        lazyload();
-                        addComment.createButterbar("图片上传成功~<br>Uploaded successfully~");
-                        grin(get_the_url,'Img');
-                    } else {
-                        addComment.createButterbar("上传失败！<br>Uploaded failed!<br> 文件名/Filename: " + f.name + "<br>code: " + res.status + "<br>" + res.message, 3000);
-                    }
-                } else if (xhr.readyState === 4) {
-                    cached.innerHTML = '<i class="picture_icon_svg" style="--svg-name: var(--svg_no);"></i>';
-                    alert("上传失败，请重试.\nUpload failed, please try again.");
-                    setTimeout(function () {
-                        cached.innerHTML = '<i class="picture_icon_svg" style="--svg-name: var(--svg_picture);"></i>';
-                    }, 1000);
+            cached.innerHTML = '<i class="picture_icon_svg" style="--svg-name: var(--svg_loading);"></i>';
+            addComment.createButterbar("上传中...<br>Uploading...");
+            fetch(Poi.api + 'sakura/v1/image/upload?_wpnonce=' + Poi.nonce, {
+                method : "POST",
+                body : formData
+            })
+            .then(res=>{
+                if(res.ok){
+                    return res.json();
+                }else{
+                    throw Error(`请求错误,状态码 ${res.status}`);
                 }
-            }
+            })
+            .then(data=>{
+                cached.innerHTML = '<i class="picture_icon_svg" style="--svg-name: var(--svg_yes);"></i>';
+                setTimeout(function () {
+                    cached.innerHTML = '<i class="picture_icon_svg" style="--svg-name: var(--svg_picture);"></i>';
+                }, 1000);
+                if (data.status === 200){
+                    const get_the_url = data.proxy;
+                    document.getElementById("upload-img-show").insertAdjacentHTML('afterend', '<img class="lazyload upload-image-preview" src="https://cdn.jsdelivr.net/gh/moezx/cdn@3.0.2/img/svg/loader/trans.ajax-spinner-preloader.svg" data-src="' + get_the_url + '" onclick="window.open(\'' + get_the_url + '\')" onerror="imgError(this)"  alt=""/>');
+                    lazyload();
+                    addComment.createButterbar("图片上传成功~<br>Uploaded successfully~");
+                    grin(get_the_url,'Img');
+                }else{
+                    addComment.createButterbar("上传失败！<br>Uploaded failed!<br> 文件名/Filename: " + f.name + "<br>code: " + res.status + "<br>" + res.message, 3000);
+                }
+            })
+            .catch(e=>{
+                console.log(e);
+                cached.innerHTML = '<i class="picture_icon_svg" style="--svg-name: var(--svg_no);"></i>';
+                alert("上传失败，请重试.\nUpload failed, please try again.");
+                setTimeout(function () {
+                    cached.innerHTML = '<i class="picture_icon_svg" style="--svg-name: var(--svg_picture);"></i>';
+                }, 1000);
+            })
         }
     }));
 }
@@ -604,22 +609,20 @@ function sm() {
         const list = e.target.parentNode;
         if(list.classList.contains("sm")){
             const msg = "您真的要设为私密吗？";
-            if (confirm(msg) == true) {
+            if (confirm(msg)) {
                 if (list.classList.contains('private_now')) {
                     alert('您之前已设过私密评论');
                     return false;
                 } else {
                     list.classList.add('private_now');
-                    const ajax_data = "action=siren_private&p_id=" + list.getAttribute("data-idp") + "&p_action=" + list.getAttribute("data-actionp"),
-                        request = new XMLHttpRequest();
-                    request.onreadystatechange = function () {
-                        if (this.readyState == 4 && this.status == 200) {
-                            list.getElementsByClassName('has_set_private')[0].innerHTML = request.responseText + ' <i class="post_icon_svg" style="--svg-name: var(--svg_lock);--size: 12px;--color:#7E8892;"></i>';
-                        }
-                    };
-                    request.open('POST', '/wp-admin/admin-ajax.php', true);
-                    request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-                    request.send(ajax_data);
+                    const ajax_data = "action=siren_private&p_id=" + list.getAttribute("data-idp") + "&p_action=" + list.getAttribute("data-actionp");
+                    fetch("/wp-admin/admin-ajax.php",{
+                        method:"POST",
+                        headers:{"Content-type":"application/x-www-form-urlencoded"},
+                        body:ajax_data
+                    }).then(res=>res.text()).then(data=>{
+                        list.getElementsByClassName('has_set_private')[0].innerHTML = data + ' <i class="post_icon_svg" style="--svg-name: var(--svg_lock);--size: 12px;--color:#7E8892;"></i>';
+                    })
                     return false;
                 }
             } else {
@@ -747,18 +750,27 @@ function getqqinfo() {
     }
     let emailAddressFlag = email.value;
     author.addEventListener("blur", function () {
-        if (temp==author.value){
+        if (temp===author.value){
             return;
         }else{
             temp=author.value;
         }
-        let qq = author.value,
-            xhr = new XMLHttpRequest();
-
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState == 4 && (xhr.status == 200 || xhr.status == 304)) {
-                let res = JSON.parse(xhr.responseText);
-                author.value = res[qq][6];
+        let qq = author.value;
+        if (qq == "" || isNaN(qq) || qq.length < 5 || qq.length > 12) {
+            qq_check.style.display = "none";
+            gravatar_check.style.display = "block";
+        } else {
+            //获取QQ昵称
+            fetch(mashiro_option.qq_api_url + '?type=getqqnickname&qqnumber=' + qq)
+            .then(res=>{
+                if(res.ok){
+                    return res.json();
+                }else{
+                    throw Error(`请求错误,状态码 ${res.status}`);
+                }
+            })
+            .then(data=>{
+                author.value = data[qq][6];
                 email.value = qq.trim() + "@qq.com";
                 if (mashiro_option.qzone_autocomplete) {
                     url.value = "https://user.qzone.qq.com/" + qq.trim();
@@ -768,14 +780,16 @@ function getqqinfo() {
                 qq = qq.trim();
                 qq_check.style.display = "block";
                 gravatar_check.style.display = "none";
-                localStorage.setItem('user_author', res[qq][6]);
+                localStorage.setItem('user_author', data[qq][6]);
                 localStorage.setItem('user_qq', qq);
                 localStorage.setItem('is_user_qq', 'yes');
                 localStorage.setItem('user_qq_email', qq + '@qq.com');
                 localStorage.setItem('user_email', qq + '@qq.com');
                 emailAddressFlag = email.value;
                 temp=author.value;
-            } else if (xhr.readyState == 4) {
+            })
+            .catch(e=>{
+                console.log(e);
                 qq = "";
                 qq_check.style.display = "none";
                 gravatar_check.style.display = "block";
@@ -786,24 +800,22 @@ function getqqinfo() {
                     localStorage.setItem('user_email', email.value);
                     localStorage.setItem('user_avatar', get_gravatar(email.value, 80));
                 }
-            }
-        }
-        let ajax_url = mashiro_option.qq_api_url + '?type=getqqnickname&qqnumber=' + qq;
-        if (qq == "" || isNaN(qq) || qq.length < 5 || qq.length > 12) {
-            qq_check.style.display = "none";
-            gravatar_check.style.display = "block";
-        } else {
-            xhr.open("get", ajax_url, true);
-            xhr.send();
-        }
-
-        let xhr2 = new XMLHttpRequest();
-        xhr2.onreadystatechange = function () {
-            if (xhr2.readyState == 4 && (xhr2.status == 200 || xhr2.status == 304)) {
-                let res = JSON.parse(xhr2.responseText);
-                user_avatar_img.setAttribute("src", res[qq]);
-                localStorage.setItem('user_avatar', res[qq]);
-            } else if (xhr2.readyState == 4) {
+            })
+            //获取头像
+            fetch(mashiro_option.qq_avatar_api_url + '?type=getqqavatar&qqnumber=' + qq)
+            .then(res=>{
+                if(res.ok){
+                    return res.json();
+                }else{
+                    throw Error(`请求错误,状态码 ${res.status}`);
+                }
+            })
+            .then(data=>{
+                user_avatar_img.setAttribute("src", data[qq]);
+                localStorage.setItem('user_avatar', data[qq]);
+            })
+            .catch(e=>{
+                console.log(e);
                 if (!qq.value) {
                     qq_check.style.display = "none";
                     gravatar_check.style.display = "block";
@@ -813,18 +825,10 @@ function getqqinfo() {
                         localStorage.setItem('user_avatar', get_gravatar(email.value, 80), 30);
                     }
                 }
-            }
-        }
-        if (qq == "" || isNaN(qq) || qq.length < 5 || qq.length > 12) {
-            qq_check.style.display = "none";
-            gravatar_check.style.display = "block";
-        } else {
-            let ajax_url2 = mashiro_option.qq_avatar_api_url + '?type=getqqavatar&qqnumber=' + qq;
-            xhr2.open("get", ajax_url2, true);
-            xhr2.send();
+            })
         }
     })
-    if (localStorage.getItem('user_avatar') && localStorage.getItem('user_email') && localStorage.getItem('is_user_qq') == 'no' && !localStorage.getItem('user_qq_email')) {
+    if (localStorage.getItem('user_avatar') && localStorage.getItem('user_email') && localStorage.getItem('is_user_qq') === 'no' && !localStorage.getItem('user_qq_email')) {
         user_avatar_img.setAttribute("src", localStorage.getItem('user_avatar'));
         email.value = localStorage.getItem('user_mail');
         qq.value = '';
@@ -836,7 +840,7 @@ function getqqinfo() {
     email.addEventListener("blur", function () {
         let emailAddress = email.value;
         if (!emailAddress)return;
-        if (is_get_by_qq == false || emailAddressFlag != emailAddress) {
+        if (is_get_by_qq === false || emailAddressFlag != emailAddress) {
             user_avatar_img.setAttribute("src", get_gravatar(emailAddress, 80));
             localStorage.setItem('user_avatar', get_gravatar(emailAddress, 80));
             localStorage.setItem('user_email', emailAddress);
@@ -903,18 +907,25 @@ function load_bangumi() {
                     e.stopPropagation();
                     target.classList.add("loading");
                     target.textContent = "";
-                    const xhr = new XMLHttpRequest();
-                    xhr.open('POST', target.href + "&_wpnonce=" + Poi.nonce, true);
-                    xhr.onreadystatechange = function () {
-                        if (xhr.readyState == 4 && xhr.status == 200) {
-                            document.getElementById("bangumi-pagination").remove();
-                            document.querySelector(".row").insertAdjacentHTML('beforeend', JSON.parse(xhr.responseText));
-                        } else {
-                            target.classList.remove("loading");
-                            target.innerHTML = '<i class="post_icon_svg" style="--svg-name: var(--svg_exclamation-triangle);--size: 35px;vertical-align: -0.1em;"></i>ERROR ';
+                    fetch(target.href + "&_wpnonce=" + Poi.nonce,{
+                        method:"POST"}
+                    )
+                    .then(res=>{
+                        if (res.ok){
+                            return res.json();
+                        }else{
+                            throw Error(`Error，Status：${res.status}`);
                         }
-                    };
-                    xhr.send();
+                    })
+                    .then(data=>{
+                        document.getElementById("bangumi-pagination").remove();
+                        document.querySelector(".row").insertAdjacentHTML('beforeend', data);
+                    })
+                    .catch(e=>{
+                        console.log(e);
+                        target.classList.remove("loading");
+                        target.innerHTML = '<i class="post_icon_svg" style="--svg-name: var(--svg_exclamation-triangle);--size: 35px;vertical-align: -0.1em;"></i>ERROR ';
+                    })
                 }
             });
 }
@@ -1133,20 +1144,16 @@ let s = document.getElementById("bgvideo"),
                             query(QueryStorage, document.getElementById("search-input").value, Record);
                             div_href();
                         } else {
-                            const _xhr = new XMLHttpRequest();
-                            _xhr.open("GET", val, true)
-                            _xhr.send();
-                            _xhr.onreadystatechange = function () {
-                                if (_xhr.readyState === 4 && _xhr.status === 200) {
-                                    let json = _xhr.responseText;
-                                    if (json != "") {
-                                        sessionStorage.setItem('search', json);
-                                        QueryStorage = JSON.parse(json);
-                                        query(QueryStorage, otxt.value, Record);
-                                        div_href();
-                                    }
+                            fetch(val)
+                            .then(res=>res.json())
+                            .then(data=>{
+                                if (data != ""){
+                                    sessionStorage.setItem('search', json);
+                                    QueryStorage = JSON.parse(json);
+                                    query(QueryStorage, otxt.value, Record);
+                                    div_href();
                                 }
-                            }
+                            })
                         }
                     }
                     if (!Object.values) Object.values = function (obj) {
@@ -1322,45 +1329,38 @@ let s = document.getElementById("bgvideo"),
                 if (pagination) {
                     pagination.classList.add("loading");
                     pagination.innerHTML = "";
-                    const _xhr = new XMLHttpRequest();
-                    _xhr.open("GET", pagination.getAttribute("href") + "#main", true);
-                    _xhr.responseType = "document";
-                    _xhr.onreadystatechange = function () {
-                        if (_xhr.readyState == 4 && _xhr.status == 200) {
-                            let json = _xhr.response,
-                                result = json.querySelectorAll("#main .post"),
-                                pga = json.querySelector("#pagination a"),
-                                nextHref = pga && pga.getAttribute("href");
-                                for(let i=0;i<result.length;i++){
-                                    let b = result[i];
-                                    document.getElementById("main").insertAdjacentHTML('beforeend', b.outerHTML);
-                                }
-                            if(Poi.pjax)_pjax.refresh(document.querySelector("#content"));
-                            const dpga = document.querySelector("#pagination a"),
-                                addps = document.querySelector("#add_post span");
-                            if (dpga){
-                                dpga.classList.remove("loading");
-                                dpga.innerHTML = "Previous";
-                            }
-                            if (addps){
-                                addps.classList.remove("loading");
-                                addps.innerHTML = "";
-                            }
-                            lazyload();
-                            post_list_show_animation();
-                            if (nextHref != void 0) {
-                                let tempScrollTop = document.documentElement.scrollTop;
-                                window.scrollTo({
-                                    top: tempScrollTop - 100,
-                                    behavior: "smooth"
-                                });
-                                document.querySelector("#pagination a").setAttribute("href", nextHref);
-                            } else {
-                                document.getElementById("pagination").innerHTML = "<span>很高兴你翻到这里，但是真的没有了...</span>";
-                            }
+                    fetch(pagination.getAttribute("href") + "#main").then(res=>res.text()).then(data=>{
+                        const parser = new DOMParser(),
+                        DOM = parser.parseFromString(data, "text/html"),
+                        result = DOM.querySelectorAll("#main .post"),
+                        paga = DOM.querySelector("#pagination a"),
+                        nextHref = paga && paga.getAttribute("href");
+                        for (let i=0;i<result.length;i++){
+                            document.getElementById("main").insertAdjacentHTML('beforeend', result[i].outerHTML);
                         }
-                    }
-                    _xhr.send();
+                        if(Poi.pjax)_pjax.refresh(document.querySelector("#content"));
+                        const dpga = document.querySelector("#pagination a"),
+                        addps = document.querySelector("#add_post span");
+                        if(dpga){
+                            dpga.classList.remove("loading");
+                            dpga.innerText = "Previous";
+                        }
+                        if(addps){
+                            addps.classList.remove("loading");
+                            addps.innerText = "";
+                        }
+                        lazyload();
+                        post_list_show_animation();
+                        if (nextHref != void 0) {
+                            window.scrollTo({
+                                top: document.documentElement.scrollTop - 100,
+                                behavior: "smooth"
+                            });
+                            document.querySelector("#pagination a").setAttribute("href", nextHref);
+                        }else{
+                            document.getElementById("pagination").innerHTML = "<span>很高兴你翻到这里，但是真的没有了...</span>";
+                        }
+                    })
                 }
                 return false;
             }
@@ -1381,24 +1381,23 @@ let s = document.getElementById("bgvideo"),
                 if (e.target == document.querySelector("form#commentform.comment-form")) {
                     e.preventDefault();
                     e.stopPropagation();
-                    const from_Data = document.querySelector("form#commentform.comment-form"),
-                        xhr = new XMLHttpRequest();
-                    xhr.open('POST', Poi.ajaxurl, true);
-                    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-                    xhr.onloadstart = function () {
-                        addComment.createButterbar("提交中(Commiting)....");
-                    };
-                    xhr.onerror = function () {
-                        addComment.createButterbar(xhr.responseText);
-                    };
-                    xhr.onreadystatechange = function () {
-                        if (xhr.readyState == 4 && xhr.status == 200) {
-                            const data = xhr.responseText;
-                            document.getElementById("comment").value = "";
+                    const from_Data = document.querySelector("form#commentform.comment-form");
+                    addComment.createButterbar("提交中(Commiting)....");
+                    fetch(Poi.ajaxurl,{
+                        method:"POST",
+                        headers:{"Content-type":"application/x-www-form-urlencoded"},
+                        body:serialize(from_Data) + "&action=ajax_comment"
+                    }).then(res=>{
+                        if(res.ok){
+                            return res.text();
+                        }else{
+                            return res.text().then(data=>{throw Error(data)})
+                        }
+                    }).then(data=>{
+                        document.getElementById("comment").value = "";
                             const cancel = document.getElementById('cancel-comment-reply-link'),
                                 temp = document.getElementById('wp-temp-form-div'),
                                 respond = document.getElementById(addComment.respondId);
-                               // post = document.getElementById('comment_post_ID').value,
                             if (document.getElementById('comment_parent').value != '0') {
                                 document.getElementById("respond").insertAdjacentHTML('beforebegin', '<ol class="children">' + data + '</ol>');
                             } else if (!document.getElementsByClassName(__list).length) {
@@ -1426,11 +1425,9 @@ let s = document.getElementById("bgvideo"),
                                 temp.parentNode.insertBefore(respond, temp);
                                 temp.remove();
                             }
-                        } else {
-                            addComment.createButterbar(xhr.responseText);
-                        }
-                    };
-                    xhr.send(serialize(from_Data) + "&action=ajax_comment");
+                    }).catch(e=>{
+                        addComment.createButterbar(e);
+                    })
                 }
             });
             addComment = {
@@ -1511,48 +1508,40 @@ let s = document.getElementById("bgvideo"),
                     e.stopPropagation();
                     const _this = e.target,
                         path = _this.pathname,
-                        _xhr = new XMLHttpRequest();
-                    _xhr.open("GET", _this.getAttribute('href'), true);
-                    _xhr.responseType = "document";
-                    _xhr.onloadstart = () => {
-                        let comments_navi = document.getElementById("comments-navi"),
-                            commentwrap = document.querySelector("ul.commentwrap"),
-                            loading_comments = document.getElementById("loading-comments"),
-                            comments_list = document.getElementById("comments-list-title");
-                        comments_navi.remove();
-                        commentwrap.remove();
-                        loading_comments.style.display="block";
-                        slideToogle(loading_comments, 500, "show");
-                        window.scrollTo({
-                            top: comments_list.getBoundingClientRect().top + window.pageYOffset - comments_list.clientTop - 65,
-                            behavior: "smooth"
-                        });
-                    }
-                    _xhr.onreadystatechange = function () {
-                        if (_xhr.readyState == 4 && _xhr.status == 200) {
-                            let json = _xhr.response,
-                                result = json.querySelector("ul.commentwrap"),
-                                nextlink = json.getElementById("comments-navi"),
-                                loading_comments = document.getElementById("loading-comments");
-                            slideToogle(loading_comments, 200, "hide");
-                            document.getElementById("loading-comments").insertAdjacentHTML('afterend', result.outerHTML);
-                            document.querySelector("ul.commentwrap").insertAdjacentHTML('afterend', nextlink.outerHTML);
-                            lazyload();
-                            if (window.gtag) {
-                                gtag('config', Poi.google_analytics_id, {
-                                    'page_path': path
-                                });
-                            }
-                            code_highlight_style();
-                            click_to_view_image();
-                            let commentwrap = document.querySelector("ul.commentwrap");
-                            window.scrollTo({
-                                top: commentwrap && (commentwrap.getBoundingClientRect().top+ window.pageYOffset - commentwrap.clientTop - 200),
-                                behavior: "smooth"
+                        comments_navi = document.getElementById("comments-navi"),
+                        commentwrap = document.querySelector("ul.commentwrap"),
+                        loading_comments = document.getElementById("loading-comments"),
+                        comments_list = document.getElementById("comments-list-title");
+                    comments_navi.remove();
+                    commentwrap.remove();
+                    loading_comments.style.display="block";
+                    window.scrollTo({
+                        top: comments_list.getBoundingClientRect().top + window.pageYOffset - comments_list.clientTop - 65,
+                        behavior: "smooth"
+                    });
+
+                    fetch(_this.getAttribute('href')).then(res=>res.text()).then(data=>{
+                        const parser = new DOMParser(),
+                        DOM = parser.parseFromString(data, "text/html"),
+                        result = DOM.querySelector("ul.commentwrap"),
+                        nextlink = DOM.getElementById("comments-navi");
+                        slideToogle(document.getElementById("loading-comments"), 1000, "hide");
+                        document.getElementById("loading-comments").insertAdjacentHTML('afterend', result.outerHTML);
+                        document.querySelector("ul.commentwrap").insertAdjacentHTML('afterend', nextlink.outerHTML);
+                        lazyload();
+                        if (window.gtag) {
+                            gtag('config', Poi.google_analytics_id, {
+                                'page_path': path
                             });
                         }
-                    }
-                    _xhr.send();
+                        code_highlight_style();
+                        click_to_view_image();
+                        const commentwrap = document.querySelector("ul.commentwrap");
+                        window.scrollTo({
+                            top: commentwrap && (commentwrap.getBoundingClientRect().top+ window.pageYOffset - commentwrap.clientTop - 200),
+                            behavior: "smooth"
+                        });
+                    })
                 }
             });
         },
