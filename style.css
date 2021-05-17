@@ -1423,8 +1423,8 @@ i.iconfont.hotpost {
     height: 100%;
     object-fit: cover;
     transition: filter .8s;
-    -webkit-filter: saturate(.5);
-    filter: saturate(.5);
+    -webkit-filter: saturate(.5) blur(0px);
+    filter: saturate(.5) blur(0px);
 }
 
 .post-list-thumb:hover .post-thumb a img{
@@ -7952,4 +7952,9 @@ p.comment-form-cookies-consent {
         display:flex;
         flex-direction: column;
         align-items: center;
+    }
+
+    .lazyload[src*="#lazyload-blur"], .lazyload[style*="#lazyload-blur"] {
+        -webkit-filter: saturate(.5) blur(10px);
+        filter: saturate(.5) blur(10px);
     }

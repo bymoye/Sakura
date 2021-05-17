@@ -9,7 +9,7 @@
 
 
 const SAKURA_VERSION = '3.3.2';
-const NMX_VERSION = '1.2.1';
+const NMX_VERSION = '1.2.2';
 const BUILD_VERSION = '3';
 
 //error_reporting(E_ALL);   
@@ -1448,6 +1448,7 @@ function get_random_image_url(){
     $md = $address . '!/fw/150/quality/80/format/' . $gs;
     $th = $address . '!/fh/300/quality/80/format/' . $gs;
     $webp = $address . '!/quality/80/format/' . $gs;
+    //$webp = $address . '!/quality/80/progressive/true';
     return array($md,$th,$webp);
 }
 

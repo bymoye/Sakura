@@ -112,22 +112,21 @@ let ec_click = (e)=>{
 function code_highlight_style() {
     const pre = document.getElementsByTagName("pre"),
         code = document.querySelectorAll("pre code");
-    if (!pre.length)return;
-    const gen_top_bar=(i)=>{
-        const attributes = {
-            'autocomplete': 'off',
-            'autocorrect': 'off',
-            'autocapitalize': 'off',
-            'spellcheck': 'false',
-            'contenteditable': 'false',
-            'design': 'by Miym'
-        };
+    const attributes = {
+        'autocomplete': 'off',
+        'autocorrect': 'off',
+        'autocapitalize': 'off',
+        'spellcheck': 'false',
+        'contenteditable': 'false',
+        'design': 'by Miym'
+    },
+    gen_top_bar=(i)=>{
         let ele_name = pre[i].children[0].className,
             lang = ele_name.substr(0, ele_name.indexOf(" ")).replace('language-', ''),
             code_a = code[i];
         if (lang.toLowerCase() === "hljs") lang = code_a.className.replace('hljs', '') ? code_a.className.replace('hljs', '') : "text";
         pre[i].classList.add("highlight-wrap");
-        for (const t of attributes){
+        for (const t in attributes){
             pre[i].setAttribute(t, attributes[t]);
         }
         code_a.setAttribute('data-rel', lang.toUpperCase());
