@@ -1445,7 +1445,7 @@ function get_random_image_url(){
     // $th = 'https://fp1.fghrsh.net/' . $html[0] . '.jpg!q80.300i.' . $gs;
     // $webp = 'https://fp1.fghrsh.net/' . $html[0] . '.jpg!q80.' . $gs;
     $address = str_replace(PHP_EOL, '',$randomurl_list[$k]);
-    $md = $address . '!/fw/150/quality/80/format/' . $gs;
+    $md = $address . '!/fw/80/format/' . $gs;
     $th = $address . '!/fh/300/quality/80/format/' . $gs;
     $webp = $address . '!/quality/80/format/' . $gs;
     //$webp = $address . '!/quality/80/progressive/true';
