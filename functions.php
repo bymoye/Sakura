@@ -788,7 +788,7 @@ function comment_mail_notify($comment_id){
     $parent_id = $comment->comment_parent ?: '';
     $spam_confirmed = $comment->comment_approved;
     $mail_notify = akina_option('mail_notify') ? get_comment_meta($parent_id,'mail_notify') : false;
-    $admin_notify = akina_option('admin_notify') ? '1' : (get_comment($parent_id)->comment_author_email != get_bloginfo('admin_email') ? '1' : '0');
+    $admin_notify = akina_option('admin_notify') ? '1' : (get_comment($parent_id)?->comment_author_email != get_bloginfo('admin_email') ? '1' : '0');
     if(($parent_id != '') && ($spam_confirmed != 'spam') && ($admin_notify != '0') && (!$mail_notify)){
     $wp_email = $mail_user_name . '@' . preg_replace('#^www\.#', '', strtolower($_SERVER['SERVER_NAME']));
     $to = trim(get_comment($parent_id)->comment_author_email);
@@ -1435,19 +1435,19 @@ function change_avatar($avatar){
 }
 
 function get_random_image_url(){
-    $randomurl_file = get_template_directory() .'/inc/result.txt';
-    // $randomurl_file = get_template_directory() .'/inc/random_url.Dat';
+    // $randomurl_file = get_template_directory() .'/inc/result.txt';
+    $randomurl_file = get_template_directory() .'/inc/random_url.Dat';
     $randomurl_list = file($randomurl_file);
     $k = array_rand($randomurl_list);
-    // $html = explode(",",$randomurl_list[$k]);
+    $html = explode(",",$randomurl_list[$k]);
     $gs = is_webp() ? 'webp' : 'jpg';
-    // $md = 'https://fp1.fghrsh.net/' . $html[0] . '.jpg!q80.150p.' . $gs;
-    // $th = 'https://fp1.fghrsh.net/' . $html[0] . '.jpg!q80.300i.' . $gs;
-    // $webp = 'https://fp1.fghrsh.net/' . $html[0] . '.jpg!q80.' . $gs;
-    $address = str_replace(PHP_EOL, '',$randomurl_list[$k]);
-    $md = $address . '!/fw/80/format/' . $gs;
-    $th = $address . '!/fh/300/quality/80/format/' . $gs;
-    $webp = $address . '!/quality/80/format/' . $gs;
+    $md = 'https://fp1.fghrsh.net/' . $html[0] . '.jpg!q80.150p.' . $gs;
+    $th = 'https://fp1.fghrsh.net/' . $html[0] . '.jpg!q80.300i.' . $gs;
+    $webp = 'https://fp1.fghrsh.net/' . $html[0] . '.jpg!q80.' . $gs;
+    // $address = str_replace(PHP_EOL, '',$randomurl_list[$k]);
+    // $md = $address . '!/fw/80/format/' . $gs;
+    // $th = $address . '!/fh/300/quality/80/format/' . $gs;
+    // $webp = $address . '!/quality/80/format/' . $gs;
     //$webp = $address . '!/quality/80/progressive/true';
     return array($md,$th,$webp);
 }
@@ -1472,7 +1472,7 @@ add_action( 'pre_get_posts', function($q){
 
 //评论回复
 function sakura_comment_notify($comment_id){
-    if ( !$_POST['mail-notify'] ) 
+    if ( !isset($_POST['mail-notify']) ) 
         update_comment_meta($comment_id,'mail_notify','false');
 }
 add_action('comment_post', 'sakura_comment_notify');

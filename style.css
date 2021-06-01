@@ -1649,11 +1649,10 @@ i.iconfont.hotpost {
 }
 
 .site-footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     padding: 2%;
-    background: rgba(255, 255, 255, .8);
-    max-width: 800px;
-    margin-left: auto;
-    margin-right: auto
 }
 
 .site-info {
@@ -6706,11 +6705,14 @@ a.toc-link {
 }
 
 @media (max-width:625px) {
+    .cmt-info-container {
+        position: relative;
+    }
     .comment-user-avatar {
         padding-top: 10px;
         width: 45px;
         height: 55px;
-        right: 11%;
+        right: 2%;
         z-index: 99;
     }
     .comment-user-avatar .socila-check {

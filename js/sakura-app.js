@@ -194,7 +194,7 @@ function attach_image() {
                 }
             })
             .catch(e=>{
-                console.log(e);
+                console.error(e);
                 cached.innerHTML = '<i class="picture_icon_svg" style="--svg-name: var(--svg_no);"></i>';
                 alert("上传失败，请重试.\nUpload failed, please try again.");
                 setTimeout(function () {
@@ -768,8 +768,7 @@ function getqqinfo() {
             qq_check.style.display = "none";
             gravatar_check.style.display = "block";
         } else {
-            //获取QQ昵称
-            fetch(mashiro_option.qq_api_url + '?type=getqqnickname&qqnumber=' + qq)
+            fetch(mashiro_option.qq_api_url + qq)
             .then(res=>{
                 if(res.ok){
                     return res.json();
@@ -778,7 +777,7 @@ function getqqinfo() {
                 }
             })
             .then(data=>{
-                author.value = data[qq][6];
+                author.value = data['qqname'];
                 email.value = qq.trim() + "@qq.com";
                 if (mashiro_option.qzone_autocomplete) {
                     url.value = "https://user.qzone.qq.com/" + qq.trim();
@@ -788,16 +787,19 @@ function getqqinfo() {
                 qq = qq.trim();
                 qq_check.style.display = "block";
                 gravatar_check.style.display = "none";
-                localStorage.setItem('user_author', data[qq][6]);
+                localStorage.setItem('user_author', data['qqname']);
                 localStorage.setItem('user_qq', qq);
                 localStorage.setItem('is_user_qq', 'yes');
                 localStorage.setItem('user_qq_email', qq + '@qq.com');
                 localStorage.setItem('user_email', qq + '@qq.com');
                 emailAddressFlag = email.value;
                 temp=author.value;
+
+                user_avatar_img.setAttribute("src", data['qqavatar']);
+                localStorage.setItem('user_avatar', data['qqavatar']);
             })
             .catch(e=>{
-                console.log(e);
+                console.error(e);
                 qq = "";
                 qq_check.style.display = "none";
                 gravatar_check.style.display = "block";
@@ -807,31 +809,6 @@ function getqqinfo() {
                     localStorage.setItem('user_qq', '');
                     localStorage.setItem('user_email', email.value);
                     localStorage.setItem('user_avatar', get_gravatar(email.value, 80));
-                }
-            })
-            //获取头像
-            fetch(mashiro_option.qq_avatar_api_url + '?type=getqqavatar&qqnumber=' + qq)
-            .then(res=>{
-                if(res.ok){
-                    return res.json();
-                }else{
-                    throw Error(`请求错误,状态码 ${res.status}`);
-                }
-            })
-            .then(data=>{
-                user_avatar_img.setAttribute("src", data[qq]);
-                localStorage.setItem('user_avatar', data[qq]);
-            })
-            .catch(e=>{
-                console.log(e);
-                if (!qq.value) {
-                    qq_check.style.display = "none";
-                    gravatar_check.style.display = "block";
-                    localStorage.setItem("user_qq", "", 30);
-                    if (!email.value) {
-                        user_avatar_img.setAttribute("src", get_gravatar(email.value, 80));
-                        localStorage.setItem('user_avatar', get_gravatar(email.value, 80), 30);
-                    }
                 }
             })
         }
@@ -854,7 +831,6 @@ function getqqinfo() {
             localStorage.setItem('user_email', emailAddress);
             localStorage.setItem('user_qq_email', '');
             localStorage.setItem('is_user_qq', 'no');
-            //qq.value = '';
             if (!qq.value) {
                 qq_check.style.display = "none";
                 gravatar_check.style.display = "block";
@@ -865,17 +841,13 @@ function getqqinfo() {
         url.value = localStorage.getItem("user_url");
     }
     url.addEventListener("blur", function () {
-        let URL_Address = url.value;
-        url.value = URL_Address;
-        localStorage.setItem('user_url', URL_Address, 30);
+        localStorage.setItem('user_url', url.value, 30);
     });
     if (localStorage.getItem('user_author')) {
         author.value = localStorage.getItem('user_author');
     }
     author.addEventListener("blur", function () {
-        let user_name = author.value;
-        author.value = user_name;
-        localStorage.setItem('user_author', user_name, 30);
+        localStorage.setItem('user_author', author.value, 30);
     });
 }
 
@@ -930,7 +902,7 @@ function load_bangumi() {
                         document.querySelector(".row").insertAdjacentHTML('beforeend', data);
                     })
                     .catch(e=>{
-                        console.log(e);
+                        console.error(e);
                         target.classList.remove("loading");
                         target.innerHTML = '<i class="post_icon_svg" style="--svg-name: var(--svg_exclamation-triangle);--size: 35px;vertical-align: -0.1em;"></i>ERROR ';
                     })
@@ -983,13 +955,6 @@ let s = document.getElementById("bgvideo"),
                 //document.querySelector(".video-stu").style.bottom = "-100px";
                 document.querySelector(".focusinfo").style.transform = "translateY(-999px)";
                 }catch{}
-            try {
-                for (let i = 0; i < ap.length; i++) {
-                    try {
-                        ap[i].destroy()
-                    } catch {}
-                }
-            } catch {}
             try {
                 hermitInit()
             } catch (e) { }
@@ -1077,19 +1042,19 @@ let s = document.getElementById("bgvideo"),
             }
         },
         PE: function () {
-            if (document.querySelector(".headertop")) {
-                const headertop = document.querySelector(".headertop"),
-                    blank = document.querySelector(".blank");
-                if (document.querySelector(".main-title")) {
-                     if(blank) blank.style.paddingTop = "0px";
-                    headertop.style.display = "";
-                    if (Poi.movies.live == 'open') Siren.liveplay();
-                } else {
-                    if(blank) blank.style.paddingTop = "75px";
-                    headertop.style.display = "none";
-                    Siren.livepause();
-                }
-            }
+            // if (document.querySelector(".headertop")) {
+            //     const headertop = document.querySelector(".headertop"),
+            //         blank = document.querySelector(".blank");
+            //     if (document.querySelector(".main-title")) {
+            //          if(blank) blank.style.paddingTop = "0px";
+            //         headertop.style.display = "block";
+            //         if (Poi.movies.live == 'open') Siren.liveplay();
+            //     } else {
+            //         if(blank) blank.style.paddingTop = "75px";
+            //         headertop.style.display = "none";
+            //         Siren.livepause();
+            //     }
+            // }
         },
         CE: function () {
             const comments_hidden = document.querySelector(".comments-hidden"),
@@ -1129,12 +1094,12 @@ let s = document.getElementById("bgvideo"),
                 document.querySelector(".js-search").classList.toggle("is-visible");
                 document.documentElement.style.overflowY = "hidden";
                 if (mashiro_option.live_search) {
-                    let QueryStorage = [];
+                    let QueryStorage = [],
+                    list = document.getElementById("PostlistBox"),
+                    Record = list.innerHTML;
                     search_a(Poi.api + "sakura/v1/cache_search/json?_wpnonce=" + Poi.nonce);
 
                     let otxt = document.getElementById("search-input"),
-                        list = document.getElementById("PostlistBox"),
-                        Record = list.innerHTML,
                         searchFlag = null;
                     otxt.oninput = function () {
                         if (searchFlag == null) {
@@ -1153,11 +1118,11 @@ let s = document.getElementById("bgvideo"),
                             div_href();
                         } else {
                             fetch(val)
-                            .then(res=>res.json())
+                            .then(res=>res.text())
                             .then(data=>{
                                 if (data != ""){
-                                    sessionStorage.setItem('search', json);
-                                    QueryStorage = JSON.parse(json);
+                                    sessionStorage.setItem('search', data);
+                                    QueryStorage = JSON.parse(data);
                                     query(QueryStorage, otxt.value, Record);
                                     div_href();
                                 }
@@ -1178,6 +1143,12 @@ let s = document.getElementById("bgvideo"),
                     }
 
                     function Cx(arr, q) {
+                        for (let s=0;s<q.length;s++){
+                            if(['.','?','*'].indexOf(q[s])!= -1){
+                                q = q.slice(0, s) + "\\" + q.slice(s);
+                                s++;
+                        }
+                    }
                         q = q.replace(q, "^(?=.*?" + q + ").+$").replace(/\s/g, ")(?=.*?");
                         return arr.filter(
                             v => Object.values(v).some(
@@ -1604,7 +1575,7 @@ let s = document.getElementById("bgvideo"),
 
 if (Poi.pjax) {
     var _pjax = new Pjax({
-        selectors: ["#page", "title", ".footer-device"],
+        selectors: ["#page", "title", ".footer-device",".headertop"],
         elements: [
             "a:not([target='_top']):not(.comment-reply-link):not(#pagination a):not(#comments-navi a):not(.user-menu-option a):not(.header-user-avatar a):not(.emoji-item)",
             ".search-form",

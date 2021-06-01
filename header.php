@@ -62,7 +62,7 @@ if (akina_option('akina_meta') == true) {
 		<?php 
 		if(!akina_option('head_focus')){ 
 		?>
-		<div class="headertop">
+		<div class="headertop" style="display:<?php echo !is_home() ? 'none' : 'block'?>">
 			<?php get_template_part('layouts/imgbox'); ?>
 		</div>	
 		<?php } ?>
