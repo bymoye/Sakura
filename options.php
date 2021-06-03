@@ -987,6 +987,24 @@ function optionsframework_options() {
 			'type_4' => __('23k Views (chinese)', 'sakura'),/*23k 次访问（中式）*/
 		));
 
+		
+		$options[] = array(
+			'name' => __('Comment image upload API', 'sakura'),/*评论图片上传接口*/
+			'id' => 'randomimg_api',
+			'std' => "fghrsh",
+			'type' => "radio",
+			'options' => array(
+				'fghrsh' => __('In (https://img.fghrsh.net/album/LmCVW)', 'sakura'),
+				'cdn' => __('自用', 'sakura')
+		));
+
+			$options[] = array(
+				'name' => __('鉴权cdnkey', 'sakura'),
+				'desc' => __('输入腾讯云CDN鉴权，(当前仅为个人使用.)', 'sakura'),
+				'id' => 'cdn_key',
+				'std' => 'test',
+				'type' => 'text');
+		
 		$options[] = array(
 			'name' => __('Comment image upload API', 'sakura'),/*评论图片上传接口*/
 			'id' => 'img_upload_api',

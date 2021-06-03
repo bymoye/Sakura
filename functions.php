@@ -1433,38 +1433,51 @@ function change_avatar($avatar){
         return $avatar ;
     }
 }
-
+function PrivateKeyC(string $url):string{
+    $time2 = dechex(time());
+    $key = akina_option('cdn_key');
+    $filename='/' . $url;
+    $domain = 'https://pan.nmxc.ltd/';
+    $sstring=$key . $filename . $time2;
+    $md5=md5($sstring);
+    return $domain.$md5.'/'.$time2.$filename;
+}
 function get_random_image_url(){
-    // $randomurl_file = get_template_directory() .'/inc/result.txt';
-    $randomurl_file = file_get_contents(get_template_directory() .'/inc/randomimg.json');
-    $randomurl_list = json_decode($randomurl_file,true);
-    $k = array_rand($randomurl_list);
-    $urllist = $randomurl_list[$k];
-    // $randomurl_file = get_template_directory() .'/inc/random_url.Dat';
-    // $randomurl_list = file($randomurl_file);
-    // $k = array_rand($randomurl_list);
-    // $html = explode(",",$randomurl_list[$k]);
-    // $gs = is_webp() ? 'webp' : 'jpg';
-    // $md = 'https://fp1.fghrsh.net/' . $html[0] . '.jpg!q80.150p.' . $gs;
-    // $th = 'https://fp1.fghrsh.net/' . $html[0] . '.jpg!q80.300i.' . $gs;
-    // $webp = 'https://fp1.fghrsh.net/' . $html[0] . '.jpg!q80.' . $gs;
-    // $address = str_replace(PHP_EOL, '',$randomurl_list[$k]);
-    // $md = $address . '!/fw/80/format/' . $gs;
-    // $th = $address . '!/fh/300/quality/80/format/' . $gs;
-    // $webp = $address . '!/quality/80/format/' . $gs;
-    //$webp = $address . '!/quality/80/progressive/true';
-    if (is_webp()){
-        $result = [
-            'https://pan.nmxc.ltd/' . $urllist['webp_md'],
-            'https://pan.nmxc.ltd/' . $urllist['webp_th'],
-            'https://pan.nmxc.ltd/' . $urllist['webp']
-        ];
+    if (akina_option('randomimg_api')==='cdn'){
+        $randomurl_file = file_get_contents(get_template_directory() .'/inc/randomimg.json');
+        $randomurl_list = json_decode($randomurl_file,true);
+        $k = array_rand($randomurl_list);
+        $urllist = $randomurl_list[$k];
     }else{
-        $result = [
-            'https://pan.nmxc.ltd/' . $urllist['jpeg_md'],
-            'https://pan.nmxc.ltd/' . $urllist['jpeg_th'],
-            'https://pan.nmxc.ltd/' . $urllist['jpeg']
-        ];
+        $randomurl_file = get_template_directory() .'/inc/random_url.Dat';
+        $randomurl_list = file($randomurl_file);
+        $k = array_rand($randomurl_list);
+        $html = explode(",",$randomurl_list[$k])[0];
+        $gs = is_webp() ? 'webp' : 'jpg';
+        $md = 'https://fp1.fghrsh.net/' . $html . '.jpg!q80.150p.' . $gs;
+        $th = 'https://fp1.fghrsh.net/' . $html . '.jpg!q80.300i.' . $gs;
+        $webp = 'https://fp1.fghrsh.net/' . $html . '.jpg!q80.' . $gs;
+    }
+    if (is_webp()){
+        if (akina_option('randomimg_api')==='cdn'){
+            $result = [
+                PrivateKeyC($urllist['webp_md']),
+                PrivateKeyC($urllist['webp_th']),
+                PrivateKeyC($urllist['webp'])
+            ];
+        }else{
+            $result = [$md,$th,$webp];
+        }
+    }else{
+        if (akina_option('randomimg_api')==='cdn'){
+            $result = [
+                PrivateKeyC($urllist['jpeg_md']),
+                PrivateKeyC($urllist['jpeg_th']),
+                PrivateKeyC($urllist['jpeg'])
+            ];
+        }else{
+            $result = [$md,$th,$webp];
+        }
     }
     return $result;
 }
