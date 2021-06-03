@@ -83,13 +83,13 @@ class CAPTCHA
         imagedestroy($img);
         // 以json格式输出
         $captchaimg = 'data:image/png;base64,' . base64_encode($captchaimg);
-        return array(
+        return [
             'code' => 0,
             'data' => $captchaimg,
             'msg' => '',
             'time' => $this->timestamp,
             'id' => $this->uniqid
-        );
+        ];
     }
 
     
@@ -129,10 +129,10 @@ class CAPTCHA
             $code = 1;
             $msg = '错误!';
         }
-        return array(
+        return [
             'code' => $code,
             'data' => '',
             'msg' => $msg
-        ); 
+        ]; 
     }
 }

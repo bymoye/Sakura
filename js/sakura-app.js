@@ -197,7 +197,7 @@ function attach_image() {
                 console.error(e);
                 cached.innerHTML = '<i class="picture_icon_svg" style="--svg-name: var(--svg_no);"></i>';
                 alert("上传失败，请重试.\nUpload failed, please try again.");
-                setTimeout(function () {
+                setTimeout(()=> {
                     cached.innerHTML = '<i class="picture_icon_svg" style="--svg-name: var(--svg_picture);"></i>';
                 }, 1000);
             })
@@ -273,9 +273,9 @@ function scrollBar() {
             return ((_scrollTop > 100 && __blur === 5) || (_scrollTop <= 100 && __blur === 0))
         },
             _blur = () => {
-                if (s > 100 && __blur != 5) {
+                if (s > 100 && __blur !== 5) {
                     __blur = parseFloat((__blur + 0.1).toFixed(10));
-                } else if (s < 100 && __blur != 0) {
+                } else if (s < 100 && __blur !== 0) {
                     __blur = parseFloat((__blur - 0.1).toFixed(10));
                 }
                 blur.setAttribute("stdDeviation", __blur);
@@ -341,7 +341,7 @@ function iconsvg() {
 function no_right_click() {
     const pri = document.getElementById("primary");
     if(!pri)return;
-    pri.addEventListener("contextmenu", function (e) {
+    pri.addEventListener("contextmenu", (e)=> {
         if (e.target.nodeName.toLowerCase() === "img") {
             e.preventDefault();
             e.stopPropagation();
@@ -353,7 +353,7 @@ no_right_click();
 function slideToogle(el, duration = 1000, mode = '', callback) {
     const dom = el;
     dom.status = dom.status || getComputedStyle(dom, null)['display'];
-    const flag = dom.status != 'none';
+    const flag = dom.status !== 'none';
     if ((flag === 1 && mode === "show") || (flag === 0 && mode === "hide")) return;
     dom.status = flag ? 'none' : 'block';
     dom.style.transition = 'height ' + duration / 1000 + 's';
@@ -382,7 +382,7 @@ function timeSeriesReload(flag) {
     if (!archives) return;
     const al_li = archives.getElementsByClassName('al_mon');
     if (flag) {
-        archives.addEventListener("click", function (e) {
+        archives.addEventListener("click", (e)=> {
             if (e.target.classList.contains("al_mon")) {
                 slideToogle(e.target.nextElementSibling, 500);
                 e.preventDefault();
@@ -406,7 +406,7 @@ function timeSeriesReload(flag) {
                     slideToogle(al_post_list_f, 500, 'show');
                 })
             }
-            archives.addEventListener("click", function (e) {
+            archives.addEventListener("click", (e)=> {
                 if (e.target.classList.contains("al_mon")) {
                     slideToogle(e.target.nextElementSibling, 500);
                     e.preventDefault();
@@ -428,7 +428,7 @@ function timeSeriesReload(flag) {
                             slideToogle(el, 500, 'show');
                         }
                         al_expand_collapse_click++;
-                    } else if (al_expand_collapse_click == 1) {
+                    } else if (al_expand_collapse_click === 1) {
                         for (let i = 0; i < al_post_list.length; i++) {
                             const el = al_post_list[i];
                             slideToogle(el, 500, 'hide');
@@ -537,7 +537,7 @@ function tableOfContentScroll(flag) {
     } else {
         if (flag) {
             let id = 1,
-                heading_fix = mashiro_option.entry_content_theme == "sakura" ? (document.querySelector("article.type-post") ? (document.querySelector("div.pattern-attachment-img") ? -75 : 200) : 375) : window.innerHeight / 2;
+                heading_fix = mashiro_option.entry_content_theme === "sakura" ? (document.querySelector("article.type-post") ? (document.querySelector("div.pattern-attachment-img") ? -75 : 200) : 375) : window.innerHeight / 2;
             const _els = document.querySelectorAll('.entry-content,.links');
                 for(let i = 0;i<_els.length;i++){
                     const _el = _els[i].querySelectorAll('h1,h2,h3,h4,h5');
@@ -729,16 +729,15 @@ add_copyright();
 ready(getqqinfo);
 
 function getqqinfo() {
-    let is_get_by_qq = false,
-        author = document.getElementById("author"),
+    let is_get_by_qq = false,temp;
+    const author = document.getElementById("author"),
         qq = document.getElementById("qq"),
         email = document.getElementById("email"),
         url = document.getElementById("url"),
-        qq_check = document.getElementsByClassName("qq-check")[0],
-        gravatar_check = document.getElementsByClassName("gravatar-check")[0],
-        temp,
+        qq_check = document.querySelector(".qq-check"),
+        gravatar_check = document.querySelector(".gravatar-check"),
         user_avatar_img = document.querySelector("div.comment-user-avatar img");
-        if (author == null) return;
+    if (author == null) return;
     if (!localStorage.getItem('user_qq') && !localStorage.getItem('user_qq_email') && !localStorage.getItem('user_author')) {
         qq.value = author.value = email.value = url.value = "";
         imgError(user_avatar_img,2);
@@ -758,17 +757,18 @@ function getqqinfo() {
     }
     let emailAddressFlag = email.value;
     author.addEventListener("blur", function () {
-        if (temp===author.value){
+        if (temp === author.value){
             return;
         }else{
             temp=author.value;
         }
-        let qq = author.value;
-        if (qq == "" || isNaN(qq) || qq.length < 5 || qq.length > 12) {
+        const i_qq = author.value;
+        if (i_qq === "" || isNaN(i_qq) || i_qq.length < 5 || i_qq.length > 12) {
             qq_check.style.display = "none";
             gravatar_check.style.display = "block";
         } else {
-            fetch(mashiro_option.qq_api_url + qq)
+            addComment.createButterbar("正在获取qq信息...", 1000);
+            fetch(mashiro_option.qq_api_url + i_qq)
             .then(res=>{
                 if(res.ok){
                     return res.json();
@@ -778,38 +778,38 @@ function getqqinfo() {
             })
             .then(data=>{
                 author.value = data['qqname'];
-                email.value = qq.trim() + "@qq.com";
+                email.value = i_qq.trim() + "@qq.com";
                 if (mashiro_option.qzone_autocomplete) {
                     url.value = "https://user.qzone.qq.com/" + qq.trim();
                 }
-                user_avatar_img.setAttribute("src", "https://q2.qlogo.cn/headimg_dl?dst_uin=" + qq + "&spec=100");
+                // user_avatar_img.setAttribute("src", "https://q2.qlogo.cn/headimg_dl?dst_uin=" + i_qq + "&spec=100");
                 is_get_by_qq = true;
-                qq = qq.trim();
+                i_qq = i_qq.trim();
                 qq_check.style.display = "block";
                 gravatar_check.style.display = "none";
                 localStorage.setItem('user_author', data['qqname']);
-                localStorage.setItem('user_qq', qq);
+                localStorage.setItem('user_qq', i_qq);
                 localStorage.setItem('is_user_qq', 'yes');
-                localStorage.setItem('user_qq_email', qq + '@qq.com');
-                localStorage.setItem('user_email', qq + '@qq.com');
+                localStorage.setItem('user_qq_email', i_qq + '@qq.com');
+                localStorage.setItem('user_email', i_qq + '@qq.com');
                 emailAddressFlag = email.value;
                 temp=author.value;
-
                 user_avatar_img.setAttribute("src", data['qqavatar']);
                 localStorage.setItem('user_avatar', data['qqavatar']);
+                addComment.createButterbar("qq信息获取成功.", 1000);
             })
             .catch(e=>{
                 console.error(e);
-                qq = "";
                 qq_check.style.display = "none";
                 gravatar_check.style.display = "block";
                 imgError(user_avatar_img,2);
-                if (email.value && is_get_by_qq==false) {
+                if (email.value && is_get_by_qq === false) {
                     user_avatar_img.setAttribute("src", get_gravatar(email.value, 80));
                     localStorage.setItem('user_qq', '');
                     localStorage.setItem('user_email', email.value);
                     localStorage.setItem('user_avatar', get_gravatar(email.value, 80));
                 }
+                addComment.createButterbar("qq信息获取失败.", 1000);
             })
         }
     })
@@ -825,7 +825,7 @@ function getqqinfo() {
     email.addEventListener("blur", function () {
         let emailAddress = email.value;
         if (!emailAddress)return;
-        if (is_get_by_qq === false || emailAddressFlag != emailAddress) {
+        if (is_get_by_qq === false || emailAddressFlag !== emailAddress) {
             user_avatar_img.setAttribute("src", get_gravatar(emailAddress, 80));
             localStorage.setItem('user_avatar', get_gravatar(emailAddress, 80));
             localStorage.setItem('user_email', emailAddress);
@@ -971,14 +971,14 @@ let s = document.getElementById("bgvideo"),
 
         },
         liveplay: function () {
-            if (s.oncanplay != void 0 && document.querySelector(".haslive")) {
+            if (s.oncanplay != null && document.querySelector(".haslive")) {
                 if (document.querySelector(".videolive")) {
                     Siren.splay();
                 }
             }
         },
         livepause: function () {
-            if (s.oncanplay != void 0 && document.querySelector(".haslive")) {
+            if (s.oncanplay != null && document.querySelector(".haslive")) {
                 Siren.spause();
                 const video_stu = document.getElementsByClassName("video-stu")[0];
                 video_stu.style.transform = "";
@@ -1031,7 +1031,7 @@ let s = document.getElementById("bgvideo"),
             });
         },
         AH: function () {
-            if (Poi.windowheight == 'auto' && mashiro_option.windowheight == 'auto') {
+            if (Poi.windowheight === 'auto' && mashiro_option.windowheight === 'auto') {
                 if (document.querySelector(".main-title")) {
                     document.getElementById("centerbg").style.height = "100vh";
                     document.getElementById("bgvideo").style.minHeight = "100vh";
@@ -1042,19 +1042,19 @@ let s = document.getElementById("bgvideo"),
             }
         },
         PE: function () {
-            // if (document.querySelector(".headertop")) {
-            //     const headertop = document.querySelector(".headertop"),
-            //         blank = document.querySelector(".blank");
-            //     if (document.querySelector(".main-title")) {
-            //          if(blank) blank.style.paddingTop = "0px";
-            //         headertop.style.display = "block";
-            //         if (Poi.movies.live == 'open') Siren.liveplay();
-            //     } else {
-            //         if(blank) blank.style.paddingTop = "75px";
-            //         headertop.style.display = "none";
-            //         Siren.livepause();
-            //     }
-            // }
+            if (document.querySelector(".headertop")) {
+                const headertop = document.querySelector(".headertop"),
+                    blank = document.querySelector(".blank");
+                if (document.querySelector(".main-title")) {
+                     if(blank) blank.style.paddingTop = "0px";
+                    headertop.style.display = "block";
+                    if (Poi.movies.live === 'open') Siren.liveplay();
+                } else {
+                    if(blank) blank.style.paddingTop = "75px";
+                    headertop.style.display = "none";
+                    Siren.livepause();
+                }
+            }
         },
         CE: function () {
             const comments_hidden = document.querySelector(".comments-hidden"),
@@ -1102,7 +1102,7 @@ let s = document.getElementById("bgvideo"),
                     let otxt = document.getElementById("search-input"),
                         searchFlag = null;
                     otxt.oninput = function () {
-                        if (searchFlag == null) {
+                        if (searchFlag === null) {
                             clearTimeout(searchFlag);
                         }
                         searchFlag = setTimeout(function () {
@@ -1262,7 +1262,7 @@ let s = document.getElementById("bgvideo"),
                 let s = document.documentElement.scrollTop || window.pageYOffset;
                     if (s > 20){mb_to_top.style.transform = "scale(1)";}
                     if (s < 20){mb_to_top.style.transform = "scale(0)";}
-                    if (s == 0) { _remove("exbit");_remove("yya");}
+                    if (s === 0) { _remove("exbit");_remove("yya");}
                     if (s > 0) { _add("yya");}
                     if(s > t) {_add("exbit");s <= i && (_remove("exbit")); i=s;}
             });
@@ -1278,9 +1278,9 @@ let s = document.getElementById("bgvideo"),
             const intersectionObserver = new IntersectionObserver(entries => {
                 if (entries[0].intersectionRatio <= 0) return;
                 const pagination = document.querySelector("#pagination a"),
-                    page_next = pagination ? pagination.getAttribute("href") : void 0,
+                    page_next = pagination ? pagination.getAttribute("href") : null,
                     load_key = document.getElementById("add_post_time");
-                if (page_next != void 0 && load_key) {
+                if (page_next !== null && load_key) {
                     const load_time = document.getElementById("add_post_time").title;
                     if (load_time != "233") {
                         console.log("%c 自动加载时倒计时 %c", "background:#9a9da2; color:#ffffff; border-radius:4px;", "", "", load_time);
@@ -1293,17 +1293,27 @@ let s = document.getElementById("bgvideo"),
             intersectionObserver.observe(
                 document.querySelector('.footer-device')
             );
-            document.body.removeEventListener("click", this.ZV);
-            document.body.addEventListener("click", this.ZV);
-            document.body.addEventListener("click", (e)=>{
-                if (e.target === document.querySelector("#pagination a")) {
+            const eventlistener = (e)=>{
+                if (e.target.classList.contains("comment-at")) {
                     e.preventDefault();
                     e.stopPropagation();
-                    clearTimeout(load_post_timer);
-                    load_post();
+                    window.scrollTo({
+                        top: document.querySelector(e.target.hash).offsetTop - 100,
+                        behavior: "smooth"
+                    });
+                }else{
+                    if (e.target === document.querySelector("#pagination a")) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        load_post();
+                    }
                 }
-            })
+            }
+            document.body.removeEventListener("click", eventlistener);
+            document.body.addEventListener("click", eventlistener);
             function load_post() {
+                clearTimeout(load_post_timer);
+                const now_href = document.location.href;
                 const pagination = document.querySelector("#pagination a");
                 if (pagination) {
                     pagination.classList.add("loading");
@@ -1313,9 +1323,11 @@ let s = document.getElementById("bgvideo"),
                         DOM = parser.parseFromString(data, "text/html"),
                         result = DOM.querySelectorAll("#main .post"),
                         paga = DOM.querySelector("#pagination a"),
-                        nextHref = paga && paga.getAttribute("href");
+                        nextHref = paga && paga.getAttribute("href"),
+                        main = document.getElementById("main");
+                        if (now_href !== document.location.href) return;
                         for (let i=0;i<result.length;i++){
-                            document.getElementById("main").insertAdjacentHTML('beforeend', result[i].outerHTML);
+                            main.append(result[i]);
                         }
                         if(Poi.pjax)_pjax.refresh(document.querySelector("#content"));
                         const dpga = document.querySelector("#pagination a"),
@@ -1330,7 +1342,7 @@ let s = document.getElementById("bgvideo"),
                         }
                         lazyload();
                         post_list_show_animation();
-                        if (nextHref != void 0) {
+                        if (nextHref !== null) {
                             window.scrollTo({
                                 top: document.documentElement.scrollTop - 100,
                                 behavior: "smooth"
@@ -1344,20 +1356,10 @@ let s = document.getElementById("bgvideo"),
                 return false;
             }
         },
-        ZV: function (e) {
-            if (e.target.classList.contains("comment-at")) {
-                e.preventDefault();
-                e.stopPropagation();
-                window.scrollTo({
-                    top: document.querySelector(e.target.hash).offsetTop - 100,
-                    behavior: "smooth"
-                });
-            }
-        },
         XCS: function () {
             const __list = "commentwrap";
             document.body.addEventListener('submit', function (e) {
-                if (e.target == document.querySelector("form#commentform.comment-form")) {
+                if (e.target === document.querySelector("form#commentform.comment-form")) {
                     e.preventDefault();
                     e.stopPropagation();
                     const from_Data = document.querySelector("form#commentform.comment-form");
@@ -1370,7 +1372,7 @@ let s = document.getElementById("bgvideo"),
                         if(res.ok){
                             return res.text();
                         }else{
-                            return res.text().then(data=>{throw Error(data)})
+                            throw Error(res.text());
                         }
                     }).then(data=>{
                         document.getElementById("comment").value = "";
@@ -1466,7 +1468,7 @@ let s = document.getElementById("bgvideo"),
                     document.body.insertAdjacentHTML('beforeend', '<div class="butterBar butterBar--center"><p class="butterBar-message">' + message + '</p></div>');
                     let butterBar = () => {
                         let _butterBar = document.getElementsByClassName("butterBar");
-                        if (_butterBar.length == 0) return;
+                        if (_butterBar.length === 0) return;
                         for (let i=0;i<_butterBar.length;i++){
                             let a = _butterBar[i];
                             a.remove();
@@ -1482,7 +1484,7 @@ let s = document.getElementById("bgvideo"),
         },
         XCP: function () {
             document.body.addEventListener('click', function (e) {
-                if (e.target.parentNode == document.getElementById("comments-navi") && e.target.nodeName.toLowerCase() == "a") {
+                if (e.target.parentNode === document.getElementById("comments-navi") && e.target.nodeName.toLowerCase() === "a") {
                     e.preventDefault();
                     e.stopPropagation();
                     const _this = e.target,
@@ -1547,7 +1549,7 @@ let s = document.getElementById("bgvideo"),
                     }
                     _header.style.setProperty("--blur",i+"px");
                     _header.style.setProperty("--saturate",g+"%");
-                    if ((top == "0px" && (i!=15 || g!=60)) || (top == "60%" && (i!=5 || g!=100))) {
+                    if ((top === "0px" && (i!==15 || g!==60)) || (top === "60%" && (i!==5 || g!==100))) {
                         flag=false;
                         e = requestAnimationFrame(_headertoggle);
                     }
