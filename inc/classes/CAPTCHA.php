@@ -92,13 +92,13 @@ class CAPTCHA
         ];
     }
 
-    
+
     /**
      * check_CAPTCHA
      *
-     * @param  string $captcha
-     * @param  int $timestamp
-     * @param  string $id
+     * @param string $captcha
+     * @param int|null $timestamp
+     * @param string|null $id
      * @return array
      */
     public static function check_CAPTCHA(string $captcha,?int $timestamp,?string $id): array{

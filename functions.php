@@ -585,7 +585,7 @@ function mytheme_default_avatar ( $avatar_defaults ) {
 function theme_noself_ping( &$links ) { 
 	$home = get_option( 'home' );
 	foreach ( $links as $l => $link){
-        if ( 0 === strpos( $link, $home ) )
+        if (str_starts_with($link, $home))
         unset($links[$l]); 
     }
 }

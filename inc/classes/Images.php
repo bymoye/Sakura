@@ -96,7 +96,7 @@ class Images
     /**
      * smms upload interface
      * @param $image
-     * @return array|void
+     * @return array
      */
     public function SMMS_API($image) {
         $client_id = $this->smms_client_id;

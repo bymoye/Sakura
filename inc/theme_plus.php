@@ -270,7 +270,7 @@ function login_ok(){
   global $current_user;
   wp_get_current_user();
 ?>
-  <p class="ex-login-avatar"><a href="http://sdn.geekzu.org/" title="<?php _e('Change avatar','sakura')/*更换头像*/?>" target="_blank" rel="nofollow"><?php echo get_avatar( $current_user->user_email, '110' ); ?></a></p>
+  <p class="ex-login-avatar"><a href="https://sdn.geekzu.org/" title="<?php _e('Change avatar','sakura')/*更换头像*/?>" target="_blank" rel="nofollow"><?php echo get_avatar( $current_user->user_email, '110' ); ?></a></p>
   <p class="ex-login-username"><?php _e('Hello, ','sakura')/*你好，*/?><strong><?php echo $current_user->display_name; ?></strong></p>
   <?php if($current_user->user_email){echo '<p>'.$current_user->user_email.'</p>';} ?>
   <p id="login-showtime"></p>

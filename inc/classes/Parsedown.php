@@ -39,9 +39,7 @@ class Parsedown
         $markup = $this->lines($lines);
 
         # trim line breaks
-        $markup = trim($markup, "\n");
-
-        return $markup;
+        return trim($markup, "\n");
     }
 
     #
@@ -328,7 +326,7 @@ class Parsedown
         {
             $text = substr($Line['body'], 4);
 
-            $Block = array(
+            return array(
                 'element' => array(
                     'name' => 'pre',
                     'handler' => 'element',
@@ -338,8 +336,6 @@ class Parsedown
                     ),
                 ),
             );
-
-            return $Block;
         }
     }
 

@@ -762,7 +762,7 @@ function getqqinfo() {
         }else{
             temp=author.value;
         }
-        const i_qq = author.value;
+        let i_qq = author.value;
         if (i_qq === "" || isNaN(i_qq) || i_qq.length < 5 || i_qq.length > 12) {
             qq_check.style.display = "none";
             gravatar_check.style.display = "block";
