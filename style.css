@@ -4793,9 +4793,11 @@ i.iconfont.down {
     #main-container.open {
         transform: translateX(250px) translateY(0);
         -webkit-transform: translateX(250px) translateY(0);
-        position: fixed;
         right: 0;
         left: 0
+    }
+    .openNav.open{
+        transform: translateX(250px);
     }
     .wrapper {
         transition-duration: .5s;
@@ -4804,7 +4806,8 @@ i.iconfont.down {
         position: relative
     }
     #mo-nav.open {
-        transform: translateX(0px);
+        transform: translateX(250px);
+        position: fixed;
         /* width: 250px */
     }
     .wrapper section h1 {
@@ -4881,9 +4884,9 @@ i.iconfont.down {
         width: 250px;
         height: 100%;
         z-index: 999;
-        position: absolute;
+        position: fixed;
         top: 0;
-        left: 0;
+        left: -250px;
         display: block;
         overflow-x: hidden !important;
         overflow-y: auto;
@@ -4891,7 +4894,6 @@ i.iconfont.down {
         -webkit-backdrop-filter: blur(7px);
         background: rgba(255,255,255,.5);
         transition: transform .5s;
-        transform: translateX(-250px);
     }
     #mo-nav .m-avatar {
         position: relative;

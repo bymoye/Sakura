@@ -34,26 +34,6 @@
         <?php } ?>
 		</div><!-- .site-info -->
 	</footer><!-- #colophon -->
-	<div class="openNav no-select">
-		<div class="iconflat no-select">	 
-			<div class="icon"></div>
-		</div>
-		<div class="site-branding">
-			<?php if (akina_option('akina_logo')){ ?>
-			<div class="site-title"><a href="<?php bloginfo('url');?>"><img src="<?php echo akina_option('akina_logo'); ?>"></a></div>
-			<?php }elseif ($site_url == "localhost" or $site_url == "nmxc.ltd"){ ?>
-				<div class="site-title"><a href="<?php bloginfo('url'); ?>">
-				<i class="nmxc_logo" style="--svg-name: var(--sitelogo_mi);--size:35px;"></i>
-				<i class="nmxc_logo sitelogo-de" style="--svg-name: var(--sitelogo_de);"></i>
-				<i class="nmxc_logo" style="--svg-name: var(--sitelogo_ni);"></i>
-				<i class="nmxc_logo" style="--svg-name: var(--sitelogo_ming);"></i>
-				<i class="nmxc_logo" style="--svg-name: var(--sitelogo_xin);"></i>
-				</a></div>
-			<?php }else{ ?>
-			<h1 class="site-title"><a href="<?php bloginfo('url');?>" ><?php bloginfo('name');?></a></h1>
-			<?php } ?>
-		</div>
-	</div><!-- m-nav-bar -->
 	</section><!-- #section -->
 	<!-- m-nav-center -->
 	<div id="mo-nav">
@@ -66,7 +46,7 @@
 				<input class="m-search-input" type="search" name="s" placeholder="<?php _e('Search...', 'sakura') /*搜索...*/?>" required>
 			</form>
 		</div>
-		<?php wp_nav_menu( array( 'depth' => 2, 'theme_location' => 'primary', 'container' => false ) ); ?>
+		<?php wp_nav_menu( [ 'depth' => 2, 'theme_location' => 'primary', 'container' => false ] ); ?>
 	</div><!-- m-nav-center end -->
 	<button id="GoTop" title="Go to top"><i class="post_icon_svg" style="--svg-name: var(--svg_backtop);--color: #404040;--size: 16px;margin:0;"></i></button>
 	<!-- search start -->

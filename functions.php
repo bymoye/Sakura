@@ -47,37 +47,37 @@ function akina_setup() {
 	set_post_thumbnail_size( 150, 150, true );
 
 	// This theme uses wp_nav_menu() in one location.
-	register_nav_menus( array(
+	register_nav_menus( [
 		'primary' => __( 'Nav Menus', 'sakura' ), //导航菜单
-	) );
+     ] );
 
 	/*
 	 * Switch default core markup for search form, comment form, and comments
 	 * to output valid HTML5.
 	 */
-	add_theme_support( 'html5', array(
+	add_theme_support( 'html5', [
 		'search-form',
 		'comment-form',
 		'comment-list',
 		'gallery',
 		'caption',
-	) );
+     ] );
 
 	/*
 	 * Enable support for Post Formats.
 	 * See https://developer.wordpress.org/themes/functionality/post-formats/
 	 */
-	add_theme_support( 'post-formats', array(
+	add_theme_support( 'post-formats', [
 		'aside',
 		'image',
 		'status',
-	) );
+     ] );
 
 	// Set up the WordPress core custom background feature.
-	add_theme_support( 'custom-background', apply_filters( 'akina_custom_background_args', array(
+	add_theme_support( 'custom-background', apply_filters( 'akina_custom_background_args',[
 		'default-color' => 'ffffff',
 		'default-image' => '',
-	) ) );
+     ] ) );
 	
 	add_filter('pre_option_link_manager_enabled','__return_true');
 	
@@ -129,9 +129,9 @@ function akina_setup() {
 	 */
 	function disable_emojis_tinymce( $plugins ) {
 	 if ( is_array( $plugins ) ) {
-	 return array_diff( $plugins, array( 'wpemoji' ) );
+	 return array_diff( $plugins, [ 'wpemoji' ] );
 	 } else {
-	 return array();
+	 return [];
 	 }
 	}
 	
@@ -140,7 +140,7 @@ function akina_setup() {
 	add_filter('nav_menu_item_id', 'my_css_attributes_filter', 100, 1);
 	add_filter('page_css_class', 'my_css_attributes_filter', 100, 1);
 	function my_css_attributes_filter($var) {
-	return is_array($var) ? array_intersect($var, array('current-menu-item','current-post-ancestor','current-menu-ancestor','current-menu-parent')) : '';
+	return is_array($var) ? array_intersect($var, ['current-menu-item','current-post-ancestor','current-menu-ancestor','current-menu-parent']) : '';
 	}
 		
 }
@@ -919,7 +919,7 @@ function push_tieba_smilies() {
 global $wpsmiliestrans;
 // don't bother setting up smilies if they are disabled
 if ( !get_option('use_smilies'))return false;
-    $tiebaname = array('good','han','spray','Grievance','shui','reluctantly','anger','tongue','se','haha','rmb','doubt','tear','surprised2','Happy','ku','surprised','theblackline','smilingeyes','spit','huaji','bbd','hu','shame','naive','rbq','britan','aa','niconiconi','niconiconi_t','niconiconit','awesome');
+    $tiebaname = ['good','han','spray','Grievance','shui','reluctantly','anger','tongue','se','haha','rmb','doubt','tear','surprised2','Happy','ku','surprised','theblackline','smilingeyes','spit','huaji','bbd','hu','shame','naive','rbq','britan','aa','niconiconi','niconiconi_t','niconiconit','awesome'];
     $return_smiles = '';
     $type = is_webp() ? 'webp' : 'png';
     $tiebaimgdir = 'tieba' . $type . '/';

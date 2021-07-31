@@ -925,23 +925,33 @@ function serialize(form) {
     return parts.join("&");
 }
 
-let s = document.getElementById("bgvideo"),
-    Siren = {
+let s = document.getElementById("bgvideo");
+const Siren = {
+        toggle: ()=>{
+            document.body.classList.toggle("navOpen");
+            document.getElementById("main-container").classList.toggle("open");
+            document.getElementById("mo-nav").classList.toggle("open");
+            const openNav = document.querySelector(".openNav");
+            openNav.classList.toggle("open");
+            if (openNav.classList.contains("yya")){
+                openNav.classList.remove("yya")
+            }
+            if (!openNav.classList.contains("open")){
+                openNav.classList.add("yya")
+            }
+            if (document.documentElement.style.overflow==="hidden"){
+                document.documentElement.style.overflow = ""
+            }else{
+                document.documentElement.style.overflow = "hidden"
+            }
+        },
         MN: function () {
-            const icf = document.getElementsByClassName("iconflat")[0];
-            icf && icf.addEventListener("click", ()=>{
-                document.body.classList.toggle("navOpen");
-                document.getElementById("main-container").classList.toggle("open");
-                document.getElementById("mo-nav").classList.toggle("open");
-                document.getElementsByClassName("openNav")[0].classList.toggle("open");
-            });
+            const icf = document.querySelector(".iconflat");
+            icf && icf.addEventListener("click",this.toggle);
         },
         MNH: function () {
             if (document.body.classList.contains("navOpen")) {
-                document.body.classList.toggle("navOpen");
-                document.getElementById("main-container").classList.toggle("open");
-                document.getElementById("mo-nav").classList.toggle("open");
-                document.getElementsByClassName("openNav")[0].classList.toggle("open");
+                this.toggle();
             }
         },
         splay: function () {

@@ -21,3 +21,9 @@ node_modules/
 *.log
 *.sql
 *.sqlite
+.idea/modules.xml
+.idea/php.xml
+.idea/Sakura.iml
+.idea/vcs.xml
+.idea/.name
+.idea/.gitignore

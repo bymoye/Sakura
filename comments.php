@@ -52,7 +52,7 @@
 					if(akina_option('norobot')) $robot_comments = '<label class="siren-checkbox-label"><input class="siren-checkbox-radio" type="checkbox" name="no-robot"><span class="siren-no-robot-checkbox siren-checkbox-radioInput"></span>'.__('I\'m not a robot', 'sakura').'</label>';
 					$private_ms = akina_option('open_private_message') ? '<label class="siren-checkbox-label"><input class="siren-checkbox-radio" type="checkbox" name="is-private"><span class="siren-is-private-checkbox siren-checkbox-radioInput"></span>'.__('Comment in private', 'sakura').'</label>' : '';
 					$mail_notify = akina_option('mail_notify') ? '<label class="siren-checkbox-label"><input class="siren-checkbox-radio" type="checkbox" name="mail-notify"><span class="siren-mail-notify-checkbox siren-checkbox-radioInput"></span>'.__('Comment reply notify', 'sakura').'</label>' : '';
-                    $args = array(
+                    $args = [
 						'id_form' => 'commentform',
 						'id_submit' => 'submit',
 						'title_reply' => '',
@@ -86,7 +86,7 @@
                         <!--表情面版完-->',
 						'comment_notes_after' => '',
 						'comment_notes_before' => '',
-						'fields' => apply_filters( 'comment_form_default_fields', array(
+						'fields' => apply_filters( 'comment_form_default_fields', [
                             'avatar' => '<div class="cmt-info-container"><div class="comment-user-avatar"><img src="https://sdn.geekzu.org/avatar/f11f237b3de93c93b24045e71f7f65c6?s=80&d=mm&r=g"><div class="socila-check qq-check"><div class="socila-check-qq"></div></div><div class="socila-check gravatar-check"><div class="socila-check-google"></div></div></div>',
 							'author' =>
 								'<div class="popup cmt-popup cmt-author" onclick="cmt_showPopup(this)"><span class="popuptext" id="thePopup" style="margin-left: -115px;width: 230px;">' . __("Auto pull nickname and avatar with a QQ num. entered", "sakura")/*输入QQ号将自动拉取昵称和头像*/ . '</span><input type="text" placeholder="' . __("Nickname or QQ number", "sakura") /*昵称或QQ号*/. ' ' . ( $req ?  '(' . __("Name* ", "sakura") . ')' : '') . '" name="author" id="author" value="' . esc_attr($comment_author) . '" size="22" autocomplete="off" tabindex="1" ' . ($req ? "aria-required='true'" : '' ). ' /></div>',
@@ -96,9 +96,9 @@
 								'<div class="popup cmt-popup" onclick="cmt_showPopup(this)"><span class="popuptext" id="thePopup" style="margin-left: -55px;width: 110px;">' . __("Advertisement is forbidden 😀", "sakura")/*禁止小广告😀*/ . '</span><input type="text" placeholder="' . __("Site", "sakura") . '" name="url" id="url" value="' . esc_attr($comment_author_url) . '" size="22" autocomplete="off" tabindex="1" /></div></div>' . $robot_comments . $private_ms . $mail_notify ,
                             'qq' =>
 								'<input type="text" placeholder="QQ" name="new_field_qq" id="qq" value="' . esc_attr($comment_author_url) . '" style="display:none" autocomplete="off"/><!--此栏不可见-->'
-							)
+						]
 						)
-					);
+						];
 					comment_form($args);
 				}
 

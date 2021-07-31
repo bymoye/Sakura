@@ -4,15 +4,16 @@ namespace Sakura\API;
 
 class Bilibili
 {
-    private $uid;
-    private $cookies;
+    private int $uid;
+    private string $cookies;
 
     public function __construct() {
         $this->uid = akina_option('bilibili_id');
         $this->cookies = akina_option('bilibili_cookie');
     }
 
-    public function get_the_bgm_items($page = 1) {
+    private function get_the_bgm_items(int $page = 1): string
+    {
         $uid = $this->uid;
         $cookies = $this->cookies;
         $url = 'https://api.bilibili.com/x/space/bangumi/follow/list?type=1&pn=' . $page . '&ps=15&follow_status=0&vmid=' . $uid;
@@ -28,7 +29,8 @@ class Bilibili
         return json_encode($bgmdata);
     }
 
-    public function get_bgm_items($page = 1) {
+    public function get_bgm_items(int $page = 1): string
+    {
         $bgm = json_decode($this->get_the_bgm_items($page), true);
         $totalpage = $bgm["total"] / 15;
         if ($totalpage - $page < 0) {

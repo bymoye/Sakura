@@ -58,6 +58,26 @@ if (akina_option('akina_meta') == true) {
 		<image href="<?php $img = get_random_bg_url();echo is_array($img) ? $img[2] : $img; ?>" x="-5" y="-5" height="102%" width="102%" preserveAspectRatio="xMidYMid slice"></image>
 	</svg>
     <div class="scrollbar" id="bar"></div>
+	<div class="openNav no-select">
+		<div class="iconflat no-select">	 
+			<div class="icon"></div>
+		</div>
+		<div class="site-branding">
+			<?php if (akina_option('akina_logo')){ ?>
+			<div class="site-title"><a href="<?php bloginfo('url');?>"><img src="<?php echo akina_option('akina_logo'); ?>"></a></div>
+			<?php }elseif ($site_url == "localhost" or $site_url == "nmxc.ltd"){ ?>
+				<div class="site-title"><a href="<?php bloginfo('url'); ?>">
+				<i class="nmxc_logo" style="--svg-name: var(--sitelogo_mi);--size:35px;"></i>
+				<i class="nmxc_logo sitelogo-de" style="--svg-name: var(--sitelogo_de);"></i>
+				<i class="nmxc_logo" style="--svg-name: var(--sitelogo_ni);"></i>
+				<i class="nmxc_logo" style="--svg-name: var(--sitelogo_ming);"></i>
+				<i class="nmxc_logo" style="--svg-name: var(--sitelogo_xin);"></i>
+				</a></div>
+			<?php }else{ ?>
+			<h1 class="site-title"><a href="<?php bloginfo('url');?>" ><?php bloginfo('name');?></a></h1>
+			<?php } ?>
+		</div>
+	</div><!-- m-nav-bar -->
 	<section id="main-container">
 		<?php 
 		if(!akina_option('head_focus')){ 
