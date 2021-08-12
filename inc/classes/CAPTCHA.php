@@ -1,28 +1,15 @@
 <?php
 declare(strict_types=1);
 namespace Sakura\API;
-
 class CAPTCHA
 {
-    private string $font;
-    private int $timestamp;
-    private string $uniqid;
-    /**
-     * CAPTCHA constructor.
-     */
-    public function __construct() {
-        $this->font = dirname(dirname(__FILE__)) . '/KumoFont.ttf';
-        $this->timestamp = time();
-        $this->uniqid = uniqid();
-    }
-    
     /**
      * create_CAPTCHA
      *
      * @param  int $time
      * @param  string $iqid 
      * @return string
-     */    
+     */
     private static function create_CAPTCHA(int $time,string $iqid): string {
         $seed = hexdec($iqid) + $time;
         mt_srand($seed);
@@ -41,7 +28,10 @@ class CAPTCHA
      *
      * @return array
      */
-    public function create_captcha_img(): array {
+    public static function create_captcha_img(): array {
+        $font = get_stylesheet_directory() . '/inc/KumoFont.ttf';
+        $timestamp = time();
+        $uniqid = uniqid();
         //创建画布
         $img = imagecreatetruecolor(120, 40);
         //setcookie('timestamp',$this->timestamp,$this->timestamp+60,'/');
@@ -51,13 +41,13 @@ class CAPTCHA
         imagefill($img, 0, 0, $backcolor);
         
         //创建验证码
-        $str = $this->create_CAPTCHA($this->timestamp,$this->uniqid);
+        $str = self::create_CAPTCHA($timestamp,$uniqid);
         //绘制文字
         for ( $i = 1; $i <= 5; $i++ ) {
             $span = 20;
             $stringcolor = imagecolorallocate($img, mt_rand(0, 255), mt_rand(0, 100), mt_rand(0, 80));
-            $file = $this->font;
-            imagefttext( $img, 25, 2, $i*$span, 30, $stringcolor, $file, $str[$i-1] );
+            // $file = self::$font;
+            imagefttext( $img, 25, 2, $i*$span, 30, $stringcolor, $font, $str[$i-1] );
         }
 
         //添加干扰线
@@ -74,7 +64,7 @@ class CAPTCHA
 
         //打开缓存区
         ob_start ();
-        imagepng($img);
+        imagewebp($img);
         //输出图片
         $captchaimg =  ob_get_contents();
         //销毁缓存区
@@ -87,8 +77,8 @@ class CAPTCHA
             'code' => 0,
             'data' => $captchaimg,
             'msg' => '',
-            'time' => $this->timestamp,
-            'id' => $this->uniqid
+            'time' => $timestamp,
+            'id' => $uniqid
         ];
     }
 
@@ -117,7 +107,7 @@ class CAPTCHA
             $msg = '超时!';
         }
         elseif($timestamp >= $temp1 && $timestamp <= $temp){
-            $comparison = CAPTCHA::create_CAPTCHA($timestamp,$id);
+            $comparison = self::create_CAPTCHA($timestamp,$id);
             if (strtolower($captcha) === strtolower($comparison)){
                 $code = 5;
                 $msg = '验证码正确!';

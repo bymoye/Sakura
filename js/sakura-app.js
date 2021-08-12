@@ -757,6 +757,7 @@ function getqqinfo() {
     }
     let emailAddressFlag = email.value;
     author.addEventListener("blur", function () {
+        
         if (temp === author.value){
             return;
         }else{
@@ -1230,9 +1231,9 @@ const Siren = {
             });
             const searc = document.querySelector(".search_close");
             searc && searc.addEventListener("click", function () {
-                const js_search = document.getElementsByClassName("js-search")[0];
+                const js_search = document.querySelector(".js-search");
                 if (js_search.classList.contains("is-visible")) {
-                    document.getElementsByClassName("js-toggle-search")[0].classList.toggle("is-active");
+                    document.querySelector(".js-toggle-search").classList.toggle("is-active");
                     js_search.classList.toggle("is-visible");
                     document.documentElement.style.overflowY = "unset";
                 }
@@ -1339,7 +1340,7 @@ const Siren = {
                         for (let i=0;i<result.length;i++){
                             main.append(result[i]);
                         }
-                        if(Poi.pjax)_pjax.refresh(document.querySelector("#content"));
+                        // if(Poi.pjax)_pjax.refresh(document.querySelector("#content"));
                         const dpga = document.querySelector("#pagination a"),
                         addps = document.querySelector("#add_post span");
                         if(dpga){
@@ -1587,15 +1588,12 @@ const Siren = {
 
 if (Poi.pjax) {
     var _pjax = new Pjax({
+        // defaultTrigger: false,
         selectors: ["#page", "title", ".footer-device",".headertop"],
-        elements: [
-            "a:not([target='_top']):not(.comment-reply-link):not(#pagination a):not(#comments-navi a):not(.user-menu-option a):not(.header-user-avatar a):not(.emoji-item)",
-            ".search-form",
-            ".s-search",
-        ],
+        // elements: ".search-form,.s-search",
         timeout: 8000,
         history: true,
-        cacheBust: false
+        // cacheBust: false
     });
     document.addEventListener("pjax:send", () => {
         // $(document).on('pjax:beforeSend', () => { //离开页面停止播放

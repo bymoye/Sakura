@@ -18,21 +18,31 @@ add_action('rest_api_init', function () {
     register_rest_route('sakura/v1', '/image/upload', array(
         'methods' => 'POST',
         'callback' => 'upload_image',
+        'permission_callback' => 'is_user_logged_in',
     ));
     register_rest_route('sakura/v1', '/cache_search/json', array(
         'methods' => 'GET',
         'callback' => 'cache_search_json',
+        'permission_callback' => "check_wpnonce",
     ));
     register_rest_route('sakura/v1', '/bangumi/bilibili', array(
         'methods' => 'POST',
         'callback' => 'bgm_bilibili',
+        'permission_callback' => 'check_wpnonce',
     ));
     register_rest_route('sakura/v1', '/captcha/create', array(
         'methods' => 'GET',
         'callback' => 'create_CAPTCHA',
+        'permission_callback' => 'check_wpnonce',
     ));
 });
 
+function check_wpnonce(){
+    if (!check_ajax_referer('wp_rest', '_wpnonce', false) ){
+        return new WP_Error( 'rest_forbidden', 'Unauthorized client.', array( 'status' => 403,'success' => false ) );
+    }
+    return true;
+}
 /**
  * Image uploader response
  * @param WP_REST_Request $request
@@ -89,47 +99,32 @@ function upload_image(WP_REST_Request $request) {
  * @可在cache_search_json()函数末尾通过设置 HTTP header 控制 json 缓存时间
  */
 function cache_search_json() {
-    if (!check_ajax_referer('wp_rest', '_wpnonce', false)) {
-        $output = array(
-            'status' => 403,
-            'success' => false,
-            'message' => 'Unauthorized client.'
-        );
-        $result = new WP_REST_Response($output, 403);
-    } else {
-        $output = Cache::search_json();
-        $result = new WP_REST_Response($output, 200);
-    }
+    $output = Cache::search_json();
+    $result = new WP_REST_Response($output, 200);
     $result->set_headers(
-        array(
+        [
             'Content-Type' => 'application/json',
             'Cache-Control' => 'max-age=3600', // json 缓存控制
-        )
+        ]
     );
     return $result;
 }
 
 function bgm_bilibili() {
-    if (!check_ajax_referer('wp_rest', '_wpnonce', false)) {
-        $output = array(
-            'status' => 403,
-            'success' => false,
-            'message' => 'Unauthorized client.'
-        );
-        $response = new WP_REST_Response($output, 403);
-    } else {
-        $page = $_GET["page"] ?: 2;
-        $bgm = new Bilibili();
-        $html = preg_replace("/\s+|\n+|\r/", ' ', $bgm->get_bgm_items($page));
-        $response = new WP_REST_Response($html, 200);
-    }
+    $page = $_GET["page"] ?: 2;
+    $bgm = new Bilibili();
+    $html = preg_replace("/\s+|\n+|\r/", ' ', $bgm->get_bgm_items($page));
+    $response = new WP_REST_Response($html, 200);
     return $response;
 }
 
 function create_CAPTCHA(){
-    $CAPTCHA = new CAPTCHA();
-    $response = new WP_REST_Response($CAPTCHA->create_captcha_img());
-    $response->set_status(200);
-    $response->set_headers(array('Content-Type' => 'application/json'));
+    $check = [wp_login_url(),wp_lostpassword_url(),wp_registration_url()];
+    // var_dump($check);
+    if (!isset($_SERVER["HTTP_REFERER"]) || !in_array($_SERVER["HTTP_REFERER"],$check)) {
+        return new WP_Error( 'rest_forbidden', 'Unauthorized client.', [ 'status' => 403,'success' => false]);
+    }
+    $response = new WP_REST_Response(CAPTCHA::create_captcha_img() , 200);
+    $response->set_headers(['Content-Type' => 'application/json']);
     return $response;
 }

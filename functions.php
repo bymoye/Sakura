@@ -737,16 +737,24 @@ function custom_html() {
     </script>',"\n";
     echo '<script>
     document.addEventListener("DOMContentLoaded", ()=>{
-        const captchaimg = document.getElementById("captchaimg");
-        captchaimg && captchaimg.addEventListener("click",(e)=>{
-            fetch("',rest_url('sakura/v1/captcha/create'),'")
-            .then(response=>response.json())
-            .then(json=>{
-                e.target.src = json["data"];
-                document.querySelector("input[name=\'timestamp\']").value = json["time"];
-                document.querySelector("input[name=\'id\']").value = json["id"];
-            });
-        })
+        const captchaimg = document.getElementById("captchaimg"),
+            getcaptcha = ()=>{
+                fetch("',rest_url('sakura/v1/captcha/create'),'?_wpnonce=',wp_create_nonce('wp_rest'),'")
+                .then(response=>response.json())
+                .then(json=>{
+                    captchaimg.src = json["data"];
+                    document.querySelector("input[name=\'timestamp\']").value = json["time"];
+                    document.querySelector("input[name=\'id\']").value = json["id"];
+                });
+                clearTimeout(timer1);
+                timer1 = setTimeout(getcaptcha,60000);
+            }
+        let timer1 = setTimeout(getcaptcha,60000);
+        if (document.querySelector("input[name=\'timestamp\']").value === "") getcaptcha()
+        captchaimg && captchaimg.addEventListener("click",getcaptcha);
+        document.addEventListener("visibilitychange",()=>{
+            document.hidden ? clearTimeout(timer1) : getcaptcha()
+        });
     }, false);  
     </script>';
 }
@@ -1630,11 +1638,7 @@ function remove_xmlrpc_pingback_ping( $methods ) {
  * 登录/注册页添加验证码
  */
 function login_CAPTCHA() {
-    include_once('inc/classes/CAPTCHA.php');
-    $img = new Sakura\API\CAPTCHA;
-    $captcha = $img->create_captcha_img();
-    //最终网页中的具体内容
-    echo '<p><label for="captcha" class="captcha">验证码<br><img id="captchaimg" width="120" height="40" src="', $captcha['data'] ,'"><input type="text" name="yzm" id="yzm" class="input" value="" size="20" tabindex="4" placeholder="请输入验证码"><input type="hidden" name="timestamp" value="',$captcha['time'],'"><input type="hidden" name="id" value="',$captcha['id'],'"></label></p>';
+    echo '<p><label for="captcha" class="captcha">验证码<br><img id="captchaimg" width="120" height="40" src=""><input type="text" name="yzm" id="yzm" class="input" value="" size="20" tabindex="4" placeholder="请输入验证码"><input type="hidden" name="timestamp" value=""><input type="hidden" name="id" value=""></label></p>';
 }
 add_action('login_form','login_CAPTCHA');
 add_action('register_form','login_CAPTCHA' );
@@ -1765,3 +1769,4 @@ function new_from_email($email) {
  
 add_filter('wp_mail_from_name', 'new_from_name');
 add_filter('wp_mail_from', 'new_from_email');
+
