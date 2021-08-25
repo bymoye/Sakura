@@ -138,7 +138,7 @@ if ( version_compare( $GLOBALS['wp_version'], '4.4-alpha', '<' ) ) { wp_die(__('
 // 提示
 if(!function_exists('siren_ajax_comment_err')) {
     function siren_ajax_comment_err($t) {
-        header('HTTP/1.0 500 Internal Server Error');
+        http_response_code(500);
         header('Content-Type: text/plain;charset=UTF-8');
         echo $t;
         exit;
@@ -146,7 +146,7 @@ if(!function_exists('siren_ajax_comment_err')) {
 }
 // 机器评论验证
 function siren_robot_comment(){
-  if ( !$_POST['no-robot'] && !is_user_logged_in()) {
+  if ( !isset($_POST['no-robot']) && !is_user_logged_in()) {
      siren_ajax_comment_err('上车请刷卡。<br>Please comfirm you are not a robot.');
   }
 }
@@ -237,7 +237,7 @@ function Exuser_center(){ ?>
     let TYPE;
     function gopage(url,type){ 
         URL = url; 
-        if(type == 1){
+        if(type === 1){
           TYPE = <?php _e('dashboard','sakura')/*管理后台*/?>;
         }else{
           TYPE = <?php _e('home','sakura')/*主页*/?>;
@@ -248,7 +248,7 @@ function Exuser_center(){ ?>
     } 
     function doUpdate(num){ 
         document.getElementById('login-showtime').innerHTML = '<?php _e("Login successful, ","sakura")/*空降成功*/?>'+num+'<?php _e("seconds later automatically transfer to","sakura")/*秒后自动转到*/?>'+TYPE; 
-        if(num == 0) { window.location=URL; } 
+        if(num === 0) { window.location=URL; }
     } 
   </script>    
   <?php if(current_user_can('level_10')){ ?>

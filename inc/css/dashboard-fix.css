@@ -17,13 +17,12 @@
     padding-right: 0px !important;
 }
 .emotion-item {
-    margin: 6px;
     display: inline-block;
     width: 32px;
     height: 32px;
     overflow: hidden;
     border-radius: 4px;
-    margin-bottom: -8px;
+    margin: 6px 6px -8px;
 }
 .emotion-secter {
     margin: 12px 12px 0 0;

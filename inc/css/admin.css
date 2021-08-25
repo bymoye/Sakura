@@ -1,10 +1,9 @@
 .theme-about {
     background: #fff;
 	max-width:860px;
-	margin: 0 auto;
-	box-shadow: 0 2px 6px rgba(0,0,0,.04);
+    box-shadow: 0 2px 6px rgba(0,0,0,.04);
 	border: 1px solid #ddd;
-	margin-top:50px
+    margin: 50px auto 0;
 }
 .fu-info {
 	padding:20px 40px

@@ -7351,7 +7351,7 @@ td.hljs-ln-numbers {
 
 
 .comment-edit-link:hover .edit{
-   color:var(--themecolor,"#65C186");
+   color:var(--themecolor, "#65C186");
    -webkit-transition: fill .2s ease-out;
     -moz-transition: fill .2s ease-out;
     transition: fill .2s ease-out;

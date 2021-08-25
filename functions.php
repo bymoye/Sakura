@@ -87,7 +87,7 @@ function akina_setup() {
     remove_action('wp_head', 'rsd_link');
     remove_action('wp_head', 'wlwmanifest_link');
     remove_action('wp_head', 'index_rel_link');
-    remove_action('wp_head', 'start_post_rel_link', 10);
+    remove_action('wp_head', 'start_post_rel_link' );
     remove_action('wp_head', 'wp_generator');
     remove_filter('the_content', 'wptexturize'); //取消标点符号转义
     
@@ -522,7 +522,7 @@ function get_post_views($post_id) {
     }
 } 
 function is_webp():bool{
-    return (isset($_COOKIE["su_webp"]) || strpos($_SERVER['HTTP_ACCEPT'], 'image/webp'));
+    return (isset($_COOKIE["su_webp"]) || (isset($_SERVER['HTTP_ACCEPT']) && strpos($_SERVER['HTTP_ACCEPT'], 'image/webp')));
 }
 /*
  * 友情链接
@@ -893,7 +893,7 @@ function rt_add_link_target( $content ){
 			// if the site url is in the attributes, assume it's in the href and skip, also if a target is present
 			if( !str_contains($part, $siteurl) && !str_contains($part, 'target=')){
 				// add the target attribute
-				$bits[$key] = 'target="_blank" ' . $bits[$key];
+				$bits[$key] = 'target="_blank" ' . $bit;
 			}
 		}
 	}
@@ -1039,7 +1039,7 @@ function bili_smile_filter_rss($content) {
     $biliimgdir = 'bili' . $type . '/';
     $smiliesgs='.' . $type;
     $content = str_replace('{{','<img src="https://cdn.jsdelivr.net/gh/bymoye/cdn@1.2/sakura/images/smilies/'.$biliimgdir,$content);
-    $content = str_replace('}}',$smilesgs.'" alt="emoji" style="height: 2em; max-height: 2em;">',$content);
+    $content = str_replace('}}',$smiliesgs.'" alt="emoji" style="height: 2em; max-height: 2em;">',$content);
     $content =  str_replace('[img]', '<img src="', $content);
     return str_replace('[/img]', '" style="display: block;margin-left: auto;margin-right: auto;">', $content);
 }

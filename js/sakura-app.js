@@ -5,7 +5,6 @@
  * @date 2021/03/20
  */
 "use strict";
-let addComment;
 
 mashiro_global.variables = new function () {
     this.has_hls = false;
@@ -15,7 +14,7 @@ mashiro_global.variables = new function () {
     const version_list = { Firefox: 84, Edg: 88, Chrome: 88, Opera: 74, Version: 9 },
         UA = navigator.userAgent;
     let reg;
-    if (UA.indexOf('Chrome')!=-1){
+    if (UA.indexOf('Chrome')!==-1){
         reg = /(Chrome)\/(\d+)/i;
     }else {
         reg = /(Firefox|Chrome|Version|Opera)\/(\d+)/i;
@@ -354,7 +353,7 @@ function slideToogle(el, duration = 1000, mode = '', callback) {
     const dom = el;
     dom.status = dom.status || getComputedStyle(dom, null)['display'];
     const flag = dom.status !== 'none';
-    if ((flag === 1 && mode === "show") || (flag === 0 && mode === "hide")) return;
+    if ((flag === true && mode === "show") || (flag === false && mode === "hide")) return;
     dom.status = flag ? 'none' : 'block';
     dom.style.transition = 'height ' + duration / 1000 + 's';
     dom.style.overflow = 'hidden';
@@ -422,7 +421,7 @@ function timeSeriesReload(flag) {
                 }
                 let al_expand_collapse_click = 0;
                 al_expand_collapse.addEventListener('click', function () {
-                    if (al_expand_collapse_click == 0) {
+                    if (al_expand_collapse_click === 0) {
                         for (let i = 0; i < al_post_list.length; i++) {
                             const el = al_post_list[i];
                             slideToogle(el, 500, 'show');
@@ -1094,11 +1093,12 @@ const Siren = {
                 }
             }
             if (mashiro_option.baguetteBoxON) {
-                baguetteBox.run('.entry-content', {
-                    captions: function (element) {
-                        return element.getElementsByTagName('img')[0].alt;
-                    }
-                });
+                window.addEventListener('load', function() {baguetteBox.run('.entry-content');});
+                // baguetteBox.run('.entry-content', {
+                //     captions: function (element) {
+                //         return element.getElementsByTagName('img')[0].alt;
+                //     }
+                // });
             }
             document.querySelector(".js-toggle-search").addEventListener("click", function () {
                 document.querySelector(".js-toggle-search").classList.toggle("is-active");
@@ -1326,7 +1326,7 @@ const Siren = {
                 clearTimeout(load_post_timer);
                 const now_href = document.location.href;
                 const pagination = document.querySelector("#pagination a");
-                if (pagination) {
+                if (pagination && !pagination.classList.contains("loading")) {
                     pagination.classList.add("loading");
                     pagination.innerHTML = "";
                     fetch(pagination.getAttribute("href") + "#main").then(res=>res.text()).then(data=>{
@@ -1379,14 +1379,10 @@ const Siren = {
                         method:"POST",
                         headers:{"Content-type":"application/x-www-form-urlencoded"},
                         body:serialize(from_Data) + "&action=ajax_comment"
-                    }).then(res=>{
+                    }).then(async res=>{
+                        const data = await res.text();
                         if(res.ok){
-                            return res.text();
-                        }else{
-                            throw Error(res.text());
-                        }
-                    }).then(data=>{
-                        document.getElementById("comment").value = "";
+                            document.getElementById("comment").value = "";
                             const cancel = document.getElementById('cancel-comment-reply-link'),
                                 temp = document.getElementById('wp-temp-form-div'),
                                 respond = document.getElementById(addComment.respondId);
@@ -1417,12 +1413,15 @@ const Siren = {
                                 temp.parentNode.insertBefore(respond, temp);
                                 temp.remove();
                             }
+                        }else{
+                            throw Error(data);
+                        }
                     }).catch(e=>{
                         addComment.createButterbar(e);
                     })
                 }
             });
-            addComment = {
+            const addComment = {
                 moveForm: function (commId, parentId, respondId) {
                     let t = this,
                         div, comm = document.getElementById(commId),
@@ -1576,6 +1575,7 @@ const Siren = {
                 e.stopPropagation();
                 if (e.target === this) {
                     top = _header.style.top;
+                    flag = false;
                         _headertoggle();
                 }
             }

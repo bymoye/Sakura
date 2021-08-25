@@ -114,8 +114,7 @@ function bgm_bilibili() {
     $page = $_GET["page"] ?: 2;
     $bgm = new Bilibili();
     $html = preg_replace("/\s+|\n+|\r/", ' ', $bgm->get_bgm_items($page));
-    $response = new WP_REST_Response($html, 200);
-    return $response;
+	return new WP_REST_Response($html, 200);
 }
 
 function create_CAPTCHA(){

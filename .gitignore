@@ -27,3 +27,6 @@ node_modules/
 .idea/vcs.xml
 .idea/.name
 .idea/.gitignore
+.idea/codeStyles/codeStyleConfig.xml
+.idea/codeStyles/Project.xml
+.idea/inspectionProfiles/Project_Default.xml
