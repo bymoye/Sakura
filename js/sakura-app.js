@@ -313,11 +313,11 @@ function scrollBar() {
 
 function iconsvg() {
     if (!document.getElementById("svg_blurfilter") && Poi.pjax) {
-            const filter = document.createElementNS(a, "filter"),
+            const a = "http://www.w3.org/2000/svg",
+                svg = document.querySelector("svg"),
+                filter = document.createElementNS(a, "filter"),
                 fe = document.createElementNS(a, "feGaussianBlur"),
-                opacity = document.createElementNS(a, "animate"),
-                a = "http://www.w3.org/2000/svg",
-                svg = document.querySelector("svg");
+                opacity = document.createElementNS(a, "animate");
             let image = document.querySelector("svg image"),
                 imgurl_total,
                 j=0,
