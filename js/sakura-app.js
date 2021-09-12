@@ -30,9 +30,6 @@ mashiro_global.variables = new function () {
     }
     if(document.createElement('canvas').toDataURL('image/webp').indexOf('data:image/webp') === 0)
         document.cookie="su_webp=1; expires=Fri, 31 Dec 9999 23:59:59 GMT; pach=/";
-    document.querySelector("svg image").addEventListener("error",function(){
-        this.setAttribute("href","");
-    })
 })();
 
 mashiro_global.ini = new function () {
@@ -315,22 +312,65 @@ function scrollBar() {
 }
 
 function iconsvg() {
-    if (!document.getElementById("svg_blurfilter")) {
-        const a = "http://www.w3.org/2000/svg",
-            svg = document.querySelector("svg"),
-            image = document.querySelector("svg image");
-        if (Poi.pjax) {
+    if (!document.getElementById("svg_blurfilter") && Poi.pjax) {
             const filter = document.createElementNS(a, "filter"),
-                fe = document.createElementNS(a, "feGaussianBlur");
+                fe = document.createElementNS(a, "feGaussianBlur"),
+                opacity = document.createElementNS(a, "animate"),
+                a = "http://www.w3.org/2000/svg",
+                svg = document.querySelector("svg");
+            let image = document.querySelector("svg image"),
+                imgurl_total,
+                j=0,
+                _dom=[];
+            opacity.setAttribute("attributeName", "opacity");
+            opacity.setAttribute("from", "1");
+            opacity.setAttribute("to", "0");
+            opacity.setAttribute("begin","null");
+            opacity.setAttribute("dur","2s");
+            opacity.setAttribute("repeatCount","1");
+            opacity.setAttribute("fill","freeze");
+
             filter.id = "svg_blurfilter";
             fe.setAttribute("stdDeviation", "5");
             fe.setAttribute("color-interpolation-filters", "sRGB");
             image.style.filter = "url(#svg_blurfilter)";
             filter.append(fe);
             svg.append(filter);
-        }
-        // image.setAttribute("filter", "url(#svg_blurfilter)");
-        svg.append(image);
+            const addevent = ()=>{
+                if (_dom.length != 0){
+                    const background = ()=>{
+                            j = j == imgurl_total -1 ? 0 : ++j;
+                            image.before(_dom[j]);
+                            image.append(opacity);
+                            opacity.beginElement();
+                            clearTimeout(timer1);
+                            timer1 = setTimeout(background,10000);
+                            opacity.onend = ()=>{opacity.remove();image.remove();image = _dom[j]}
+                        }
+                    
+                    let timer1 = setTimeout(background,10000);
+                    document.addEventListener("visibilitychange",()=>{
+                        document.hidden ? clearTimeout(timer1) : timer1 = setTimeout(background,10000);
+                    });
+                }
+            }
+            window.addEventListener("load",()=>{
+                fetch("https://api.nmxc.ltd/randomimg?type=pc&n=3&encode=json")
+                .then(async res=>{
+                    const data = await res.json();
+                    if (res.ok){
+                        const imgurl = data.url;
+                        imgurl.unshift(image.href.baseVal);
+                        imgurl_total = imgurl.length;
+                        for (let i = 0; i<imgurl_total; i++){
+                            _dom[i] = image.cloneNode(false);
+                            _dom[i].setAttribute("href",imgurl[i])
+                            _dom[i].addEventListener("error",()=>{_dom.splice(i,1)});
+                        }
+                        addevent();
+                    }
+                })
+            })
     }
     document.querySelector('.openNav').classList.remove('exbit');
     document.querySelector('.site-header').classList.remove('exbit');
@@ -531,8 +571,8 @@ function tableOfContentScroll(flag) {
     if (document.body.clientWidth <= 1200) {
         return;
     } else if (!document.querySelector("div.have-toc") && !document.querySelector("div.has-toc")) {
-        const ele = document.querySelector(".toc-container");
-        if (ele) ele.remove();
+        let ele = document.querySelector(".toc-container");
+        if (ele) {ele.remove();ele = null;}
     } else {
         if (flag) {
             let id = 1,
@@ -857,7 +897,7 @@ function mail_me() {
 }
 
 function activate_widget() {
-    const secondary = document.getElementById("secondary");
+    let secondary = document.getElementById("secondary");
     if (!secondary)return;
     if (document.body.clientWidth > 860) {
             let show_hide = document.querySelector("show-hide");
@@ -866,48 +906,49 @@ function activate_widget() {
             });
     } else {
             secondary.remove();
+            secondary = null;
     }
 }
 setTimeout(function () {
     activate_widget();
 }, 100);
 
+const bgmlistener = (e)=>{
+    const target = e.target;
+    if (target === document.querySelector("#bangumi-pagination a")) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (target.classList.contains("loading")) return;
+        target.classList.add("loading");
+        target.textContent = "";
+        fetch(target.href + "&_wpnonce=" + Poi.nonce,{method:"POST"})
+        .then(async res=>{
+            const data = await res.json();
+            if (res.ok){
+                document.getElementById("bangumi-pagination").remove();
+                document.querySelector(".row").insertAdjacentHTML('beforeend', data);
+            }else{
+                throw Error(`Error，Status：${res.status}`);
+            }
+        })
+        .catch(e=>{
+            console.error(e);
+            target.classList.remove("loading");
+            target.innerHTML = '<i class="post_icon_svg" style="--svg-name: var(--svg_exclamation-triangle);--size: 35px;vertical-align: -0.1em;"></i>ERROR ';
+        })
+    }
+}
 function load_bangumi() {
-    let section = document.getElementsByTagName("section"),_flag=false;
+    const section = document.getElementsByTagName("section");
+    let _flag = false;
     for (let i=0;i<section.length;i++){
         if(section[i].classList.contains("bangumi")){
             _flag = true;
+            break
         }
     }
     if(_flag){
-            document.addEventListener('click', function (e) {
-                let target = e.target;
-                if (target === document.querySelector("#bangumi-pagination a")) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    target.classList.add("loading");
-                    target.textContent = "";
-                    fetch(target.href + "&_wpnonce=" + Poi.nonce,{
-                        method:"POST"}
-                    )
-                    .then(res=>{
-                        if (res.ok){
-                            return res.json();
-                        }else{
-                            throw Error(`Error，Status：${res.status}`);
-                        }
-                    })
-                    .then(data=>{
-                        document.getElementById("bangumi-pagination").remove();
-                        document.querySelector(".row").insertAdjacentHTML('beforeend', data);
-                    })
-                    .catch(e=>{
-                        console.error(e);
-                        target.classList.remove("loading");
-                        target.innerHTML = '<i class="post_icon_svg" style="--svg-name: var(--svg_exclamation-triangle);--size: 35px;vertical-align: -0.1em;"></i>ERROR ';
-                    })
-                }
-            });
+            document.addEventListener('click', bgmlistener);
 }
 }
 
@@ -1384,8 +1425,8 @@ const Siren = {
                         if(res.ok){
                             document.getElementById("comment").value = "";
                             const cancel = document.getElementById('cancel-comment-reply-link'),
-                                temp = document.getElementById('wp-temp-form-div'),
                                 respond = document.getElementById(addComment.respondId);
+                            let temp = document.getElementById('wp-temp-form-div');
                             if (document.getElementById('comment_parent').value != '0') {
                                 document.getElementById("respond").insertAdjacentHTML('beforebegin', '<ol class="children">' + data + '</ol>');
                             } else if (!document.getElementsByClassName(__list).length) {
@@ -1412,6 +1453,7 @@ const Siren = {
                             if (temp && respond) {
                                 temp.parentNode.insertBefore(respond, temp);
                                 temp.remove();
+                                temp = null;
                             }
                         }else{
                             throw Error(data);
@@ -1437,7 +1479,7 @@ const Siren = {
                         div.style.display = 'none';
                         respond.parentNode.insertBefore(div, respond)
                     }
-                    !comm ? (temp = document.getElementById('wp-temp-form-div'), document.getElementById('comment_parent').value = '0', temp.parentNode.insertBefore(respond, temp), temp.remove()) : comm.parentNode.insertBefore(respond, comm.nextSibling);
+                    !comm ? (temp = document.getElementById('wp-temp-form-div'), document.getElementById('comment_parent').value = '0', temp.parentNode.insertBefore(respond, temp), temp.remove(),temp = null) : comm.parentNode.insertBefore(respond, comm.nextSibling);
                     const _respond = document.getElementById("respond");
                     window.scrollTo({
                         top: _respond.getBoundingClientRect().top + window.pageYOffset - _respond.clientTop - 100,
@@ -1453,6 +1495,7 @@ const Siren = {
                         if (temp && respond) {
                             temp.parentNode.insertBefore(respond, temp);
                             temp.remove();
+                            temp = null;
                         }
                         this.style.display = 'none';
                         this.onclick = null;
@@ -1469,6 +1512,7 @@ const Siren = {
                         for(let i=0;i<butterBar.length;i++){
                             let a = butterBar[i];
                             a.remove();
+                            a = null;
                         }
                     }
                 },
@@ -1482,6 +1526,7 @@ const Siren = {
                         for (let i=0;i<_butterBar.length;i++){
                             let a = _butterBar[i];
                             a.remove();
+                            a = null;
                         }
                     }
                     if (showtime > 0) {
@@ -1499,21 +1544,18 @@ const Siren = {
                     e.stopPropagation();
                     const _this = e.target,
                         path = _this.pathname,
-                        comments_navi = document.getElementById("comments-navi"),
-                        commentwrap = document.querySelector("ul.commentwrap"),
                         loading_comments = document.getElementById("loading-comments"),
                         comments_list = document.getElementById("comments-list-title");
-                    comments_navi.remove();
-                    commentwrap.remove();
+                    document.getElementById("comments-navi").remove();
+                    document.querySelector("ul.commentwrap").remove();
                     loading_comments.style.display="block";
                     window.scrollTo({
                         top: comments_list.getBoundingClientRect().top + window.pageYOffset - comments_list.clientTop - 65,
                         behavior: "smooth"
                     });
 
-                    fetch(_this.getAttribute('href')).then(res=>res.text()).then(data=>{
-                        const parser = new DOMParser(),
-                        DOM = parser.parseFromString(data, "text/html"),
+                    fetch(_this.getAttribute('href')).then(async res=>{
+                        const DOM = new DOMParser().parseFromString(await res.text(), 'text/html'),
                         result = DOM.querySelector("ul.commentwrap"),
                         nextlink = DOM.getElementById("comments-navi");
                         slideToogle(document.getElementById("loading-comments"), 1000, "hide");
@@ -1587,12 +1629,11 @@ const Siren = {
     }
 
 if (Poi.pjax) {
-    var _pjax = new Pjax({
+    const pjax = new Pjax({
         // defaultTrigger: false,
-        selectors: ["#page", "title", ".footer-device",".headertop"],
+        selectors: ["#page", "title", ".footer-device"],
         // elements: ".search-form,.s-search",
         timeout: 8000,
-        history: true,
         // cacheBust: false
     });
     document.addEventListener("pjax:send", () => {
