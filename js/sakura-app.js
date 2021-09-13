@@ -317,55 +317,80 @@ function iconsvg() {
                 svg = document.querySelector("svg"),
                 filter = document.createElementNS(a, "filter"),
                 fe = document.createElementNS(a, "feGaussianBlur"),
-                opacity = document.createElementNS(a, "animate");
-            let image = document.querySelector("svg image"),
-                imgurl_total,
+                _dom = [];
+            let imgurl_total,
                 j=0,
-                _dom=[];
-            opacity.setAttribute("attributeName", "opacity");
-            opacity.setAttribute("from", "1");
-            opacity.setAttribute("to", "0");
-            opacity.setAttribute("begin","null");
-            opacity.setAttribute("dur","2s");
-            opacity.setAttribute("repeatCount","1");
-            opacity.setAttribute("fill","freeze");
-
-            filter.id = "svg_blurfilter";
-            fe.setAttribute("stdDeviation", "5");
-            fe.setAttribute("color-interpolation-filters", "sRGB");
-            image.style.filter = "url(#svg_blurfilter)";
-            filter.append(fe);
-            svg.append(filter);
-            const addevent = ()=>{
+                timer1=null;
+            const createanimate=()=>{
+                const opacity = document.createElementNS(a, "animate");
+                opacity.setAttribute("attributeName", "opacity");
+                opacity.setAttribute("from", "1");
+                opacity.setAttribute("to", "0");
+                opacity.setAttribute("begin","null");
+                opacity.setAttribute("dur","2s");
+                opacity.setAttribute("repeatCount","1");
+                opacity.setAttribute("fill","freeze");
+                return opacity
+            },
+            createimage = (href)=>{
+                const n = document.createElementNS(a, "image");
+                n.setAttribute("href",href)
+                n.setAttribute("x","-5")
+                n.setAttribute("y","-5")
+                n.setAttribute("height","102%")
+                n.setAttribute("width","102%")
+                n.setAttribute("preserveAspectRatio","xMidYMid slice")
+                n.setAttribute("stlye","filter: url('#svg_blurfilter');")
+                return n;
+            },
+            addevent = ()=>{
                 if (_dom.length != 0){
                     const background = ()=>{
                             j = j == imgurl_total -1 ? 0 : ++j;
+                            let image = document.querySelector("svg image"),
+                                opacity = createanimate();
                             image.before(_dom[j]);
                             image.append(opacity);
                             opacity.beginElement();
-                            clearTimeout(timer1);
-                            timer1 = setTimeout(background,10000);
-                            opacity.onend = ()=>{opacity.remove();image.remove();image = _dom[j]}
+                            opacity.addEventListener("endEvent",function _event(){
+                                opacity.remove();
+                                image.remove();
+                                opacity.removeEventListener("endEvent",_event)
+                                opacity = null;
+                                image = null;
+                            })
                         }
                     
-                    let timer1 = setTimeout(background,10000);
+                    timer1 = setInterval(background,10000);
                     document.addEventListener("visibilitychange",()=>{
-                        document.hidden ? clearTimeout(timer1) : timer1 = setTimeout(background,10000);
+                        document.hidden ? (clearInterval(timer1),timer1=null) : timer1 = setInterval(background,10000);
                     });
                 }
             }
+            filter.id = "svg_blurfilter";
+            fe.setAttribute("stdDeviation", "5");
+            fe.setAttribute("color-interpolation-filters", "sRGB");
+            document.querySelector("svg image").style.filter = "url(#svg_blurfilter)";
+            filter.append(fe);
+            svg.append(filter);
             window.addEventListener("load",()=>{
                 fetch("https://api.nmxc.ltd/randomimg?type=pc&n=3&encode=json")
                 .then(async res=>{
                     const data = await res.json();
                     if (res.ok){
                         const imgurl = data.url;
-                        imgurl.unshift(image.href.baseVal);
+                        imgurl.unshift(document.querySelector("svg image").href.baseVal);
                         imgurl_total = imgurl.length;
                         for (let i = 0; i<imgurl_total; i++){
-                            _dom[i] = image.cloneNode(false);
-                            _dom[i].setAttribute("href",imgurl[i])
-                            _dom[i].addEventListener("error",()=>{_dom.splice(i,1)});
+                            _dom[i] = createimage(imgurl[i])
+                            const f = ()=>{
+                                _dom.splice(i,1)
+                            }
+                            _dom[i].addEventListener("error",f);
+                            _dom[i].addEventListener("load",function n(){
+                                _dom[i].removeEventListener("error",f);
+                                _dom[i].removeEventListener("load",n);
+                            })
                         }
                         addevent();
                     }

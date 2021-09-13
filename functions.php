@@ -9,7 +9,7 @@
 
 
 const SAKURA_VERSION = '3.3.2';
-const NMX_VERSION = '1.2.7';
+const NMX_VERSION = '1.2.8';
 const BUILD_VERSION = '3';
 
 //error_reporting(E_ALL);   
