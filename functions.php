@@ -735,12 +735,7 @@ function custom_html() {
     const forgetmenot = document.querySelector(".forgetmenot");
     if(forgetmenot)forgetmenot.outerHTML = \'<p class="forgetmenot">Remember Me<input name="rememberme" id="rememberme" value="forever" type="checkbox"><label for="rememberme" style="float: right;margin-top: 5px;transform: scale(2);margin-right: -10px;"></label></p>\';
     </script>',"\n";
-    echo '<script src="https://cdn.bootcdn.net/ajax/libs/vConsole/3.9.0/vconsole.min.js"></script>
-    <script>
-        // init vConsole
-        var vConsole = new VConsole();
-    </script>
-    <script>
+    echo '<script>
     document.addEventListener("DOMContentLoaded", ()=>{
         const captchaimg = document.getElementById("captchaimg"),
             getcaptcha = ()=>{

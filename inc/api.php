@@ -38,7 +38,8 @@ add_action('rest_api_init', function () {
 });
 
 function check_wpnonce(){
-    if (!check_ajax_referer('wp_rest', '_wpnonce', false) ){
+    $nonce = $_REQUEST['_wpnonce'];
+    if (! wp_verify_nonce( $nonce, 'wp_rest' ) ){
         return new WP_Error( 'rest_forbidden', 'Unauthorized client.', array( 'status' => 403,'success' => false ) );
     }
     return true;
