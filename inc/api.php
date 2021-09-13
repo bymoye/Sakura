@@ -39,7 +39,7 @@ add_action('rest_api_init', function () {
 
 function check_wpnonce(){
     $nonce = $_REQUEST['_wpnonce'];
-    if (! wp_verify_nonce( $nonce, 'wp_rest' ) ){
+    if (!check_ajax_referer('wp_rest', '_wpnonce', false) ){
         return new WP_Error( 'rest_forbidden', 'Unauthorized client.', array( 'status' => 403,'success' => false ) );
     }
     return true;
@@ -122,7 +122,7 @@ function create_CAPTCHA(){
     $check = [wp_login_url(),wp_lostpassword_url(),wp_registration_url()];
     // var_dump($check);
     if (!isset($_SERVER["HTTP_REFERER"]) || !in_array($_SERVER["HTTP_REFERER"],$check)) {
-        return new WP_Error( 'rest_forbidden', 'Unauthorized client.', [ 'status' => 403,'success' => false]);
+        return new WP_Error( 'rest_forbidden', 'Unauthorized client.???', [ 'status' => 403,'success' => false]);
     }
     $response = new WP_REST_Response(CAPTCHA::create_captcha_img() , 200);
     $response->set_headers(['Content-Type' => 'application/json']);
