@@ -64,7 +64,7 @@ class CAPTCHA
 
         //打开缓存区
         ob_start ();
-        imagewebp($img);
+        imagejpeg($img);
         //输出图片
         $captchaimg =  ob_get_contents();
         //销毁缓存区
