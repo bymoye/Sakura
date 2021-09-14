@@ -49,12 +49,19 @@ function get_random_bg_url(){
         return akina_option('default_feature_image').'?&'.rand(1,1000);
     }
 }*/
-function get_random_bg_url(){
-  if (akina_option('cover_cdn_options') == 'type_2'){
-    return get_template_directory_uri() . '/feature/index.php?' . rand(1,1000);
-  }elseif(akina_option('cover_cdn_options') == 'type_1'){
-    return get_random_image_url();
-  }}
+//include_once('classes/bgapi.php');
+//use Sakura\API\bgapi;
+//function get_random_bg_url(){
+//  if (akina_option('cover_cdn_options') == 'type_2'){
+//    return get_template_directory_uri() . '/feature/index.php?' . rand(1,1000);
+//  }elseif(akina_option('cover_cdn_options') == 'type_1'){
+//    if (wp_is_mobile()){
+//      return bgapi::getbg("moblie");
+//    }else{
+//      return bgapi::getbg('moblie');
+//    }
+//    // return get_random_image_url();
+//  }}
 /*
  * 订制时间样式
  * poi_time_since(strtotime($post->post_date_gmt));
@@ -295,7 +302,7 @@ function the_headPattern(){
     if (has_post_thumbnail()) {
       $full_image_url = !empty($full_image_url) ? $full_image_url[0] : '';
   } else {
-      $full_image_url = get_random_bg_url();
+      $full_image_url = DEFAULT_FEATURE_IMAGE();
   }
     if (have_posts()) : while (have_posts()) : the_post();
     $center = 'single-center';
@@ -317,7 +324,7 @@ function the_headPattern(){
     if (has_post_thumbnail()) {
       $full_image_url = !empty($full_image_url) ? $full_image_url[0] : '';
   } else {
-      $full_image_url = get_random_bg_url();
+      $full_image_url = DEFAULT_FEATURE_IMAGE();
   }
   if(!get_the_title()){
     if(is_page_template('user/page-archive.php')){
@@ -338,27 +345,27 @@ function the_headPattern(){
   }
   $t .= the_title( '<h1 class="entry-title">', '</h1>', false);
   }elseif(is_author()){
-      $full_image_url = get_random_bg_url();
+      $full_image_url = DEFAULT_FEATURE_IMAGE();
       $t .= '<h1 class="entry-title"> '.sprintf( __( "\" %s \" 个人归档页","sakura" ), get_the_author()) .'</h1>';
   }elseif(is_archive()){
     if (z_taxonomy_image_url()) {
       $full_image_url = z_taxonomy_image_url();
   } else {
-      $full_image_url = get_random_bg_url();
+      $full_image_url = DEFAULT_FEATURE_IMAGE();
   }
     $des = category_description() ? category_description() : ''; // 描述
     $t .= '<h1 class="cat-title">'.single_cat_title('', false).'</h1>';
     $t .= ' <span class="cat-des">'.$des.'</span>';
   }elseif(is_search()){
-    $full_image_url = get_random_bg_url();
+    $full_image_url = DEFAULT_FEATURE_IMAGE();
     $t .= '<h1 class="entry-title search-title"> '.sprintf( __( "Search results for \" %s \"","sakura" ), get_search_query()) ./*关于“ '.get_search_query().' ”的搜索结果*/'</h1>';
   }
   if(akina_option('patternimg')) $full_image_url = false;
   if(!is_home() && $full_image_url) : ?>
   <div class="pattern-center-blank"></div>
   <div class="pattern-center <?php if(is_single()){echo $center;} ?>">
-  <?php (is_array($full_image_url)) ? ($full_image_lazyload=$full_image_url[0]).($full_image_url_src=$full_image_url[1]) : ($full_image_lazyload="(https://cdn.jsdelivr.net/gh/moezx/cdn@3.0.1/img/svg/loader/orange.progress-bar-stripe-loader.svg").($full_image_url_src=$full_image_url)?>
-  <div class="pattern-attachment-img lazyload" style="background-image: url(<?php echo $full_image_lazyload ?>)" data-src="<?php echo $full_image_url_src ?>"> </div>
+  <?php (is_array($full_image_url)) ? ($full_image_lazyload=$full_image_url['md']).($full_image_url_src=$full_image_url['th']) : ($full_image_lazyload="(https://cdn.jsdelivr.net/gh/moezx/cdn@3.0.1/img/svg/loader/orange.progress-bar-stripe-loader.svg").($full_image_url_src=$full_image_url)?>
+  <div class="pattern-attachment-img lazyload" style="background-image: url(<?php echo $full_image_lazyload ?>)" data-src="<?php echo $full_image_url_src ?>"> </div><?php var_dump($full_image_url);?>
     <header class="pattern-header <?php if(is_single()){echo $header;} ?>"><?php echo $t; ?></header>
   </div>
   <?php elseif(is_home()) :
@@ -410,7 +417,7 @@ function the_video_headPattern_hls(){
     $t .= '<h1 class="cat-title">'.single_cat_title('', false).'</h1>';
     $t .= ' <span class="cat-des">'.$des.'</span>';
   }elseif(is_search()){
-    $full_image_url = get_random_bg_url();
+    $full_image_url = DEFAULT_FEATURE_IMAGE();
     $thubm_image_url = 'https://cdn.jsdelivr.net/gh/moezx/cdn@3.0.1/img/svg/loader/orange.progress-bar-stripe-loader.svg';
     $t .= '<h1 class="entry-title search-title"> '.sprintf( __( "Search results for \" %s \"","sakura" ), get_search_query()) ./*关于“ '.get_search_query().' ”的搜索结果*/'</h1>';
   }
@@ -477,7 +484,7 @@ function the_video_headPattern_normal(){
     $t .= '<h1 class="cat-title">'.single_cat_title('', false).'</h1>';
     $t .= ' <span class="cat-des">'.$des.'</span>';
   }elseif(is_search()){
-    $full_image_url = get_random_bg_url();
+    $full_image_url = DEFAULT_FEATURE_IMAGE();
     $thubm_image_url = 'https://cdn.jsdelivr.net/gh/moezx/cdn@3.0.1/img/svg/loader/orange.progress-bar-stripe-loader.svg';
     $t .= '<h1 class="entry-title search-title"> '.sprintf( __( "Search results for \" %s \"","sakura" ), get_search_query()) ./*关于“ '.get_search_query().' ”的搜索结果*/'</h1>';
   }
@@ -554,13 +561,13 @@ function header_user_menu(){
 function get_prev_thumbnail_url() { 
   $prev_post = get_previous_post(); 
   if (!$prev_post) {
-    return get_random_bg_url(); // 首页图
+    return DEFAULT_FEATURE_IMAGE(); // 首页图
   } else if ( has_post_thumbnail($prev_post->ID) ) { 
     $img_src = wp_get_attachment_image_src( get_post_thumbnail_id( $prev_post->ID ), 'large');
     if(!empty($img_src)){
       return $img_src[0]; // 特色图
     }else{
-      return get_random_bg_url();
+      return DEFAULT_FEATURE_IMAGE();
     }
   } 
   else { 
@@ -570,7 +577,7 @@ function get_prev_thumbnail_url() {
     if($n > 0){ 
       return $strResult[1][0];  // 文章图
     }else{
-      return get_random_bg_url(); // 首页图
+      return DEFAULT_FEATURE_IMAGE(); // 首页图
     } 
   } 
 }
@@ -586,7 +593,7 @@ function get_next_thumbnail_url() {
     if ($img_src){
       return $img_src[0];
     }else {
-      return get_random_bg_url();
+      return DEFAULT_FEATURE_IMAGE();
     }
   } 
   else { 
@@ -596,7 +603,7 @@ function get_next_thumbnail_url() {
     if($n > 0){ 
       return $strResult[1][0];
     }else{
-      return get_random_bg_url();
+      return DEFAULT_FEATURE_IMAGE();
     } 
   } 
 }

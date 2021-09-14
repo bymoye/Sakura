@@ -6,6 +6,7 @@ include_once('classes/Bilibili.php');
 include_once('classes/Cache.php');
 include_once('classes/Images.php');
 include_once('classes/CAPTCHA.php');
+include_once('classes/bgapi.php');
 
 use Sakura\API\Bilibili;
 use Sakura\API\Images;

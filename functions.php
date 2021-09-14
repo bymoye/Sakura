@@ -1441,64 +1441,75 @@ function change_avatar($avatar){
         return $avatar ;
     }
 }
-function PrivateKeyC(string $url):string{
-    $time2 = dechex(time());
-    $key = akina_option('cdn_key');
-    $filename='/' . $url;
-    $domain = 'https://pan.nmxc.ltd/';
-    $sstring=$key . $filename . $time2;
-    $md5=md5($sstring);
-    return $domain.$md5.'/'.$time2.$filename;
-}
-function get_random_image_url(){
-    if (akina_option('randomimg_api')==='cdn'){
-        $randomurl_file = file_get_contents(get_template_directory() .'/inc/randomimg.json');
-        $randomurl_list = json_decode($randomurl_file,true);
-        $k = array_rand($randomurl_list);
-        $urllist = $randomurl_list[$k];
-    }else{
-        $randomurl_file = get_template_directory() .'/inc/random_url.Dat';
-        $randomurl_list = file($randomurl_file);
-        $k = array_rand($randomurl_list);
-        $html = explode(",",$randomurl_list[$k])[0];
-        $gs = is_webp() ? 'webp' : 'jpg';
-        $md = 'https://fp1.fghrsh.net/' . $html . '.jpg!q80.150p.' . $gs;
-        $th = 'https://fp1.fghrsh.net/' . $html . '.jpg!q80.300i.' . $gs;
-        $webp = 'https://fp1.fghrsh.net/' . $html . '.jpg!q80.' . $gs;
-    }
-    if (is_webp()){
-        if (akina_option('randomimg_api')==='cdn'){
-            $result = [
-                PrivateKeyC($urllist['webp_md']),
-                PrivateKeyC($urllist['webp_th']),
-                PrivateKeyC($urllist['webp'])
-            ];
-        }else{
-            $result = [$md,$th,$webp];
-        }
-    }else{
-        if (akina_option('randomimg_api')==='cdn'){
-            $result = [
-                PrivateKeyC($urllist['jpeg_md']),
-                PrivateKeyC($urllist['jpeg_th']),
-                PrivateKeyC($urllist['jpeg'])
-            ];
-        }else{
-            $result = [$md,$th,$webp];
-        }
-    }
-    return $result;
-}
-
-function DEFAULT_FEATURE_IMAGE() {
+// function PrivateKeyC(string $url,string $type):string{
+//     $time2 = dechex(time());
+//     $key = akina_option('cdn_key');
+//     $filename='/' . $url;
+//     $domain = 'https://pan.nmxc.ltd/';
+//     $sstring=$key . $filename . $time2;
+//     $md5=md5($sstring);
+//     return $domain.$md5.'/'.$time2.$filename;
+// }
+// function get_random_image_url(){
+//     if (akina_option('randomimg_api')==='cdn'){
+//         $randomurl_file = file_get_contents(get_template_directory() .'/inc/randomimg.json');
+//         $randomurl_list = json_decode($randomurl_file,true);
+//         $k = array_rand($randomurl_list);
+//         $urllist = $randomurl_list[$k];
+//     }else{
+//         $randomurl_file = get_template_directory() .'/inc/random_url.Dat';
+//         $randomurl_list = file($randomurl_file);
+//         $k = array_rand($randomurl_list);
+//         $html = explode(",",$randomurl_list[$k])[0];
+//         $gs = is_webp() ? 'webp' : 'jpg';
+//         $md = 'https://fp1.fghrsh.net/' . $html . '.jpg!q80.150p.' . $gs;
+//         $th = 'https://fp1.fghrsh.net/' . $html . '.jpg!q80.300i.' . $gs;
+//         $webp = 'https://fp1.fghrsh.net/' . $html . '.jpg!q80.' . $gs;
+//     }
+//     if (is_webp()){
+//         if (akina_option('randomimg_api')==='cdn'){
+//             $result = [
+//                 PrivateKeyC($urllist['webp_md']),
+//                 PrivateKeyC($urllist['webp_th']),
+//                 PrivateKeyC($urllist['webp'])
+//             ];
+//         }else{
+//             $result = [$md,$th,$webp];
+//         }
+//     }else{
+//         if (akina_option('randomimg_api')==='cdn'){
+//             $result = [
+//                 PrivateKeyC($urllist['jpeg_md']),
+//                 PrivateKeyC($urllist['jpeg_th']),
+//                 PrivateKeyC($urllist['jpeg'])
+//             ];
+//         }else{
+//             $result = [$md,$th,$webp];
+//         }
+//     }
+//     return $result;
+// }
+use Sakura\API\bgapi;
+function DEFAULT_FEATURE_IMAGE(): array|bool|string {
 if (akina_option('cover_cdn_options') == 'type_2'){
     return get_template_directory_uri() . '/feature/index.php?' . rand(1,1000);
   }elseif(akina_option('cover_cdn_options') == 'type_1'){
-    return get_random_image_url();
+    return bgapi::getbg();
   }
     return false;
 }
 
+function get_random_bg_url(): array|string {
+	if (akina_option('cover_cdn_options') == 'type_2'){
+		return get_template_directory_uri() . '/feature/index.php?' . rand(1,1000);
+	}elseif(akina_option('cover_cdn_options') == 'type_1'){
+		if (wp_is_mobile()){
+			return bgapi::getbg('mobile');
+		}else{
+			return bgapi::getbg();
+		}
+		// return get_random_image_url();
+	}}
 //防止设置置顶文章造成的图片同侧bug
 add_action( 'pre_get_posts', function($q){
     if ($q->is_home() && $q->is_main_query()){

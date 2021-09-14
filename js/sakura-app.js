@@ -340,7 +340,7 @@ function iconsvg() {
                 n.setAttribute("height","102%")
                 n.setAttribute("width","102%")
                 n.setAttribute("preserveAspectRatio","xMidYMid slice")
-                n.setAttribute("stlye","filter: url('#svg_blurfilter');")
+                n.style.filter = "url(#svg_blurfilter)";
                 return n;
             },
             addevent = ()=>{
@@ -374,7 +374,13 @@ function iconsvg() {
             filter.append(fe);
             svg.append(filter);
             window.addEventListener("load",()=>{
-                fetch("https://api.nmxc.ltd/randomimg?type=pc&n=3&encode=json")
+                let url;
+                if (window.screen.height > window.screen.width){
+                    url = "https://api.nmxc.ltd/randomimg?type=pc&n=3&encode=json&type=mobile";
+                }else{
+                    url = "https://api.nmxc.ltd/randomimg?type=pc&n=3&encode=json"
+                }
+                fetch(url)
                 .then(async res=>{
                     const data = await res.json();
                     if (res.ok){
@@ -392,6 +398,7 @@ function iconsvg() {
                                 _dom[i].removeEventListener("load",n);
                             })
                         }
+                        url=null;
                         addevent();
                     }
                 })

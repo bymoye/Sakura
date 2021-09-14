@@ -32,7 +32,7 @@ $the_cat = get_the_category();
 ?>
 	<article class="post post-list-thumb <?php echo $class; ?>" itemscope="" itemtype="http://schema.org/BlogPosting">
 		<div class="post-thumb">
-		<?php if(is_array($post_img)){$post_img_lazyload = $post_img[0];$post_img_url = $post_img[1];}else{$post_img_lazyload = $post_img;$post_img_url = $post_img;}?>
+		<?php if(is_array($post_img)){$post_img_lazyload = $post_img['md'];$post_img_url = $post_img['th'];}else{$post_img_lazyload = $post_img;$post_img_url = $post_img;}?>
 			<a href="<?php the_permalink(); ?>"><img class="lazyload" src="<?php echo $post_img_lazyload?>#lazyload-blur" data-src="<?php echo $post_img_url ?>" alt="" loading="lazy"></a>
 		</div><!-- thumbnail-->
 		<div class="post-content-wrap">

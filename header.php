@@ -55,7 +55,7 @@ if (akina_option('akina_meta') == true) {
 </head>
 <body <?php body_class(); ?>>
 	<svg style="position: fixed; width: 100%; height: 100%; z-index: -999;">
-		<image href="<?php $img = get_random_bg_url();echo is_array($img) ? $img[2] : $img; ?>" x="-5" y="-5" height="102%" width="102%" preserveAspectRatio="xMidYMid slice"></image>
+		<image href="<?php $img = get_random_bg_url();echo is_array($img) ? $img['large'] : $img; ?>" x="-5" y="-5" height="102%" width="102%" preserveAspectRatio="xMidYMid slice"></image>
 	</svg>
     <div class="scrollbar" id="bar"></div>
 	<div class="openNav no-select">
