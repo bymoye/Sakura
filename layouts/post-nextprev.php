@@ -5,7 +5,6 @@
  */
 
 if ( akina_option('post_nepre') == 'yes') {
-//$preg_match_rule = '/fghrsh.*?(jpg|png|gif|bmp)/';
 ?>
 <section class="post-squares nextprev">
 	<div class="post-nepre <?php if(get_next_post()){echo 'half';}else{echo 'full';} ?> previous">
