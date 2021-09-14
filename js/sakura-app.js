@@ -390,7 +390,8 @@ function iconsvg() {
                         for (let i = 0; i<imgurl_total; i++){
                             _dom[i] = createimage(imgurl[i])
                             const f = ()=>{
-                                _dom.splice(i,1)
+                                _dom.splice(i,1);
+                                imgurl_total = imgurl.length;
                             }
                             _dom[i].addEventListener("error",f);
                             _dom[i].addEventListener("load",function n(){
