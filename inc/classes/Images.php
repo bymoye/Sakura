@@ -20,7 +20,7 @@ class Images
      * @param $image
      * @return array
      */
-    public function Chevereto_API($image) {
+    public function Chevereto_API($image): array {
         $upload_url = akina_option('cheverto_url') . '/api/1/upload';
         $args = array(
             'body' => array(
@@ -58,7 +58,7 @@ class Images
      * @param $image
      * @return array
      */
-    public function Imgur_API($image) {
+    public function Imgur_API($image): array {
         $upload_url = akina_option('imgur_upload_image_proxy');
         $args = array(
             'headers' => array(
@@ -98,7 +98,7 @@ class Images
      * @param $image
      * @return array
      */
-    public function SMMS_API($image) {
+    public function SMMS_API($image): array {
         $client_id = $this->smms_client_id;
         $upload_url = "https://sm.ms/api/v2/upload";
         $filename = $image['cmt_img_file']['name'];

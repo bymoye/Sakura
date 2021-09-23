@@ -12,6 +12,7 @@ use Sakura\API\Bilibili;
 use Sakura\API\Images;
 use Sakura\API\Cache;
 use Sakura\API\CAPTCHA;
+
 /**
  * Router
  */
@@ -24,21 +25,21 @@ add_action('rest_api_init', function () {
     register_rest_route('sakura/v1', '/cache_search/json', array(
         'methods' => 'GET',
         'callback' => 'cache_search_json',
-        'permission_callback' => "check_wpnonce",
+        'permission_callback' => "check_nonce",
     ));
     register_rest_route('sakura/v1', '/bangumi/bilibili', array(
         'methods' => 'POST',
         'callback' => 'bgm_bilibili',
-        'permission_callback' => 'check_wpnonce',
+        'permission_callback' => 'check_nonce',
     ));
     register_rest_route('sakura/v1', '/captcha/create', array(
         'methods' => 'GET',
         'callback' => 'create_CAPTCHA',
-        'permission_callback' => 'check_wpnonce',
+        'permission_callback' => 'check_nonce',
     ));
 });
 
-function check_wpnonce(){
+function check_nonce(): WP_Error|bool {
     if (!check_ajax_referer('wp_rest', '_wpnonce', false) ){
         return new WP_Error( 'rest_forbidden', 'Unauthorized client.', array( 'status' => 403,'success' => false ) );
     }

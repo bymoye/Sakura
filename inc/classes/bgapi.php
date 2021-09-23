@@ -35,7 +35,7 @@ class bgapi
 	/**
 	 * @return bool
 	 */
-	private static function check():bool{
+	public static function check():bool{
         $match = preg_match_all ("/(Firefox|Chrome|Version|Opera)\/(\d+)/i", $_SERVER['HTTP_USER_AGENT'], $result);
         $flag = false;
         if ($match != false){
@@ -49,7 +49,12 @@ class bgapi
         return $flag;
     }
 
-    private static function privateapi(string $type=null):array{
+	/**
+	 * @param string|null $type
+	 *
+	 * @return array
+	 */
+	private static function privateapi(string $type=null):array{
         if ($type == 'mobile'){
             $randomurl_file = file_get_contents(get_template_directory() .'/inc/randomimg_mb.json');
         }else{ 
@@ -78,7 +83,12 @@ class bgapi
         ];
     }
 
-    private static function fghrshapi(string $type=null):array{
+	/**
+	 * @param string|null $type
+	 *
+	 * @return array
+	 */
+	private static function fghrshapi(string $type=null):array{
         if ($type == 'mobile'){
             $randomurl_file = get_template_directory() .'/inc/randombg_mb.txt';
         }else{
@@ -94,8 +104,13 @@ class bgapi
             'large' => $html . '!q80.' . $gs
         ];
     }
-    
-    public static function getbg(?string $type=''):array{
+
+	/**
+	 * @param string|null $type
+	 *
+	 * @return array
+	 */
+	public static function getbg(?string $type=''):array{
         if (akina_option('randomimg_api') === 'cdn'){
             return self::privateapi($type);
         }else{

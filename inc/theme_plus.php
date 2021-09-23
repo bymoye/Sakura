@@ -16,7 +16,8 @@ show_admin_bar(false);
  */
 function bgvideo(){
   $dis = '';
-  if(!akina_option('focus_amv') || akina_option('focus_height')) $dis = 'display:none;';
+  if(!akina_option('focus_amv'))return '';
+  if(akina_option('focus_height')) $dis = 'display:none;';
   $html = '<div id="video-container" style="'.$dis.'">'; 
   $html .= '<video id="bgvideo" class="video" video-name="" src="" width="auto" preload="auto"></video>';
   $html .= '<div id="video-btn" class="loadvideo videolive"></div>';
@@ -39,29 +40,6 @@ function get_avatar_profile_url(){
   return akina_option('focus_logo') ?: get_avatar_url(get_the_author_meta( 'ID' ));
 }
 
-
-/*
- * 随机图
-function get_random_bg_url(){
-    if ( empty( akina_option('default_feature_image' )) ) {
-        return get_template_directory_uri().'/feature/index.php?'.rand(1,1000);
-    } else {
-        return akina_option('default_feature_image').'?&'.rand(1,1000);
-    }
-}*/
-//include_once('classes/bgapi.php');
-//use Sakura\API\bgapi;
-//function get_random_bg_url(){
-//  if (akina_option('cover_cdn_options') == 'type_2'){
-//    return get_template_directory_uri() . '/feature/index.php?' . rand(1,1000);
-//  }elseif(akina_option('cover_cdn_options') == 'type_1'){
-//    if (wp_is_mobile()){
-//      return bgapi::getbg("moblie");
-//    }else{
-//      return bgapi::getbg('moblie');
-//    }
-//    // return get_random_image_url();
-//  }}
 /*
  * 订制时间样式
  * poi_time_since(strtotime($post->post_date_gmt));

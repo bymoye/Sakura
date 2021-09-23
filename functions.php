@@ -233,7 +233,7 @@ require get_template_directory() . '/inc/template-tags.php';
  */
 require get_template_directory() . '/inc/theme_plus.php';
 require get_template_directory() . '/inc/categories-images.php';
-
+use Sakura\API\bgapi;
 //Comment Location Start
 function convertip($ip)
 {
@@ -521,9 +521,7 @@ function get_post_views($post_id) {
         // }
     }
 } 
-function is_webp():bool{
-    return (isset($_COOKIE["su_webp"]) || (isset($_SERVER['HTTP_ACCEPT']) && strpos($_SERVER['HTTP_ACCEPT'], 'image/webp')));
-}
+
 /*
  * 友情链接
  */
@@ -929,7 +927,7 @@ global $wpsmiliestrans;
 if ( !get_option('use_smilies'))return false;
     $tiebaname = ['good','han','spray','Grievance','shui','reluctantly','anger','tongue','se','haha','rmb','doubt','tear','surprised2','Happy','ku','surprised','theblackline','smilingeyes','spit','huaji','bbd','hu','shame','naive','rbq','britan','aa','niconiconi','niconiconi_t','niconiconit','awesome'];
     $return_smiles = '';
-    $type = is_webp() ? 'webp' : 'png';
+    $type = bgapi::check() ? 'webp' : 'png';
     $tiebaimgdir = 'tieba' . $type . '/';
     $smiliesgs='.' . $type;
     foreach ($tiebaname as $tieba_Name){
@@ -1003,7 +1001,7 @@ function push_bili_smilies(){
   global $bilismiliestrans;
   $name = array('baiyan','bishi','bizui','chan','dai','daku','dalao','dalian','dianzan','doge','facai','fanu','ganga','guilian','guzhang','haixiu','heirenwenhao','huaixiao','jingxia','keai','koubizi','kun','lengmo','liubixue','liuhan','liulei','miantian','mudengkoudai','nanguo','outu','qinqin','se','shengbing','shengqi','shuizhao','sikao','tiaokan','tiaopi','touxiao','tuxue','weiqu','weixiao','wunai','xiaoku','xieyanxiao','yiwen','yun','zaijian','zhoumei','zhuakuang');
   $return_smiles = '';
-  $type = is_webp() ? 'webp' : 'png';
+  $type = bgapi::check() ? 'webp' : 'png';
   $biliimgdir = 'bili' . $type . '/';
   $smiliesgs='.' . $type;
   foreach($name as $smilies_Name){
@@ -1035,7 +1033,7 @@ add_filter('the_content_feed', 'featuredtoRSS');
 
 //
 function bili_smile_filter_rss($content) {
-    $type = is_webp() ? 'webp' : 'png';
+    $type = bgapi::check() ? 'webp' : 'png';
     $biliimgdir = 'bili' . $type . '/';
     $smiliesgs='.' . $type;
     $content = str_replace('{{','<img src="https://cdn.jsdelivr.net/gh/bymoye/cdn@1.2/sakura/images/smilies/'.$biliimgdir,$content);
@@ -1441,55 +1439,7 @@ function change_avatar($avatar){
         return $avatar ;
     }
 }
-// function PrivateKeyC(string $url,string $type):string{
-//     $time2 = dechex(time());
-//     $key = akina_option('cdn_key');
-//     $filename='/' . $url;
-//     $domain = 'https://pan.nmxc.ltd/';
-//     $sstring=$key . $filename . $time2;
-//     $md5=md5($sstring);
-//     return $domain.$md5.'/'.$time2.$filename;
-// }
-// function get_random_image_url(){
-//     if (akina_option('randomimg_api')==='cdn'){
-//         $randomurl_file = file_get_contents(get_template_directory() .'/inc/randomimg.json');
-//         $randomurl_list = json_decode($randomurl_file,true);
-//         $k = array_rand($randomurl_list);
-//         $urllist = $randomurl_list[$k];
-//     }else{
-//         $randomurl_file = get_template_directory() .'/inc/random_url.Dat';
-//         $randomurl_list = file($randomurl_file);
-//         $k = array_rand($randomurl_list);
-//         $html = explode(",",$randomurl_list[$k])[0];
-//         $gs = is_webp() ? 'webp' : 'jpg';
-//         $md = 'https://fp1.fghrsh.net/' . $html . '.jpg!q80.150p.' . $gs;
-//         $th = 'https://fp1.fghrsh.net/' . $html . '.jpg!q80.300i.' . $gs;
-//         $webp = 'https://fp1.fghrsh.net/' . $html . '.jpg!q80.' . $gs;
-//     }
-//     if (is_webp()){
-//         if (akina_option('randomimg_api')==='cdn'){
-//             $result = [
-//                 PrivateKeyC($urllist['webp_md']),
-//                 PrivateKeyC($urllist['webp_th']),
-//                 PrivateKeyC($urllist['webp'])
-//             ];
-//         }else{
-//             $result = [$md,$th,$webp];
-//         }
-//     }else{
-//         if (akina_option('randomimg_api')==='cdn'){
-//             $result = [
-//                 PrivateKeyC($urllist['jpeg_md']),
-//                 PrivateKeyC($urllist['jpeg_th']),
-//                 PrivateKeyC($urllist['jpeg'])
-//             ];
-//         }else{
-//             $result = [$md,$th,$webp];
-//         }
-//     }
-//     return $result;
-// }
-use Sakura\API\bgapi;
+
 function DEFAULT_FEATURE_IMAGE(): array|bool|string {
 if (akina_option('cover_cdn_options') == 'type_2'){
     return get_template_directory_uri() . '/feature/index.php?' . rand(1,1000);

@@ -12,8 +12,7 @@ class Bilibili
         $this->cookies = akina_option('bilibili_cookie');
     }
 
-    private function get_the_bgm_items(int $page = 1): string
-    {
+    private function get_the_bgm_items(int $page = 1): string {
         $uid = $this->uid;
         $cookies = $this->cookies;
         $url = 'https://api.bilibili.com/x/space/bangumi/follow/list?type=1&pn=' . $page . '&ps=15&follow_status=0&vmid=' . $uid;
