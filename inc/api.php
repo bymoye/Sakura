@@ -124,7 +124,12 @@ function create_CAPTCHA(){
         $referer = $_SERVER['HTTP_REFERER'];
         $host = parse_url($referer);
         if ($host['host'] === $_SERVER['HTTP_HOST']){
-            $response = new WP_REST_Response(CAPTCHA::create_captcha_img() , 200);
+			$result = CAPTCHA::create_captcha_result();
+			if ($result['code'] != 0){
+				$response = new WP_REST_Response($result , 403);
+			}else{
+				$response = new WP_REST_Response($result , 200);
+			}
             $response->set_headers(['Content-Type' => 'application/json']);
             return $response;
         }

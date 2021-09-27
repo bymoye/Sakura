@@ -1136,6 +1136,13 @@ function optionsframework_options() {
 		'type' => 'checkbox');
 
 	$options[] = array(
+		'name' => __('Redis CAPTCHA', 'sakura'),/*机器人验证*/
+		'desc' => __('Enable Redis CAPTCHA', 'sakura'),/*开启机器人验证*/
+		'id' => 'redis_captcha',
+		'std' => '0',
+		'type' => 'checkbox');
+
+	$options[] = array(
 		'name' => __('Comment UA infomation', 'sakura'),/*评论UA信息*/
 		'desc' => __('Check to enable, display the user\'s browser, operating system information', 'sakura'),/*勾选开启，显示用户的浏览器，操作系统信息*/
 		'id' => 'open_useragent',

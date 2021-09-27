@@ -740,19 +740,25 @@ function custom_html() {
                 fetch("',rest_url('sakura/v1/captcha/create'),'?_wpnonce=',wp_create_nonce('wp_rest'),'")
                 .then(response=>response.json())
                 .then(json=>{
-                    captchaimg.src = json["data"];
-                    document.querySelector("input[name=\'timestamp\']").value = json["time"];
-                    document.querySelector("input[name=\'id\']").value = json["id"];
+                    if (json["msg"] != ""){
+                        document.querySelector(".banner.error").classList.add("visible");
+                        document.querySelector(".banner-message").innerText = json["msg"];
+                        clearTimeout(error);
+                        error = setTimeout(()=>{
+                            document.querySelector(".banner.error").classList.remove("visible");
+                        },3000);
+                    }else{
+                        captchaimg.src = json["data"];
+                        document.querySelector("input[name=\'timestamp\']").value = json["time"];
+                        document.querySelector("input[name=\'id\']").value = json["id"];
+                    }
                 });
                 clearTimeout(timer1);
                 timer1 = setTimeout(getcaptcha,60000);
             }
-        let timer1 = setTimeout(getcaptcha,60000);
+        let timer1 = setTimeout(getcaptcha,60000),error;
         if (document.querySelector("input[name=\'timestamp\']").value === "") getcaptcha()
         captchaimg && captchaimg.addEventListener("click",getcaptcha);
-        document.addEventListener("visibilitychange",()=>{
-            document.hidden ? clearTimeout(timer1) : getcaptcha()
-        });
     }, false);  
     </script>';
 }
@@ -1604,10 +1610,17 @@ function login_CAPTCHA() {
 add_action('login_form','login_CAPTCHA');
 add_action('register_form','login_CAPTCHA' );
 add_action('lostpassword_form','login_CAPTCHA');
+function login_tips() {
+    echo '<div class="banner error">
+    <div class="banner-icon"><svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" class="eva eva-alert-circle-outline" fill="#ffffff"><g data-name="Layer 2"><g data-name="alert-circle"><rect width="24" height="24" opacity="0"></rect><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"></path><circle cx="12" cy="16" r="1"></circle><path d="M12 7a1 1 0 0 0-1 1v5a1 1 0 0 0 2 0V8a1 1 0 0 0-1-1z"></path></g></g></svg></div>
+    <div class="banner-message"></div>
+</div>';
+}
+add_action('login_init','login_tips');
 /**
  * 登录界面验证码验证
  */
-function CAPTCHA_CHECK($user, $username, $password) {
+function CAPTCHA_CHECK( $user, $password) {
     if (empty($_POST)) {
         return new WP_Error();
     }
@@ -1627,7 +1640,8 @@ function CAPTCHA_CHECK($user, $username, $password) {
         return new WP_Error('prooffail', '<strong>错误</strong>：验证码为空！');
     }
 }
-add_filter( 'authenticate','CAPTCHA_CHECK',20,3);
+add_filter( 'wp_authenticate_user', 'CAPTCHA_CHECK', 10, 2 );
+//add_filter( 'authenticate','CAPTCHA_CHECK',20,3);
 /**
  * 忘记密码界面验证码验证
  */

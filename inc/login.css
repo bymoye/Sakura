@@ -362,3 +362,44 @@ input#yzm {
 #captchaimg{
 	vertical-align: middle;
 }
+
+.banner.visible {
+	box-shadow: 0 2px 2px 2px rgb(0 0 0 / 12%);
+	animation-name: banner-in;
+	animation-direction: forwards;
+	animation-duration: 0.6s;
+	animation-timing-function: ease-in-out;
+	animation-fill-mode: forwards;
+	animation-iteration-count: 1;
+}
+.banner {
+	color: white;
+	font-weight: 700;
+	padding: 0.5rem;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	background: #ed1c24;
+	max-width: 50%;
+	margin: 0 auto;
+	min-width: 400px;
+}
+.banner .banner-message {
+	flex: 1;
+	padding: 0 2rem;
+}
+.banner:not(.visible) {
+	display: none;
+	transform: translateY(-100%);
+}
+@keyframes banner-in {
+	0% {
+		transform: translateY(-100%);
+	}
+	50% {
+		transform: translateY(10%);
+	}
+	100% {
+		transform: translateY(0);
+	}
+}

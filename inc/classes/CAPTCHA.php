@@ -1,8 +1,46 @@
 <?php
 declare(strict_types=1);
 namespace Sakura\API;
+use Redis;
 class CAPTCHA
 {
+	/**
+	 * @return object|array
+	 */
+	private static function redis_conn(): object|array
+    {
+		if (class_exists('Redis')){
+			try {
+				$redis = new Redis();
+				$redis->pconnect( '127.0.0.1', 6379);
+				return $redis;
+			} catch (Exception $e) {
+				return ['msg'=>$e->getMessage()];
+			}
+		}
+		return ['msg'=>'未检测到redis类'];
+    }
+
+	/**
+	 * @return array|string
+	 */
+    private static function redis_create_CAPTCHA(): array|string {
+        $redis = self::redis_conn();
+        if (is_object($redis)){
+            $key = 'CAPTCHA_'.$_SERVER['REMOTE_ADDR'];
+            $info = $redis->zRevRange($key,0,-1,true);
+			$count = current($info);
+            if ($count>=3){
+                return ['msg'=>'请求次数过多.请一分钟后重试'];
+            }
+			$str = self::create_CAPTCHA();
+            $redis->zRemRangeByScore($key,'0','2');
+            $redis->zAdd($key, $count+1, $str);
+            $redis->expire($key, 20);
+        return $str;
+        }
+        return $redis;
+    }
     /**
      * create_CAPTCHA
      *
@@ -10,9 +48,11 @@ class CAPTCHA
      * @param  string $iqid 
      * @return string
      */
-    private static function create_CAPTCHA(int $time,string $iqid): string {
-        $seed = hexdec($iqid) + $time;
-        mt_srand($seed);
+    private static function create_CAPTCHA(int $time=0,string $iqid=''): string {
+		if (!akina_option('redis_captcha')){
+			$seed = hexdec($iqid) + $time;
+			mt_srand($seed);
+		}
         $arr = array_merge(range('a', 'z'), range('A', 'Z'), range(0, 9));
         shuffle( $arr );
         $rand_keys = array_rand( $arr, 5 );
@@ -28,60 +68,66 @@ class CAPTCHA
      *
      * @return array
      */
-    public static function create_captcha_img(): array {
+    private static function create_captcha_img(string $str): string {
         $font = get_stylesheet_directory() . '/inc/KumoFont.ttf';
-        $timestamp = time();
-        $uniqid = uniqid();
         //创建画布
         $img = imagecreatetruecolor(120, 40);
-        //setcookie('timestamp',$this->timestamp,$this->timestamp+60,'/');
-        //setcookie('id',$this->uniqid,$this->timestamp+60,'/');
         //填充背景色
         $backcolor = imagecolorallocate($img, mt_rand(200, 255), mt_rand(200, 255), mt_rand(0, 255));
         imagefill($img, 0, 0, $backcolor);
-        
-        //创建验证码
-        $str = self::create_CAPTCHA($timestamp,$uniqid);
         //绘制文字
         for ( $i = 1; $i <= 5; $i++ ) {
             $span = 20;
-            $stringcolor = imagecolorallocate($img, mt_rand(0, 255), mt_rand(0, 100), mt_rand(0, 80));
-            // $file = self::$font;
-            imagefttext( $img, 25, 2, $i*$span, 30, $stringcolor, $font, $str[$i-1] );
+            $string_color = imagecolorallocate($img, mt_rand(0, 255), mt_rand(0, 100), mt_rand(0, 80));
+            imagefttext( $img, 25, 2, $i*$span, 30, $string_color, $font, $str[$i-1] );
         }
 
         //添加干扰线
         for ( $i = 1; $i <= 8; $i++ ) {
-            $linecolor = imagecolorallocate( $img, mt_rand( 0, 150 ), mt_rand( 0, 250 ), mt_rand( 0, 255 ) );
-            imageline( $img, mt_rand( 0, 179 ), mt_rand( 0, 39 ), mt_rand( 0, 179 ), mt_rand( 0, 39 ), $linecolor );
+            $line_color = imagecolorallocate( $img, mt_rand( 0, 150 ), mt_rand( 0, 250 ), mt_rand( 0, 255 ) );
+            imageline( $img, mt_rand( 0, 179 ), mt_rand( 0, 39 ), mt_rand( 0, 179 ), mt_rand( 0, 39 ), $line_color );
         }
 
         //添加干扰点
         for ( $i = 1; $i <= 180*40*0.02; $i++ ) {
-            $pixelcolor = imagecolorallocate( $img, mt_rand( 100, 150 ), mt_rand( 0, 120 ), mt_rand( 0, 255 ) );
-            imagesetpixel( $img, mt_rand( 0, 179 ), mt_rand( 0, 39 ), $pixelcolor );
+            $pixel_color = imagecolorallocate( $img, mt_rand( 100, 150 ), mt_rand( 0, 120 ), mt_rand( 0, 255 ) );
+            imagesetpixel( $img, mt_rand( 0, 179 ), mt_rand( 0, 39 ), $pixel_color );
         }
 
         //打开缓存区
         ob_start ();
         imagejpeg($img);
         //输出图片
-        $captchaimg =  ob_get_contents();
+        $captcha_img =  ob_get_contents();
         //销毁缓存区
         ob_end_clean();
         //销毁图片(释放资源)
         imagedestroy($img);
         // 以json格式输出
-        $captchaimg = 'data:image/png;base64,' . base64_encode($captchaimg);
-        return [
-            'code' => 0,
-            'data' => $captchaimg,
-            'msg' => '',
-            'time' => $timestamp,
-            'id' => $uniqid
-        ];
+	    $captcha_img = 'data:image/png;base64,' . base64_encode($captcha_img);
+		return $captcha_img;
     }
 
+	/**
+	 * @return array
+	 */
+	public static function create_captcha_result():array{
+
+		if (akina_option('redis_captcha')){
+			$str = self::redis_create_CAPTCHA();
+		}else{
+			$timestamp = time();
+			$uniq_id = uniqid();
+			$str = self::create_CAPTCHA($timestamp,$uniq_id);
+		}
+		return [
+			'code' => isset($str['msg']) ? 1 :0,
+			'data' => isset($str['msg']) ? 'Error' :self::create_captcha_img($str),
+			'msg' => $str['msg'] ?? '',
+			'time' => $timestamp ?? '',
+			'id' => $uniq_id ?? ''
+		];
+	}
 
     /**
      * check_CAPTCHA
