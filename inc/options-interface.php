@@ -14,7 +14,7 @@ function optionsframework_tabs() {
 		if ( $value['type'] == "heading" ) {
 			$counter++;
 			$class = '';
-			$class = $value['id']?? $value['name'];
+			$class = $value['id'] ?? $value['name'];
 			$class = preg_replace('/[^a-zA-Z0-9._\-]/', '', strtolower($class) ) . '-tab';
 			$menu .= '<a id="options-group-'.  $counter . '-tab" class="nav-tab ' . $class .'" title="' . esc_attr( $value['name'] ) . '" href="' . esc_attr( '#options-group-'.  $counter ) . '">' . esc_html( $value['name'] ) . '</a>';
 		}
@@ -402,7 +402,7 @@ function optionsframework_fields() {
 				$output .= '</div>'."\n";
 			}
 			$class = '';
-			$class = $value['id']?? $value['name'];
+			$class = $value['id'] ?? $value['name'];
 			$class = preg_replace('/[^a-zA-Z0-9._\-]/', '', strtolower($class) );
 			$output .= '<div id="options-group-' . $counter . '" class="group ' . $class . '">';
 			$output .= '<h3>' . esc_html( $value['name'] ) . '</h3>' . "\n";

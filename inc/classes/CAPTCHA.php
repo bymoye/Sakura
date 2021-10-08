@@ -1,7 +1,8 @@
 <?php
 declare(strict_types=1);
 namespace Sakura\API;
-use Redis;
+include_once('redis.php');
+
 class CAPTCHA
 {
 	/**
@@ -11,8 +12,7 @@ class CAPTCHA
     {
 		if (class_exists('Redis')){
 			try {
-				$redis = new Redis();
-				$redis->pconnect( '127.0.0.1', 6379);
+				$redis = _Redis::getRedis();
 				return $redis;
 			} catch (Exception $e) {
 				return ['msg'=>$e->getMessage()];
@@ -28,14 +28,14 @@ class CAPTCHA
         $redis = self::redis_conn();
         if (is_object($redis)){
             $key = 'CAPTCHA_'.$_SERVER['REMOTE_ADDR'];
-            $info = $redis->zRevRange($key,0,-1,true);
-			$count = current($info);
+			$info = $redis->hGet($key, 'count');
+			$count = $info ?? '0';
             if ($count>=3){
-                return ['msg'=>'请求次数过多.请一分钟后重试'];
+                return ['msg'=>"验证码请求次数过多.请 {$redis->ttl($key)}s 后重试"];
             }
 			$str = self::create_CAPTCHA();
-            $redis->zRemRangeByScore($key,'0','2');
-            $redis->zAdd($key, $count+1, $str);
+	        $redis->hSet($key, 'captcha', $str);
+	        $redis->hSet($key, 'count', $count+1);
             $redis->expire($key, 20);
         return $str;
         }
@@ -63,13 +63,15 @@ class CAPTCHA
         return $str;
     }
 
-    /**
-     * create_captcha_img
-     *
-     * @return array
-     */
+	/**
+	 * create_captcha_img
+	 *
+	 * @param string $str
+	 *
+	 * @return string
+	 */
     private static function create_captcha_img(string $str): string {
-        $font = get_stylesheet_directory() . '/inc/KumoFont.ttf';
+        $font = get_stylesheet_directory() . '/inc/font26.ttf';
         //创建画布
         $img = imagecreatetruecolor(120, 40);
         //填充背景色
@@ -77,9 +79,9 @@ class CAPTCHA
         imagefill($img, 0, 0, $backcolor);
         //绘制文字
         for ( $i = 1; $i <= 5; $i++ ) {
-            $span = 20;
+			$span = $i==1 ? 5 : 18;
             $string_color = imagecolorallocate($img, mt_rand(0, 255), mt_rand(0, 100), mt_rand(0, 80));
-            imagefttext( $img, 25, 2, $i*$span, 30, $string_color, $font, $str[$i-1] );
+            imagefttext( $img, 24, mt_rand(-15,15), $i*$span, 30, $string_color, $font, $str[$i-1] );
         }
 
         //添加干扰线
@@ -104,8 +106,7 @@ class CAPTCHA
         //销毁图片(释放资源)
         imagedestroy($img);
         // 以json格式输出
-	    $captcha_img = 'data:image/png;base64,' . base64_encode($captcha_img);
-		return $captcha_img;
+	    return 'data:image/png;base64,' . base64_encode($captcha_img);
     }
 
 	/**
@@ -121,7 +122,7 @@ class CAPTCHA
 			$str = self::create_CAPTCHA($timestamp,$uniq_id);
 		}
 		return [
-			'code' => isset($str['msg']) ? 1 :0,
+			'code' => isset($str['msg']) ? 1 : 0,
 			'data' => isset($str['msg']) ? 'Error' :self::create_captcha_img($str),
 			'msg' => $str['msg'] ?? '',
 			'time' => $timestamp ?? '',
@@ -129,6 +130,50 @@ class CAPTCHA
 		];
 	}
 
+	/**
+	 * @param string $captcha
+	 * @param int $timestamp
+	 * @param string $id
+	 *
+	 * @return array
+	 */
+	public static function check_CAPTCHA(string $captcha = '',int $timestamp = 0,string $id = ''): array {
+        if (akina_option('redis_captcha')){
+	        $result = self::check_CAPTCHA_Redis($captcha);
+        }else{
+	        $result = self::_check_CAPTCHA($captcha,$timestamp,$id);
+        }
+		return $result;
+    }
+
+	/**
+	 * @param string $captcha
+	 *
+	 * @return array
+	 */
+	private static function check_CAPTCHA_Redis(string $captcha): array {
+		$redis = self::redis_conn();
+		$key = 'CAPTCHA_'.$_SERVER['REMOTE_ADDR'];
+		$comparison = $redis->hGet($key, 'captcha');
+		if (!$comparison){
+			$code = 1;
+			$msg = '寄,可能超时了哦!';
+		}
+		elseif (strtolower($captcha) === strtolower($comparison)) {
+			$code = 5;
+			$msg = '验证码正确!';
+			$redis->hdel($key,'captcha');
+		}else{
+			$code = 1;
+			$msg = '验证码错误!';
+			$redis->hdel($key,'captcha');
+		}
+		return [
+			'code' => $code,
+			'data' => '',
+			'msg' => $msg
+		];
+	}
     /**
      * check_CAPTCHA
      *
@@ -137,7 +182,7 @@ class CAPTCHA
      * @param string|null $id
      * @return array
      */
-    public static function check_CAPTCHA(string $captcha,?int $timestamp,?string $id): array{
+    private static function _check_CAPTCHA(string $captcha,int|null $timestamp,string|null $id): array{
         $temp = time();
         $temp1 = $temp-60;
         if (!isset($timestamp) || !isset($id) || !ctype_xdigit($id) || !ctype_digit($timestamp)){

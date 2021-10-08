@@ -1136,11 +1136,39 @@ function optionsframework_options() {
 		'type' => 'checkbox');
 
 	$options[] = array(
-		'name' => __('Redis CAPTCHA', 'sakura'),/*机器人验证*/
-		'desc' => __('Enable Redis CAPTCHA', 'sakura'),/*开启机器人验证*/
+		'name' => __('Redis CAPTCHA', 'sakura'),/*后台登录验证码开启Redis支持*/
+		'desc' => __('Enable Redis CAPTCHA', 'sakura'),/*勾选开启，而后将验证码依赖redis(请确保PHP安装了redis扩展,系统安装了redis,且可以正常连接)*/
 		'id' => 'redis_captcha',
 		'std' => '0',
 		'type' => 'checkbox');
+
+	$options[] = array(
+		'name' => __('Redis host', 'sakura'),
+		'desc' => __('请输入redis tcp连接host', 'sakura'),
+		'id' => 'redis_host',
+		'std' => '127.0.0.1',
+		'type' => 'text');
+
+	$options[] = array(
+		'name' => __('Redis host', 'sakura'),
+		'desc' => __('请输入 redis 密码(如果存在,未设置请留空)', 'sakura'),
+		'id' => 'redis_pw',
+		'std' => '',
+		'type' => 'text');
+
+	$options[] = array(
+		'name' => __('Redis port', 'sakura'),
+		'desc' => __('请输入redis tcp连接port', 'sakura'),
+		'id' => 'redis_port',
+		'std' => '6379',
+		'type' => 'text');
+
+	$options[] = array(
+		'name' => __('lazyload spinner', 'sakura'),
+		'desc' => __('The placeholder to display when the image loads, fill in the image url', 'sakura'),/*图片加载时要显示的占位图，填写图片 url*/
+		'id' => 'lazyload_spinner',
+		'std' => 'https://cdn.jsdelivr.net/gh/moezx/cdn@3.0.2/img/svg/loader/trans.ajax-spinner-preloader.svg',
+		'type' => 'text');
 
 	$options[] = array(
 		'name' => __('Comment UA infomation', 'sakura'),/*评论UA信息*/

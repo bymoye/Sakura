@@ -1622,14 +1622,22 @@ add_action('login_init','login_tips');
  */
 function CAPTCHA_CHECK( $user, $password) {
     if (empty($_POST)) {
-        return new WP_Error();
+        return 0;
     }
     if(isset($_POST['yzm']) && !empty(trim($_POST['yzm']))){
-        if (!isset($_POST['timestamp']) || !isset($_POST['id']) || !ctype_xdigit($_POST['id']) || !ctype_digit($_POST['timestamp'])){
-            return new WP_Error('prooffail', '<strong>错误</strong>：非法数据');
+        $check = '';
+	    include_once('inc/classes/CAPTCHA.php');
+	    if (!akina_option('redis_captcha')) {
+		    if ( ! isset( $_POST['timestamp'] ) || ! isset( $_POST['id'] ) || ! ctype_xdigit( $_POST['id'] ) || ! ctype_digit( $_POST['timestamp'] ) ) {
+			    return new WP_Error( 'prooffail', '<strong>错误</strong>：非法数据' );
+		    }
+		    $check = Sakura\API\CAPTCHA::check_CAPTCHA($_POST['yzm'],$_POST['timestamp'],$_POST['id']);
+	    }else{
+		    $check = Sakura\API\CAPTCHA::check_CAPTCHA($_POST['yzm']);
         }
-        include_once('inc/classes/CAPTCHA.php');
-        $check = Sakura\API\CAPTCHA::check_CAPTCHA($_POST['yzm'],$_POST['timestamp'],$_POST['id']);
+        if (!is_array($check)){
+            return new WP_Error('prooffail', '<strong>错误</strong>：内部错误!');
+        }
         if($check['code'] == 5){
             return $user;
         }else{
