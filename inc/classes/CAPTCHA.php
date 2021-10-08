@@ -21,13 +21,16 @@ class CAPTCHA
 		return ['msg'=>'未检测到redis类'];
     }
 
+    private static function get_ip(){
+        return $_SERVER['HTTP_CLIENT_IP'] ?? ($_SERVER['HTTP_X_FORWARDED_FOR'] ?? $_SERVER['REMOTE_ADDR']);
+    }
 	/**
 	 * @return array|string
 	 */
     private static function redis_create_CAPTCHA(): array|string {
         $redis = self::redis_conn();
         if (is_object($redis)){
-            $key = 'CAPTCHA_'.$_SERVER['REMOTE_ADDR'];
+            $key = 'CAPTCHA_'.self::get_ip();
 			$info = $redis->hGet($key, 'count');
 			$count = $info ?? '0';
             if ($count>=3){
@@ -36,7 +39,7 @@ class CAPTCHA
 			$str = self::create_CAPTCHA();
 	        $redis->hSet($key, 'captcha', $str);
 	        $redis->hSet($key, 'count', $count+1);
-            $redis->expire($key, 20);
+            $redis->expire($key, 60);
         return $str;
         }
         return $redis;
@@ -153,7 +156,7 @@ class CAPTCHA
 	 */
 	private static function check_CAPTCHA_Redis(string $captcha): array {
 		$redis = self::redis_conn();
-		$key = 'CAPTCHA_'.$_SERVER['REMOTE_ADDR'];
+		$key = 'CAPTCHA_'.self::get_ip();
 		$comparison = $redis->hGet($key, 'captcha');
 		if (!$comparison){
 			$code = 1;
