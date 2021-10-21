@@ -352,9 +352,9 @@ function iconsvg() {
             window.addEventListener("load",()=>{
                 let url;
                 if (window.screen.height > window.screen.width){
-                    url = "https://api.nmxc.ltd/randomimg?type=pc&n=3&encode=json&type=mobile";
+                    url = "https://api.nmxc.ltd/randimg?type=pc&n=3&encode=json&type=mobile";
                 }else{
-                    url = "https://api.nmxc.ltd/randomimg?type=pc&n=3&encode=json"
+                    url = "https://api.nmxc.ltd/randimg?type=pc&n=3&encode=json"
                 }
                 fetch(url)
                 .then(async res=>{
@@ -1010,10 +1010,10 @@ const Siren = {
                 video_btn.classList.add("video-pause");
                 video_btn.classList.remove("video-play");
                 try{
-                video_btn.style.display = "";
-                document.querySelector(".video-stu").style.transform = "translateY(0px)";
-                document.querySelector(".focusinfo").style.transform = "translateY(-999px)";
-                hermitInit()
+                    video_btn.style.display = "";
+                    document.querySelector(".video-stu").style.transform = "translateY(0px)";
+                    document.querySelector(".focusinfo").style.transform = "translateY(-999px)";
+                    hermitInit()
                 } catch (e) {}
                 s.play();
             }

@@ -16,12 +16,12 @@ $icon_Version = 'icon_' . $Version . '_svg';
 		<div class="header-info">
             <p><?php echo akina_option('admin_des'); ?></p>
             <?php if($Version =="v1")echo '</div>'?>
-            <div class=<?php echo $top_social_Version;?>>
+            <div class="<?php echo $top_social_Version;?>">
             <?php if (akina_option('github')){ ?>
                 <li><a href="<?php echo akina_option('github', ''); ?>" rel="noopener" target="_blank" title="github"><i class=<?php echo $icon_Version;?> style="--svg-name: var(--svg_github);--color: #0073aa;"></i></a></li>
             <?php } ?>	
             <?php if (akina_option('sina')){ ?>
-                <li><a href="<?php echo akina_option('sina', ''); ?>" rel="noopener" target="_blank" title="sina"><i class=<?php echo $icon_Version;?> style="--svg-name: var(--svg_weibo);--color: red;"></i></a></li>
+                <li><a href="<?php echo akina_option('sina', ''); ?>" rel="noopener" target="_blank" title="sina"><i class=<?php echo $icon_Version;?> style="--svg-name: var(--svg_sina);--color: red;"></i></a></li>
             <?php } ?>
             <?php if (akina_option('telegram')){ ?>
                 <li><a href="<?php echo akina_option('telegram', ''); ?>" rel="noopener" target="_blank" title="telegram"><i class=<?php echo $icon_Version;?> style="--svg-name: var(--svg_telegram);--color: #0088cc;"></i></a></li>

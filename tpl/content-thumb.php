@@ -12,8 +12,8 @@
 //add_filter('the_excerpt', 'custom_short_excerpt');
 $i=0; while ( have_posts() ) : the_post(); $i++;
     $class = match (akina_option('feature_align')) {
-        "left" => 'post-list-thumb-left',
-        "right" => '',
+        'left' => 'post-list-thumb-left',
+        'right' => '',
         default => ($i % 2 == 0) ? 'post-list-thumb-left' : '',
     };
 if( $i == 1 ){
