@@ -320,28 +320,26 @@ function iconsvg() {
                 return n;
             },
             addevent = ()=>{
-                if (_dom.length != 0){
-                    const background = ()=>{
-                            j = j == imgurl_total -1 ? 0 : ++j;
-                            let image = document.querySelector("svg image"),
-                                opacity = createanimate();
-                            image.before(_dom[j]);
-                            image.append(opacity);
-                            opacity.beginElement();
-                            opacity.addEventListener("endEvent",function _event(){
-                                opacity.remove();
-                                image.remove();
-                                opacity.removeEventListener("endEvent",_event)
-                                opacity = null;
-                                image = null;
-                            })
-                        }
-                    
-                    timer1 = setInterval(background,10000);
-                    document.addEventListener("visibilitychange",()=>{
-                        document.hidden ? (clearInterval(timer1),timer1=null) : timer1 = setInterval(background,10000);
-                    });
-                }
+                const background = ()=>{
+                        j = j == imgurl_total -1 ? 0 : ++j;
+                        let image = document.querySelector("svg image"),
+                            opacity = createanimate();
+                        image.before(_dom[j]);
+                        image.append(opacity);
+                        opacity.beginElement();
+                        opacity.addEventListener("endEvent",function _event(){
+                            opacity.remove();
+                            image.remove();
+                            opacity.removeEventListener("endEvent",_event)
+                            opacity = null;
+                            image = null;
+                        })
+                    }
+                
+                timer1 = setInterval(background,10000);
+                document.addEventListener("visibilitychange",()=>{
+                    document.hidden ? (clearInterval(timer1),timer1=null) : timer1 = setInterval(background,10000);
+                });
             }
             filter.id = "svg_blurfilter";
             fe.setAttribute("stdDeviation", "5");
@@ -356,28 +354,28 @@ function iconsvg() {
                 }else{
                     url = "https://api.nmxc.ltd/randimg?type=pc&n=3&encode=json"
                 }
+                _dom[0] = document.querySelectorAll('svg image')[0];
                 fetch(url)
                 .then(async res=>{
                     const data = await res.json();
                     if (res.ok){
                         const imgurl = data.url;
-                        imgurl.unshift(document.querySelector("svg image").href.baseVal);
                         imgurl_total = imgurl.length;
-                        for (let i = 0; i<imgurl_total; i++){
-                            _dom[i] = createimage(imgurl[i])
-                            const f = ()=>{
-                                _dom.splice(i,1);
-                                imgurl_total = imgurl.length;
+                        for (let i = 1; i<=imgurl_total; i++){
+                                _dom[i] = createimage(imgurl[i-1])
+                                const f = ()=>{
+                                    _dom.splice(i,1);
+                                    imgurl_total = imgurl.length;
+                                }
+                                _dom[i].addEventListener("error",f);
+                                _dom[i].addEventListener("load",function n(){
+                                    _dom[i].removeEventListener("error",f);
+                                    _dom[i].removeEventListener("load",n);
+                                })
                             }
-                            _dom[i].addEventListener("error",f);
-                            _dom[i].addEventListener("load",function n(){
-                                _dom[i].removeEventListener("error",f);
-                                _dom[i].removeEventListener("load",n);
-                            })
                         }
                         url=null;
                         addevent();
-                    }
                 })
             })
     }
@@ -962,8 +960,17 @@ function load_bangumi() {
 }
 
 mashiro_global.ini.normalize();
-loadCSS(mashiro_option.jsdelivr_css_src);
-loadCSS(mashiro_option.entry_content_theme_src);
+
+function loadcss(filename) { 
+    const link = document.createElement("link"); 
+    link.setAttribute("rel", "stylesheet"); 
+    link.setAttribute("type", "text/css"); 
+    link.setAttribute("href", filename);
+    link.setAttribute("nonce", Poi.nonce);
+    if (typeof link != "undefined") document.getElementsByTagName("head")[0].appendChild(link) 
+} 
+loadcss(mashiro_option.jsdelivr_css_src);
+loadcss(mashiro_option.entry_content_theme_src);
 
 function serialize(form) {
     const formData = new FormData(form),
@@ -1645,7 +1652,7 @@ const Siren = {
 if (Poi.pjax) {
     const pjax = new Pjax({
         // defaultTrigger: false,
-        selectors: ["#page", "title", ".footer-device"],
+        selectors: ["#page", "title","#sakura_css_inline-css", ".footer-device"],
         // elements: ".search-form,.s-search",
         timeout: 8000,
         // cacheBust: false

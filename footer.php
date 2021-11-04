@@ -19,13 +19,13 @@
 	<footer id="colophon" class="site-footer" role="contentinfo">
 		<div class="site-info" theme-info="Sakura v<?php echo SAKURA_VERSION; ?>">
 			<div class="footertext">
-				<p style="color: #666666;"><?php echo akina_option('footer_info', ''); ?></p>
+				<p><?php echo akina_option('footer_info', ''); ?></p>
 			</div>
 			<div class="footer-device">
-			<p style="font-family: 'Ubuntu', sans-serif;">
-					<span style="color: #666;">
+			<p>
+					<span>
 						<?php /* 能保留下面两个链接吗？算是我一个小小的心愿吧~ */ ?>
-						这是迷的匿名信 © 2018-2021 Theme <a href="https://github.com/bymoye/Sakura/" rel="noreferrer" target="_blank" style="color: #666;text-decoration: underline dotted rgba(0, 0, 0, .1);">Sakura</a><br>
+						这是迷的匿名信 © 2018-2021 Theme <a href="https://github.com/bymoye/Sakura/" rel="noreferrer" target="_blank" >Sakura</a><br>
 						<?php printf(' 耗时 %.3f 秒 | 查询 %d 次 | 内存 %.2f MB',timer_stop(),get_num_queries(), memory_get_peak_usage() / 1024 / 1024);?>
 				</span>
 				</p>
@@ -48,13 +48,13 @@
 		</div>
 		<?php wp_nav_menu( [ 'depth' => 2, 'theme_location' => 'primary', 'container' => false ] ); ?>
 	</div><!-- m-nav-center end -->
-	<button id="GoTop" title="Go to top"><i class="post_icon_svg" style="--svg-name: var(--svg_backtop);--color: #404040;--size: 16px;margin:0;"></i></button>
+	<button id="GoTop" title="Go to top"><i class="post_icon_svg svg_backtop"></i></button>
 	<!-- search start -->
 	<form class="js-search search-form search-form--modal" method="get" action="<?php echo home_url(); ?>" role="search">
 		<div class="search-form__inner">
 		<?php if(akina_option('live_search')){ ?>
 			<div class="micro">
-			<i class="post_icon_svg icon-search" style="--svg-name: var(--svg_search);--color: #666;--size: 35px;"></i>
+			<i class="post_icon_svg icon-search svg_search"></i>
 				<input id="search-input" class="text-input" type="search" name="s" placeholder="<?php _e('Want to find something?', 'sakura') /*想要找点什么呢*/?>" required>
 			</div>
 			<div class="ins-section-wrapper">
@@ -64,7 +64,7 @@
 		<?php }else{ ?>
 			<div class="micro">
 				<p class="micro mb-"><?php _e('Want to find something?', 'sakura') /*想要找点什么呢*/?></p>
-				<i class="post_icon_svg icon-search" style="--svg-name: var(--svg_search);--color: #666;--size: 35px;"></i>
+				<i class="post_icon_svg icon-search svg_search"></i>
 				<input class="text-input" type="search" name="s" placeholder="<?php _e('Search', 'sakura') ?>" required />
 			</div>
 		<?php } ?>
@@ -74,13 +74,13 @@
 	<!-- search end -->
 	<?php if(akina_option('google_analytics_id', '')):?>
 <!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=<?php echo akina_option('google_analytics_id', ''); ?>"></script>
-<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','<?php echo akina_option('google_analytics_id', ''); ?>');</script>
+<script async nonce=<?php wp_create_nonce('wp_rest')?> src="https://www.googletagmanager.com/gtag/js?id=<?php echo akina_option('google_analytics_id', ''); ?>"></script>
+<script nonce=<?php wp_create_nonce('wp_rest')?>>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','<?php echo akina_option('google_analytics_id', ''); ?>');</script>
 <?php endif; ?>
 <?php wp_footer(); ?>
 <?php if(akina_option('site_statistics')){ ?>
 <div class="site-statistics">
-<script type="text/javascript"><?php echo akina_option('site_statistics'); ?></script>
+<script type="text/javascript" nonce=<?php wp_create_nonce('wp_rest')?>><?php echo akina_option('site_statistics'); ?></script>
 </div>
 <?php } ?>
 <?php if (akina_option('sakura_widget')) : ?>

@@ -19,8 +19,8 @@ get_header();
    <?php if (akina_option('head_notice') != '0') {
         $text = akina_option('notice_title');
         ?>
-    <div class="notice" style="margin-top:60px">
-       <i class="post_icon_svg" style="--svg-name: var(--svg_notification);--size: 15px;"></i>
+    <div class="notice">
+       <i class="post_icon_svg svg_notification"></i>
         <?php if (strlen($text) > 142 && !wp_is_mobile()) { ?>
         <marquee align="middle" behavior="scroll" loop="-1" scrollamount="6" style="margin: 0 8px 0 20px; display: block;" onMouseOut="this.start()" onMouseOver="this.stop()">
             <div class="notice-content"><?php echo $text; ?></div>
@@ -43,8 +43,8 @@ get_header();
     
     <div id="primary" class="content-area">
         <main id="main" class="site-main" role="main">  
-        <h1 class="main-title" style="font-family: 'Ubuntu', sans-serif;">
-            <i class="post_icon_svg" style="--svg-name: var(--svg_pinna);--color: #666;--size: 16px;vertical-align: -0.1em;margin:0;"></i> Discovery</h1>
+        <h1 class="main-title">
+            <i class="post_icon_svg svg_pinna"></i> Discovery</h1>
         <?php
         if (have_posts()) :
             if (is_home() && ! is_front_page()) : ?>
@@ -71,10 +71,10 @@ get_header();
         <?php if (akina_option('pagenav_style') == 'ajax') { ?>
         <div id="pagination"><?php next_posts_link(' Previous'); ?></div>
         <div id="add_post">
-            <span id="add_post_time" style="visibility: hidden;" title="<?php echo akina_option('auto_load_post', ''); ?>"  ></span></div>
+            <span id="add_post_time" title="<?php echo akina_option('auto_load_post', ''); ?>"  ></span></div>
         <?php } else { ?>
         <nav class="navigator">
-            <?php previous_posts_link('<i class="post_icon_svg" style="--svg-name: var(--svg_back);--size: 15px;"></i>') ?><?php next_posts_link('<i class="post_icon_svg" style="--svg-name: var(--svg_right);--size: 15px;"></i>') ?>
+            <?php previous_posts_link('<i class="post_icon_svg svg_back"></i>') ?><?php next_posts_link('<i class="post_icon_svg svg_back"></i>') ?>
         </nav>
         <?php } ?>
     </div><!-- #primary -->

@@ -381,7 +381,7 @@ function the_video_headPattern_hls(){
     } else {
         $edit_this_post_link = '';
     }
-    $t .= the_title( '<h1 class="entry-title">', '<button id="coverVideo-btn" class=".constant-width-to-height-ratio" onclick="coverVideo()"><i class="post_icon_svg" style="--svg-name: var(--svg_stop);--size: 14px;"></i></button></h1>', false);
+    $t .= the_title( '<h1 class="entry-title">', '<button id="coverVideo-btn" class=".constant-width-to-height-ratio" onclick="coverVideo()"><i class="post_icon_svg svg_stop"></i></button></h1>', false);
     $t .= '<p class="entry-census"><span><a href="'. esc_url(get_author_posts_url(get_the_author_meta('ID'),get_the_author_meta( 'user_nicename' ))) .'"><img src="'. get_avatar_url( get_the_author_meta('ID'), 64 )/*$ava*/ .'"></a></span><span><a href="'. esc_url(get_author_posts_url(get_the_author_meta('ID'),get_the_author_meta( 'user_nicename' ))) .'">'. get_the_author() .'</a></span><span class="bull">·</span>'. poi_time_since(get_post_time('U', true),false,true) .'<span class="bull">·</span>'. get_post_views(get_the_ID()) .' '._n("View","Views",get_post_views(get_the_ID()),"sakura")/*次阅读*/.$edit_this_post_link.'</p>';
     endwhile; endif;
   }elseif(is_page()){
@@ -448,7 +448,7 @@ function the_video_headPattern_normal(){
     } else {
         $edit_this_post_link = '';
     }
-    $t .= the_title( '<h1 class="entry-title">', '<button id="coverVideo-btn" class=".constant-width-to-height-ratio" onclick="coverVideo()"><i class="post_icon_svg" style="--svg-name: var(--svg_stop);--size: 14px;"></i></button></h1>', false);
+    $t .= the_title( '<h1 class="entry-title">', '<button id="coverVideo-btn" class=".constant-width-to-height-ratio" onclick="coverVideo()"><i class="post_icon_svg svg_stop"></i></button></h1>', false);
     $t .= '<p class="entry-census"><span><a href="'. esc_url(get_author_posts_url(get_the_author_meta('ID'),get_the_author_meta( 'user_nicename' ))) .'"><img src="'. get_avatar_url( get_the_author_meta('ID'), 64 )/*$ava*/ .'"></a></span><span><a href="'. esc_url(get_author_posts_url(get_the_author_meta('ID'),get_the_author_meta( 'user_nicename' ))) .'">'. get_the_author() .'</a></span><span class="bull">·</span>'. poi_time_since(get_post_time('U', true),false,true) .'<span class="bull">·</span>'. get_post_views(get_the_ID()) .' '._n("View","Views",get_post_views(get_the_ID()),"sakura")/*次阅读*/.$edit_this_post_link.'</p>';
     endwhile; endif;
   }elseif(is_page()){
@@ -519,7 +519,7 @@ function header_user_menu(){
   ?>
   <div class="header-user-avatar">
     <a href="<?php echo $login_url; ?>">
-    <i class="post_icon_svg" style="--svg-name: var(--svg_none);--color: #666;--size: 30px;"></i>
+    <i class="post_icon_svg svg_none"></i>
     </a>
     <div class="header-user-menu">
       <div class="herder-user-name no-logged">Whether to <a href="<?php echo $login_url; ?>" target="_blank" style="color:#333;font-weight:bold;text-decoration:none">log in</a> now?
@@ -766,7 +766,7 @@ function siren_private_message_hook($comment_content , $comment){
     $current_commenter = wp_get_current_commenter();
     if ( $is_private ) $comment_content = '#私密# ' . $comment_content;
     if ( $current_commenter['comment_author_email'] == $email || $parent_email == $current_commenter['comment_author_email'] || current_user_can('delete_user') ) return $comment_content;
-    if ( $is_private ) return '<i class="post_icon_svg" style="--svg-name: var(--svg_lock);--size: 12px;--color:#7E8892;"></i> '.__("The comment is private","sakura")/*该评论为私密评论*/;
+    if ( $is_private ) return '<i class="post_icon_svg svg_lock"></i> '.__("The comment is private","sakura")/*该评论为私密评论*/;
     return $comment_content;
 }
 add_filter('get_comment_text','siren_private_message_hook',10,2);

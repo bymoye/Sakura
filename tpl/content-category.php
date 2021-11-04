@@ -25,14 +25,14 @@
  	<div class="works-overlay">
 	<h1 class="works-title"><a href="<?php the_permalink();?>"><?php the_title();?></a></h1>
 	<div class="works-p-time">		
-	<em class='post_icon_svg' style='--svg-name: var(--svg_calendar);--size: 17px;--color:white;vertical-align: text-top;margin:0'></em> <?php echo poi_time_since(strtotime($post->post_date_gmt));//the_time('Y-m-d');?>
+	<em class='post_icon_svg svg_calendar'></em> <?php echo poi_time_since(strtotime($post->post_date_gmt));//the_time('Y-m-d');?>
 	  </div>
 	<div class="works-meta">
        <div class="works-comnum">  
-        <span><i class="post_icon_svg" style="--svg-name: var(--svg_message);--size: 16px;--color: #000;"></i> <?php comments_popup_link(__('NOTHING','sakura'), '1 ', '% '); /*暂无*/?></span>
+        <span><i class="post_icon_svg svg_message"></i> <?php comments_popup_link(__('NOTHING','sakura'), '1 ', '% '); /*暂无*/?></span>
 		</div>
 		<div class="works-views"> 
-		<span><i class="post_icon_svg" style="--svg-name: var(--svg_eyes);--size: 16px;--color: #000;"></i> <?php echo get_post_views(get_the_ID()); ?> </span>
+		<span><i class="post_icon_svg svg_eyes"></i> <?php echo get_post_views(get_the_ID()); ?> </span>
 		 </div>   
         </div>
 		<a class="worksmore" href="<?php the_permalink(); ?>"></a>

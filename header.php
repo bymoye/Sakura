@@ -9,7 +9,11 @@
  * @package Akina
  */
 ?>
-<?php header('X-Frame-Options: SAMEORIGIN'); ?>
+<?php header('X-Frame-Options: SAMEORIGIN');
+$nonce = wp_create_nonce('wp_rest');
+$self = "default-src 'self' *.nmxc.ltd cdn.jsdelivr.net 'strict-dynamic'; script-src 'strict-dynamic' 'nonce-{$nonce}'; style-src 'strict-dynamic' 'nonce-{$nonce}'; img-src *.nmxc.ltd fp1.fghrsh.net cdn.jsdelivr.net sdn.geekzu.org 'self' data:;";
+header('Content-Security-Policy: '.$self); 
+?>
 <!DOCTYPE html>
 <html <?php language_attributes(); ?>>
 <head>
@@ -53,7 +57,7 @@ if (akina_option('akina_meta') == true) {
 <?php wp_head(); ?>
 </head>
 <body <?php body_class(); ?>>
-	<svg style="position: fixed; width: 100%; height: 100%; z-index: -999;">
+	<svg id="background">
 		<image href="<?php $img = get_random_bg_url();echo is_array($img) ? $img['large'] : $img; ?>" x="-5" y="-5" height="102%" width="102%" preserveAspectRatio="xMidYMid slice"></image>
 	</svg>
     <div class="scrollbar" id="bar"></div>
@@ -66,11 +70,11 @@ if (akina_option('akina_meta') == true) {
 			<div class="site-title"><a href="<?php bloginfo('url');?>"><img src="<?php echo akina_option('akina_logo'); ?>"></a></div>
 			<?php }elseif ($site_url == "localhost" or $site_url == "nmxc.ltd"){ ?>
 				<div class="site-title"><a href="<?php bloginfo('url'); ?>">
-				<i class="nmxc_logo" style="--svg-name: var(--sitelogo_mi);--size:35px;"></i>
-				<i class="nmxc_logo sitelogo-de" style="--svg-name: var(--sitelogo_de);"></i>
-				<i class="nmxc_logo" style="--svg-name: var(--sitelogo_ni);"></i>
-				<i class="nmxc_logo" style="--svg-name: var(--sitelogo_ming);"></i>
-				<i class="nmxc_logo" style="--svg-name: var(--sitelogo_xin);"></i>
+				<i class="nmxc_logo sitelogo-mi"></i>
+				<i class="nmxc_logo sitelogo-de"></i>
+				<i class="nmxc_logo sitelogo-ni"></i>
+				<i class="nmxc_logo sitelogo-ming"></i>
+				<i class="nmxc_logo sitelogo-xin"></i>
 				</a></div>
 			<?php }else{ ?>
 			<h1 class="site-title"><a href="<?php bloginfo('url');?>" ><?php bloginfo('name');?></a></h1>
@@ -81,7 +85,7 @@ if (akina_option('akina_meta') == true) {
 		<?php 
 		if(!akina_option('head_focus')){ 
 		?>
-		<div class="headertop" style="display:<?php echo !is_home() ? 'none' : 'block'?>">
+		<div class="headertop">
 			<?php get_template_part('layouts/imgbox'); ?>
 		</div>	
 		<?php } ?>
@@ -96,11 +100,11 @@ if (akina_option('akina_meta') == true) {
 						<?php }elseif($site_url == 'localhost' or $site_url == 'nmxc.ltd'){ ?>
 							<div class="site-title">
 							<a href="<?php bloginfo('url');?>">
-							<i class="nmxc_logo" style="--svg-name: var(--sitelogo_mi);--size:35px;"></i>
-							<i class="nmxc_logo sitelogo-de" style="--svg-name: var(--sitelogo_de);"></i>
-							<i class="nmxc_logo" style="--svg-name: var(--sitelogo_ni);"></i>
-							<i class="nmxc_logo" style="--svg-name: var(--sitelogo_ming);"></i>
-							<i class="nmxc_logo" style="--svg-name: var(--sitelogo_xin);"></i>
+							<i class="nmxc_logo sitelogo-mi"></i>
+							<i class="nmxc_logo sitelogo-de"></i>
+							<i class="nmxc_logo sitelogo-ni"></i>
+							<i class="nmxc_logo sitelogo-ming"></i>
+							<i class="nmxc_logo sitelogo-xin"></i>
 							</a>
 						</div>
 						<?php }else{ ?>
@@ -114,7 +118,7 @@ if (akina_option('akina_meta') == true) {
 						<?php } ?><!-- logo end -->
 					</div><!-- .site-branding -->
 					<?php header_user_menu(); if(akina_option('top_search') == 'yes') { ?>
-					<div class="searchbox"><i class="post_icon_svg search js-toggle-search" style="--svg-name: var(--svg_search);--color: #666;--size: 30px;"></i></div>
+					<div class="searchbox"><i class="post_icon_svg search js-toggle-search"></i></div>
 					<?php } ?>
 					<div class="lower"><?php if(!akina_option('shownav')){ ?>
 						<div id="show-nav" class="showNav">

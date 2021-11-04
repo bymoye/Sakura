@@ -7,7 +7,7 @@
 
 ?>
 <div class="top-feature-row">
-    <h1 class="fes-title" style="font-family: 'Ubuntu', sans-serif;"><i class="post_icon_svg" style="--svg-name: var(--svg_anchor);--color: #666;--size: 16px;vertical-align: -0.1em;margin:0;"></i> <?php echo akina_option('feature_title'); ?></h1>
+    <h1 class="fes-title"><i class="post_icon_svg svg_anchor"></i> <?php echo akina_option('feature_title'); ?></h1>
     <div class="top-feature-v2">
         <div class="the-feature square from_left_and_right">
             <a href="<?php echo akina_option('feature1_link', '#'); ?>" target="_blank">
@@ -20,7 +20,7 @@
         </div>
     </div>
     <div class="top-feature-v2">
-        <div class="the-feature square from_left_and_right" style="margin: 0 4.5px">
+        <div class="the-feature square from_left_and_right">
             <a href="<?php echo akina_option('feature2_link', '#'); ?>" target="_blank">
                 <div class="img"><img src="<?php echo akina_option('feature2_img', ''); ?>" alt="Discovery2"></div>
                 <div class="info">

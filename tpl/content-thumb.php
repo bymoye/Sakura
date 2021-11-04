@@ -33,27 +33,27 @@ $the_cat = get_the_category();
 	<article class="post post-list-thumb <?php echo $class; ?>" itemscope="" itemtype="http://schema.org/BlogPosting">
 		<div class="post-thumb">
 		<?php if(is_array($post_img)){$post_img_lazyload = $post_img['md'];$post_img_url = $post_img['th'];}else{$post_img_lazyload = $post_img;$post_img_url = $post_img;}?>
-			<a href="<?php the_permalink(); ?>"><img class="lazyload" src="<?php echo $post_img_lazyload?>#lazyload-blur" data-src="<?php echo $post_img_url ?>" alt="" loading="lazy"></a>
+			<a href="<?php the_permalink(); ?>"><img class="lazyload" src="<?php echo $post_img_lazyload?>#lazyload-blur" data-src="<?php echo $post_img_url ?>" alt="" draggable="false" loading="lazy"></a>
 		</div><!-- thumbnail-->
 		<div class="post-content-wrap">
 			<div class="post-content">
 				<div class="post-date">
-				<i class="post_icon_svg" style="--svg-name: var(--svg_time);"></i><?php echo poi_time_since(strtotime($post->post_date_gmt)); ?>
+				<i class="post_icon_svg svg_time"></i><?php echo poi_time_since(strtotime($post->post_date_gmt)); ?>
 					<?php if(is_sticky()) : ?>
-					&nbsp;<i class="post_icon_svg" style="--svg-name: var(--svg_hot);--color: #FF3B00;--size: 14px;"></i>
+					&nbsp;<i class="post_icon_svg svg_hot"></i>
 			 		<?php endif ?>
 				</div>
 				<a href="<?php the_permalink(); ?>" class="post-title"><h3><?php the_title();?></h3></a>
 				<div class="post-meta">
-					<span><i class="post_icon_svg" style="--svg-name: var(--svg_eyes);"></i><?php echo get_post_views(get_the_ID()).' '._n('Hit','Hits',get_post_views(get_the_ID()),'sakura')/*热度*/?></span>
-					<span class="comments-number"><i class="post_icon_svg" style="--svg-name: var(--svg_message);"></i></svg><?php comments_popup_link('NOTHING', '1 '.__("Comment","sakura")/*条评论*/, '% '.__("Comments","sakura")/*条评论*/); ?></span>
-					<span><i class="post_icon_svg" style="--svg-name: var(--svg_fenlei);"></i><a href="<?php echo esc_url(get_category_link($the_cat[0]->cat_ID)); ?>"><?php echo $the_cat[0]->cat_name; ?></a>
+					<span><i class="post_icon_svg svg_eyes"></i><?php echo get_post_views(get_the_ID()).' '._n('Hit','Hits',get_post_views(get_the_ID()),'sakura')/*热度*/?></span>
+					<span class="comments-number"><i class="post_icon_svg"></i></svg><?php comments_popup_link('NOTHING', '1 '.__("Comment","sakura")/*条评论*/, '% '.__("Comments","sakura")/*条评论*/); ?></span>
+					<span><i class="post_icon_svg svg_fenlei"></i><a href="<?php echo esc_url(get_category_link($the_cat[0]->cat_ID)); ?>"><?php echo $the_cat[0]->cat_name; ?></a>
 					</span>
 				</div>
 				<div class="float-content">
 					<?php substr(the_excerpt() , 0 , 3); ?>
 					<div class="post-bottom">
-						<a href="<?php the_permalink(); ?>" class="button-normal"><i class="post_icon_svg" style="--svg-name: var(--svg_caidan);--color: #666;--size: 25px;"></i></a>
+						<a href="<?php the_permalink(); ?>" class="button-normal"><i class="post_icon_svg svg_caidan"></i></a>
 					</div>
 				</div>
 			</div>

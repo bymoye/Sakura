@@ -11,7 +11,6 @@
 const SAKURA_VERSION = '3.3.2';
 const NMX_VERSION = '1.3.3';
 const BUILD_VERSION = '3';
-
 //error_reporting(E_ALL);   
 
 if ( !function_exists('akina_setup')){
@@ -56,11 +55,12 @@ function akina_setup() {
 	 * to output valid HTML5.
 	 */
 	add_theme_support( 'html5', [
+		'script',
 		'search-form',
 		'comment-form',
 		'comment-list',
 		'gallery',
-		'caption',
+		'caption'
      ] );
 
 	/*
@@ -195,7 +195,7 @@ function sakura_scripts() {
 	$code_lamp = 'close';
 	//if(wp_is_mobile()) $auto_height = 'fixed'; //拦截移动端
     $reply_link_version = version_compare( $GLOBALS['wp_version'], '5.1', '>=' ) ? 'new' : 'old';
-	wp_localize_script('app', 'Poi' , array(
+	wp_add_inline_script('app', 'const Poi = ' . json_encode(array(
 		'pjax' => akina_option('poi_pjax'),
 		'movies' => $movies,
 		'windowheight' => $auto_height,
@@ -207,10 +207,19 @@ function sakura_scripts() {
         'api' => esc_url_raw(rest_url()),
         'nonce' => wp_create_nonce('wp_rest'),
         'google_analytics_id' => akina_option('google_analytics_id', '')
-	));
+	)),"before");
 }
 add_action('wp_enqueue_scripts', 'sakura_scripts');
+function add_data_attribute($tag, $handle):string {
+    return strtr($tag, ['<script ' => '<script nonce="'.wp_create_nonce('wp_rest').'" ']);
+}
+add_filter('script_loader_tag', 'add_data_attribute', 10, 2);
 
+function add_style_attribute($tag, $handle):string {
+    $replace = ['rel=\'stylesheet\' ' => 'rel=\'stylesheet\' nonce="'.wp_create_nonce('wp_rest').'" ', '<style ' => '<style nonce="'.wp_create_nonce('wp_rest').'" '];
+    return strtr($tag, $replace);
+}
+add_filter('style_loader_tag', 'add_style_attribute', 10, 2);
 /**
  * load .php.
  */
@@ -430,14 +439,14 @@ if(!function_exists('akina_comment_format')){
                                             $i_private = get_comment_meta($comment_ID, '_private', true);
                                             $flag = '';
                                             $class = !empty($i_private)? 'private_now' : null;
-                                            $flag .= ' <i class="post_icon_svg" style="--svg-name: var(--svg_xuehua);--size: 12px;--color:#7E8892;"></i> <a href="javascript:;" data-actionp="set_private" data-idp="' . get_comment_id() . '" id="sp" class="sm '.$class.'" style="color:rgba(0,0,0,.35)">'.__("Private", "sakura").': <span class="has_set_private">';
+                                            $flag .= ' <i class="post_icon_svg svg_xuehua"></i> <a href="javascript:;" data-actionp="set_private" data-idp="' . get_comment_id() . '" id="sp" class="sm '.$class.'" style="color:rgba(0,0,0,.35)">'.__("Private", "sakura").': <span class="has_set_private">';
                                             if (!empty($i_private)) {
-                                                $flag .= __("Yes", "sakura").' <i class="post_icon_svg" style="--svg-name: var(--svg_lock);--size: 12px;--color:#7E8892;"></i>';
+                                                $flag .= __("Yes", "sakura").' <i class="post_icon_svg svg_lock"></i>';
                                             } else {
-                                                $flag .= __("No", "sakura").' <i class="post_icon_svg" style="--svg-name: var(--svg_unlock);--size: 12px;--color:#7E8892;"></i>';
+                                                $flag .= __("No", "sakura").' <i class="post_icon_svg svg_unlock"></i>';
                                             }
                                             $flag .= '</span></a>';
-                                            $flag .= edit_comment_link('<i class="post_icon_svg" style="--svg-name: var(--svg_edit);--size: 12px;--color:#e67474;margin:0"></i> '.__("Edit", "mashiro"), ' <span style="color:rgba(0,0,0,.35)">', '</span>');
+                                            $flag .= edit_comment_link('<i class="post_icon_svg svg_edit"></i> '.__("Edit", "mashiro"), ' <span style="color:rgba(0,0,0,.35)">', '</span>');
                                             echo $flag;
                                         } ?></div>
 								</div>
@@ -465,13 +474,13 @@ if(!function_exists('akina_comment_format')){
         $author_count = count($wpdb->get_results(
         "SELECT comment_ID as author_count FROM $wpdb->comments WHERE comment_author_email = '$comment_author_email' "));
         echo match(true){
-            $author_count < 5 => '<i class="post_icon_svg" style="--svg-name: var(--svg_level_0);--size:1.5em;--color:#BFBFBF;margin: 0 3px;"></i>',
-            $author_count < 10 => '<i class="post_icon_svg" style="--svg-name: var(--svg_level_1);--size:1.5em;--color:#BFBFBF;margin: 0 3px;"></i>',
-            $author_count < 20 => '<i class="post_icon_svg" style="--svg-name: var(--svg_level_2);--size:1.5em;--color:#95DDB2;margin: 0 3px;"></i>',
-            $author_count < 40 => '<i class="post_icon_svg" style="--svg-name: var(--svg_level_3);--size:1.5em;--color:#92D1E5;margin: 0 3px;"></i>',
-            $author_count < 80 => '<i class="post_icon_svg" style="--svg-name: var(--svg_level_4);--size:1.5em;--color:#FFB37C;margin: 0 3px;"></i>',
-            $author_count < 160 => '<i class="post_icon_svg" style="--svg-name: var(--svg_level_5);--size:1.5em;--color:#FF6C00;margin: 0 3px;"></i>',
-            default => '<i class="post_icon_svg" style="--svg-name: var(--svg_level_6);--size:1.5em;--color:red;margin: 0 3px;"></i>',
+            $author_count < 5 => '<i class="post_icon_svg svg_level svg_level_0"></i>',
+            $author_count < 10 => '<i class="post_icon_svg svg_level svg_level_1"></i>',
+            $author_count < 20 => '<i class="post_icon_svg svg_level svg_level_2"></i>',
+            $author_count < 40 => '<i class="post_icon_svg svg_level svg_level_3"></i>',
+            $author_count < 80 => '<i class="post_icon_svg svg_level svg_level_4"></i>',
+            $author_count < 160 => '<i class="post_icon_svg svg_level svg_level_5"></i>',
+            default => '<i class="post_icon_svg svg_level svg_level_6"></i>',
         };
     }
 
@@ -681,13 +690,13 @@ add_filter('mce_buttons_3', 'enable_more_buttons');
 function download($atts, $content = null) {  
 return '<a class="download" href="'.$content.'" rel="external"  
 target="_blank" title="下载地址">  
-<span><i class="post_icon_svg" style="--svg-name: var(--svg_pull_down);--size: 18px;"></i>Download</span></a>';}  
+<span><i class="post_icon_svg svg_pull_down"></i>Download</span></a>';}  
 add_shortcode('download', 'download'); 
 
 add_action('after_wp_tiny_mce', 'bolo_after_wp_tiny_mce');  
 function bolo_after_wp_tiny_mce($mce_settings) {  
 ?>  
-<script type="text/javascript">  
+<script nonce=<?php wp_create_nonce('wp_rest')?> type="text/javascript">  
 QTags.addButton( 'download', '下载按钮', "[download]下载地址[/download]" );
 </script>  
 <?php } 
@@ -720,7 +729,7 @@ add_filter( 'login_headerurl', 'custom_loginlogo_url' );
 //Login Page Footer
 function custom_html() {
     $loginbg = akina_option('login_bg') ?: 'https://cdn.jsdelivr.net/gh/mashirozx/Sakura@3.2.7/images/hd.png';
-	echo '<script type="text/javascript" src="'.get_template_directory_uri().'/js/login.js"></script>'."\n";
+	echo '<script nonce='. wp_create_nonce('wp_rest') .' type="text/javascript" src="'.get_template_directory_uri().'/js/login.js"></script>'."\n";
 	echo '<script type="text/javascript">
     document.body.insertAdjacentHTML("afterbegin","<div class=\"loading\"><img src=\"https://cdn.jsdelivr.net/gh/moezx/cdn@3.1.9/img/Sakura/images/login_loading.gif\" width=\"58\" height=\"10\"></div><div id=\"bg\"><img /></div>");
     const bg_img = document.querySelector("#bg img");
@@ -1127,7 +1136,7 @@ function memory_archives_list() {
                 $mon = $mon_tmp;
                 $output .= '<li class="al_li"><span class="al_mon"><span style="color:#0bf;">'.get_the_time('M').'</span> (<span id="post-num"></span>'.__(" post(s)","sakura") /*篇文章*/.')</span><ul class="al_post_list">'; //输出月份
             }
-            $output .= '<li>'.'<a href="'. get_permalink() .'"><span style="color:#0bf;">'/*get_the_time('d'.__(" ","sakura")) 日*/.'</span>'. get_the_title() .' <span>('.get_post_views(get_the_ID()).' <i class="post_icon_svg" style="--svg-name: var(--svg_fire);--size: 15px;--color:#000;margin:0;"></i> / '. get_comments_number('0', '1', '%') .' <i class="post_icon_svg" style="--svg-name: var(--svg_commenting);--size: 15px;--color:#000;margin:0;"></i>)</span></a></li>'; //输出文章日期和标题
+            $output .= '<li>'.'<a href="'. get_permalink() .'"><span style="color:#0bf;">'/*get_the_time('d'.__(" ","sakura")) 日*/.'</span>'. get_the_title() .' <span>('.get_post_views(get_the_ID()).' <i class="post_icon_svg svg_fire"></i> / '. get_comments_number('0', '1', '%') .' <i class="post_icon_svg svg_commenting"></i>)</span></a></li>'; //输出文章日期和标题
         endwhile;
         wp_reset_postdata();
         $output .= '</ul></li></ul> <!--<ul class="al_mon_list"><li><ul class="al_post_list" style="display: block;"><li>博客已经萌萌哒运行了<span id="monitorday"></span>天</li></ul></li></ul>--></div>';
@@ -1501,7 +1510,7 @@ function markdown_parser($incoming_comment) {
     global $wpdb,$comment_markdown_content;
     $re = '/```([\s\S]*?)```[\s]*|`{1,2}[^`](.*?)`{1,2}|\[.*?\]\([\s\S]*?\)/m';
     if(preg_replace($re,'temp',$incoming_comment['comment_content']) != strip_tags(preg_replace($re,'temp',$incoming_comment['comment_content']))){
-        siren_ajax_comment_err('评论只支持Markdown啦，见谅╮(￣▽￣)╭<br>Markdown Supported while <i class="post_icon_svg" style="--svg-name: var(--svg_code);--size: 20px;--color:#000;vertical-align: -0.3em;"></i> Forbidden');
+        siren_ajax_comment_err('评论只支持Markdown啦，见谅╮(￣▽￣)╭<br>Markdown Supported while <i class="post_icon_svg svg_code"></i> Forbidden');
         return( $incoming_comment );
     }
     // $myCustomer = $wpdb->get_row("SELECT * FROM wp_comments");

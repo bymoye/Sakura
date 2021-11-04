@@ -19,7 +19,7 @@ if ( $site_description && ( is_home() || is_front_page() ) ) echo " - $site_desc
 </title>
 
 <?php wp_head(); ?>
-<script>
+<script nonce=<?php wp_create_nonce('wp_rest')?>>
 const getsvg = new XMLHttpRequest();
 getsvg.open("GET", "https://cdn.jsdelivr.net/gh/bymoye/sakura@latest/images/icon.svg", true);
 getsvg.onload = function(e) {
@@ -46,5 +46,5 @@ let the_dom="<?php echo str_replace("http://", "", str_replace("https://", "", g
 </form>
 </div>
 </section>
-<script src="https://cdn.jsdelivr.net/gh/bymoye/cdn@1.1/sakura/js/other/404.min.js" type="text/javascript"></script>
+<script nonce=<?php wp_create_nonce('wp_rest')?> src="https://cdn.jsdelivr.net/gh/bymoye/cdn@1.1/sakura/js/other/404.min.js" type="text/javascript"></script>
 </body>

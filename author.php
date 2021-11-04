@@ -74,10 +74,10 @@ get_header();
 		</main><!-- #main -->
 		<?php if ( akina_option('pagenav_style') == 'ajax') { ?>
 		<div id="pagination"><?php next_posts_link(' Previous'); ?></div>
-		<div id="add_post"><span id="add_post_time" style="visibility: hidden;" title="<?php echo akina_option('auto_load_post',''); ?>"  ></span></div>
+		<div id="add_post"><span id="add_post_time" title="<?php echo akina_option('auto_load_post',''); ?>"  ></span></div>
 		<?php }else{ ?>
 		<nav class="navigator">
-        <?php previous_posts_link('<i class="post_icon_svg" style="--svg-name: var(--svg_back);--color: #666;--size: 15px;"></i>') ?><?php next_posts_link('<i class="post_icon_svg" style="--svg-name: var(--svg_right);--color: #666;--size: 15px;"></i>') ?>
+        <?php previous_posts_link('<i class="post_icon_svg svg_back"') ?><?php next_posts_link('<i class="post_icon_svg svg_right"></i>') ?>
 		</nav>
 		<?php } ?>
 	</div><!-- #primary -->
