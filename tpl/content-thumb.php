@@ -51,7 +51,7 @@ $the_cat = get_the_category();
 					</span>
 				</div>
 				<div class="float-content">
-					<?php substr(the_excerpt() , 0 , 3); ?>
+					<?php the_excerpt() ?>
 					<div class="post-bottom">
 						<a href="<?php the_permalink(); ?>" class="button-normal"><i class="post_icon_svg" style="--svg-name: var(--svg_caidan);--color: #666;--size: 25px;"></i></a>
 					</div>
