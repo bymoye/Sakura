@@ -17,7 +17,7 @@
 	?>
 	</div><!-- #page Pjax container-->
 	<footer id="colophon" class="site-footer" role="contentinfo">
-		<div class="site-info" theme-info="Sakura v<?php echo SAKURA_VERSION; ?>">
+		<div class="site-info" theme-info="Sakura_Blur v<?php echo NMX_VERSION; ?>">
 			<div class="footertext">
 				<p style="color: #666666;"><?php echo akina_option('footer_info', ''); ?></p>
 			</div>

@@ -114,14 +114,14 @@ function optionsframework_options() {
 	
 	$options[] = array(
 		'name' => __('Site title', 'sakura'),/*站点名称*/
-		'desc' => __('Mashiro\'s Blog', 'sakura'),
+		'desc' => __('bymoye\'s Blog', 'sakura'),
 		'id' => 'site_name',
 		'std' => '',
 		'type' => 'text');	
 
 	$options[] = array(
 		'name' => __('Author', 'sakura'),/*作者*/
-		'desc' => __('Mashiro', 'sakura'),
+		'desc' => __('bymoye', 'sakura'),
 		'id' => 'author_name',
 		'std' => '',
 		'type' => 'text');	
@@ -878,7 +878,7 @@ function optionsframework_options() {
         
     $options[] = array(
     'name' => __('About', 'sakura'),/*关于*/
-    'desc' => __('Theme Sakura v'.SAKURA_VERSION.'  |  <a href="https://2heng.xin/theme-sakura/">Theme document</a>  |  <a href="https://github.com/mashirozx/Sakura/">Source code</a><a href="https://github.com/mashirozx/Sakura/releases/latest"><img src="https://img.shields.io/github/release/mashirozx/Sakura.svg?style=flat-square" alt="GitHub release"></a>', 'sakura'),/*Theme Sakura v'.SAKURA_VERSION.'  |  <a href="https://2heng.xin/theme-sakura/">主题说明</a>  |  <a href="https://github.com/mashirozx/Sakura/">源码</a><a href="https://github.com/mashirozx/Sakura/releases/latest"><img src="https://img.shields.io/github/release/mashirozx/Sakura.svg?style=flat-square" alt="GitHub release"></a>*/
+    'desc' => __('Theme Sakura_Blur v'.NMX_VERSION.'  |  <a href="https://2heng.xin/theme-sakura/">Theme document</a>  |  <a href="https://github.com/mashirozx/Sakura/">Source code</a><a href="https://github.com/mashirozx/Sakura/releases/latest"><img src="https://img.shields.io/github/release/mashirozx/Sakura.svg?style=flat-square" alt="GitHub release"></a>', 'sakura'),
     'id' => 'theme_intro',
     'std' => '',
     'type' => 'typography ');
@@ -891,7 +891,7 @@ function optionsframework_options() {
 		'type' => "images",
 		'options' => array(
 			'tag' => 'https://img.shields.io/github/release/mashirozx/Sakura.svg?style=flat-square',
-            'tag2' => 'https://img.shields.io/github/commits-since/mashirozx/Sakura/v'.SAKURA_VERSION.'.svg?style=flat-square'
+            'tag2' => 'https://img.shields.io/github/commits-since/mashirozx/Sakura/v'.NMX_VERSION.'.svg?style=flat-square'
         )
 	);
 	

@@ -112,7 +112,7 @@ function cache_search_json() {
     return $result;
 }
 
-function bgm_bilibili() {
+function bgm_bilibili(): WP_REST_Response {
     $page = $_GET["page"] ?: 2;
     $bgm = new Bilibili();
     $html = preg_replace("/\s+|\n+|\r/", ' ', $bgm->get_bgm_items($page));

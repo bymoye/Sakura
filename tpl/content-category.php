@@ -17,7 +17,7 @@
 		<a href="<?php the_permalink();?>"><?php the_post_thumbnail('large'); ?></a>
 		<?php } else {?>
 		<?php $feature_image = DEFAULT_FEATURE_IMAGE();
-		if (is_array($feature_image)){$feature_img=$feature_image['th'];}else{$feature_img=$feature_image;}?>
+		$feature_img = $feature_image['th'] ?? $feature_image;?>
 		<a href="<?php the_permalink();?>"><img src="<?php echo $feature_img; ?>" /></a>
 		<?php } ?>
 	</div>

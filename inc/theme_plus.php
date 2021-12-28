@@ -305,21 +305,15 @@ function the_headPattern(){
       $full_image_url = DEFAULT_FEATURE_IMAGE();
   }
   if(!get_the_title()){
-    if(is_page_template('user/page-archive.php')){
-      $t .= '<h1 class="entry-title">月份归档</h1>';
-    } elseif(is_page_template('user/page-timeline.php')){
-      $t .= '<h1 class="entry-title">时光轴 | timeline</h1>';
-    } elseif(is_page_template('user/page-register.php')){
-      $t .= '<h1 class="entry-title">新用户 | New Account</h1>';
-    } elseif(is_page_template('user/page-login.php')){
-      $t .= '<h1 class="entry-title">登录 | Login</h1>';
-    } elseif(is_page_template('user/page-links.php')){
-      $t .= '<h1 class="entry-titlele">友情链接 | friends</h1>';
-    } elseif(is_page_template('user/page-shuoshuo.php')){
-      $t .= '<h1 class="entry-title">碎碎念</h1>';
-    } else{
-      $t .= '<h1 class="entry-title">无标题 | Nothing</h1>';
-    }
+    $t .= match(true){
+      is_page_template('user/page-archive.php') => '<h1 class="entry-title">月份归档</h1>',
+      is_page_template('user/page-timeline.php') => '<h1 class="entry-title">时光轴 | timeline</h1>',
+      is_page_template('user/page-register.php') => '<h1 class="entry-title">新用户 | New Account</h1>',
+      is_page_template('user/page-login.php') => '<h1 class="entry-title">登录 | Login</h1>',
+      is_page_template('user/page-links.php') => '<h1 class="entry-titlele">友情链接 | friends</h1>',
+      is_page_template('user/page-shuoshuo.php') => '<h1 class="entry-title">碎碎念</h1>',
+      default => '<h1 class="entry-title">无标题 | Nothing</h1>',
+    };
   }
   $t .= the_title( '<h1 class="entry-title">', '</h1>', false);
   }elseif(is_author()){

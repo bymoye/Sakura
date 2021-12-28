@@ -9,40 +9,11 @@
 header("Content-type: text/css; charset: UTF-8");
 #header('Access-Control-Allow-Origin: *');
 
-function _get($str){
-    return !empty($_GET[$str]) ? $_GET[$str] : null;
-}
-
-if(_get('color_1')==NULL) {
-	$color_1="#e5e5e5";
-} else {
-	$color_1="#"._get('color_1');
-}
-
-if(_get('color_2')==NULL) {
-	$color_2="#999";
-} else {
-	$color_2="#"._get('color_2');
-}
-
-if(_get('color_3')==NULL) {
-	$color_3="#d64e07";
-} else {
-	$color_3="#"._get('color_3');
-}
-
-if(_get('color_4')==NULL) {
-	$color_4="#04a4cc";
-} else {
-	$color_4="#"._get('color_4');
-}
-
-if(_get('rules')==NULL) {
-	$rules="";
-} else {
-	$rules=urldecode(_get('rules'));
-}
-
+$color_1 = '#'.(empty($_GET['color_1']) ? 'e5e5e5' : $_GET['color_1']);
+$color_2 = '#'.(empty($_GET['color_2']) ? '999' : $_GET['color_2']);
+$color_3 = '#'.(empty($_GET['color_3']) ? 'd64e07' : $_GET['color_3']);
+$color_4 = '#'.(empty($_GET['color_4']) ? '04a4cc' : $_GET['color_4']);
+$rules = empty($_GET['rules']) ? '' : urldecode($_GET['rules']);
 ?>
 
 /*! This file is auto-generated */

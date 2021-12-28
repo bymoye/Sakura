@@ -8,7 +8,6 @@
  */
 
 
-const SAKURA_VERSION = '3.3.2';
 const NMX_VERSION = '1.3.3';
 const BUILD_VERSION = '3';
 
@@ -700,7 +699,7 @@ QTags.addButton( 'download', '下载按钮', "[download]下载地址[/download]"
 //Login Page style
 function custom_login() {
 	//echo '<link rel="stylesheet" type="text/css" href="' . get_bloginfo('template_directory') . '/inc/login.css" />'."\n";
-	echo '<link rel="stylesheet" type="text/css" href="',get_template_directory_uri(),'/inc/login.css?',SAKURA_VERSION,'" />',"\n";
+	echo '<link rel="stylesheet" type="text/css" href="',get_template_directory_uri(),'/inc/login.css?',NMX_VERSION,'" />',"\n";
 }
 
 add_action('login_head', 'custom_login');

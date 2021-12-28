@@ -1,6 +1,6 @@
 <?php
 $image_url_load = DEFAULT_FEATURE_IMAGE ();
-(is_array($image_url_load)) ? define('Z_IMAGE_PLACEHOLDER', $image_url_load['th']) : define('Z_IMAGE_PLACEHOLDER', $image_url_load);
+define('Z_IMAGE_PLACEHOLDER', $image_url_load['th'] ?? $image_url_load);
 
 add_action('admin_init', 'z_init');
 function z_init() {

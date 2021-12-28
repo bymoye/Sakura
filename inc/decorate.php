@@ -12,7 +12,7 @@ if ( akina_option('theme_skin') ) { ?>
 }
 <?php } ?>
 <?php if(akina_option('entry_content_theme') == "sakura"){ ?>
-.entry-content th {background-color: <?php echo akina_option('theme_skin'); ?>}
+.entry-content th {background-color: var(--themecolor);}
 <?php } ?>
 <?php if(akina_option('live_search')){ ?>
 .search-form--modal .search-form__inner {
@@ -27,8 +27,7 @@ if ( akina_option('site_custom_style') ) {
 // Custom style end ?>
 <?php // liststyle
 if ( akina_option('list_type') == 'square') { ?>
-.feature img{ border-radius: 0px; !important; }
-.feature i { border-radius: 0px; !important; }
+.feature img,.feature i{ border-radius: 0px; !important; }
 <?php } // liststyle ?>
 <?php // comments
 if ( akina_option('toggle-menu') == 'no') { ?>
