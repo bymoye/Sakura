@@ -721,13 +721,12 @@ function custom_html() {
     $loginbg = akina_option('login_bg') ?: 'https://cdn.jsdelivr.net/gh/mashirozx/Sakura@3.2.7/images/hd.png';
 	echo '<script type="text/javascript" src="'.get_template_directory_uri().'/js/login.js"></script>'."\n";
 	echo '<script type="text/javascript">
-    document.body.insertAdjacentHTML("afterbegin","<div class=\"loading\"><img src=\"https://cdn.jsdelivr.net/gh/moezx/cdn@3.1.9/img/Sakura/images/login_loading.gif\" width=\"58\" height=\"10\"></div><div id=\"bg\"><img /></div>");
+    document.body.insertAdjacentHTML("afterbegin","<div id=\"bg\"><img /></div>");
     const bg_img = document.querySelector("#bg img");
     bg_img.setAttribute("src","',$loginbg, '");
     bg_img.addEventListener("load",function(){
         resizeImage(\'bg\');
         window.onresize = ()=>{resizeImage("bg");}
-        fadeOut(document.querySelector(".loading"))
     });
     const forgetmenot = document.querySelector(".forgetmenot");
     if(forgetmenot)forgetmenot.outerHTML = \'<p class="forgetmenot">Remember Me<input name="rememberme" id="rememberme" value="forever" type="checkbox"><label for="rememberme" style="float: right;margin-top: 5px;transform: scale(2);margin-right: -10px;"></label></p>\';
