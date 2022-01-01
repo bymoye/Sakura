@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Custom function
  * @Siren
@@ -290,7 +291,6 @@ function the_headPattern():void{
         $full_image_url = DEFAULT_FEATURE_IMAGE();
     }
     if(!get_the_title()){
-      var_dump(is_page_template('user/page-shuoshuo.php'));
       $t .= match(true){
         is_page_template('user/page-archive.php') => '<h1 class="entry-title">月份归档</h1>',
         is_page_template('user/page-timeline.php') => '<h1 class="entry-title">时光轴 | timeline</h1>',
