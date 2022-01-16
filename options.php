@@ -1090,7 +1090,7 @@ function optionsframework_options() {
 		'name' => __('lazyload spinner', 'sakura'),
 		'desc' => __('The placeholder to display when the image loads, fill in the image url', 'sakura'),/*图片加载时要显示的占位图，填写图片 url*/
 		'id' => 'lazyload_spinner',
-		'std' => 'https://cdn.jsdelivr.net/gh/moezx/cdn@3.0.2/img/svg/loader/trans.ajax-spinner-preloader.svg',
+		'std' => 'https://proxy.nmxc.ltd/gh/moezx/cdn@3.0.2/img/svg/loader/trans.ajax-spinner-preloader.svg',
 		'type' => 'text');
         
     $options[] = array(
@@ -1167,7 +1167,7 @@ function optionsframework_options() {
 		'name' => __('lazyload spinner', 'sakura'),
 		'desc' => __('The placeholder to display when the image loads, fill in the image url', 'sakura'),/*图片加载时要显示的占位图，填写图片 url*/
 		'id' => 'lazyload_spinner',
-		'std' => 'https://cdn.jsdelivr.net/gh/moezx/cdn@3.0.2/img/svg/loader/trans.ajax-spinner-preloader.svg',
+		'std' => 'https://proxy.nmxc.ltd/gh/moezx/cdn@3.0.2/img/svg/loader/trans.ajax-spinner-preloader.svg',
 		'type' => 'text');
 
 	$options[] = array(

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Sakura functions and definitions.
  *
@@ -170,7 +171,7 @@ function sakura_scripts() {
     if(akina_option('jsdelivr_cdn_test')){ 
         wp_enqueue_script( 'js_lib', get_template_directory_uri() . '/cdn/js/lib.js', array(), NMX_VERSION.akina_option('cookie_version', ''), true );
     } else { 
-        wp_enqueue_script( 'js_lib', 'https://cdn.jsdelivr.net/gh/bymoye/Sakura@' . NMX_VERSION . '/cdn/js/lib.min.js', array(), NMX_VERSION, true );
+        wp_enqueue_script( 'js_lib', 'https://proxy.nmxc.ltd/gh/bymoye/Sakura@' . NMX_VERSION . '/cdn/js/lib.min.js', array(), NMX_VERSION, true );
     }
     if (akina_option('app_no_jsdelivr_cdn')) {
         wp_enqueue_style( 'icon_css', get_template_directory_uri() . '/cdn/css/icon.css', array(), NMX_VERSION );
@@ -178,8 +179,8 @@ function sakura_scripts() {
         wp_enqueue_style( 'sakura_css', get_stylesheet_uri(), array(), NMX_VERSION );
         wp_enqueue_script( 'app', get_template_directory_uri() . '/js/sakura-app.js', array(), NMX_VERSION, true );
     } else {
-        wp_enqueue_style( 'sakura_css', 'https://cdn.jsdelivr.net/combine/gh/bymoye/Sakura@' . NMX_VERSION . '/style.min.css,gh/bymoye/Sakura/cdn/css/icon.min.css,gh/bymoye/Sakura/cdn/css/sitelogo.min.css', array(), NMX_VERSION );
-        wp_enqueue_script( 'app', 'https://cdn.jsdelivr.net/combine/gh/bymoye/Sakura@' . NMX_VERSION . '/js/sakura-app.min.js,gh/bymoye/cdn@1.1.5/sakura/cdn/js/widget.min.js', array(), NMX_VERSION, true );
+        wp_enqueue_style( 'sakura_css', 'https://proxy.nmxc.ltd/combine/gh/bymoye/Sakura@' . NMX_VERSION . '/style.min.css,gh/bymoye/Sakura/cdn/css/icon.min.css,gh/bymoye/Sakura/cdn/css/sitelogo.min.css', array(), NMX_VERSION );
+        wp_enqueue_script( 'app', 'https://proxy.nmxc.ltd/combine/gh/bymoye/Sakura@' . NMX_VERSION . '/js/sakura-app.min.js,gh/bymoye/cdn@1.1.5/sakura/cdn/js/widget.min.js', array(), NMX_VERSION, true );
     } 
 
     
@@ -292,7 +293,7 @@ function convertip($ip)
                 return 'System Error';
             }
             $DataSeek = implode('', unpack('L', $DataSeek . chr(0)));
-            fseek($fd, $DataSeek);
+            fseek($fd, (int)$DataSeek);
             $ipData2 = fread($fd, 4);
             if (strlen($ipData2) < 4) {
                 fclose($fd);
@@ -364,7 +365,7 @@ function convertip($ip)
                     return 'System Error';
                 }
                 $AddrSeek2 = implode('', unpack('L', $AddrSeek2 . chr(0)));
-                fseek($fd, $AddrSeek2);
+                fseek($fd, (int)$AddrSeek2);
             } else {
                 fseek($fd, -1, SEEK_CUR);
             }
@@ -399,7 +400,7 @@ function convertip($ip)
  * COMMENT FORMATTING
  *
  * 标准的 lazyload 输出头像
- * <?php echo str_replace( 'src=', 'src="https://cdn.jsdelivr.net/gh/moezx/cdn@3.0.1/img/svg/loader/index.ajax-spinner-preloader.svg" onerror="imgError(this,1)" data-src=', get_avatar( $comment->comment_author_email, '80', '', get_comment_author(), array( 'class' => array( 'lazyload' ) ) ) ); ?>
+ * <?php echo str_replace( 'src=', 'src="https://proxy.nmxc.ltd/gh/moezx/cdn@3.0.1/img/svg/loader/index.ajax-spinner-preloader.svg" onerror="imgError(this,1)" data-src=', get_avatar( $comment->comment_author_email, '80', '', get_comment_author(), array( 'class' => array( 'lazyload' ) ) ) ); ?>
  *
  * 如果不延时是这样的
  * <?php echo get_avatar( $comment->comment_author_email, '80', '', get_comment_author() ); ?>
@@ -414,7 +415,7 @@ if(!function_exists('akina_comment_format')){
 				<div class="comment-arrow">
 					<div class="main shadow">
 						<div class="profile">
-							<a href="<?php comment_author_url(); ?>" target="_blank" rel="nofollow"><?php echo str_replace( 'src=', 'src="https://cdn.jsdelivr.net/gh/moezx/cdn@3.0.2/img/svg/loader/trans.ajax-spinner-preloader.svg" onerror="imgError(this,1)" data-src=', get_avatar( $comment->comment_author_email, '80', '', get_comment_author(), array( 'class' => array('lazyload')))); ?></a>
+							<a href="<?php comment_author_url(); ?>" target="_blank" rel="nofollow"><?php echo str_replace( 'src=', 'src="https://proxy.nmxc.ltd/gh/moezx/cdn@3.0.2/img/svg/loader/trans.ajax-spinner-preloader.svg" onerror="imgError(this,1)" data-src=', get_avatar( $comment->comment_author_email, '80', '', get_comment_author(), array( 'class' => array('lazyload')))); ?></a>
 						</div>
 						<div class="commentinfo">
 							<section class="commeta">
@@ -532,7 +533,7 @@ function get_the_link_items($id = null){
       foreach ($bookmarks as $bookmark) {
 		if (empty($bookmark->link_description)) $bookmark->link_description = __('This guy is so lazy ╮(╯▽╰)╭', 'sakura');
 		if (empty($bookmark->link_image)) $bookmark->link_image = 'https://view.moezx.cc/images/2017/12/30/Transparent_Akkarin.th.jpg';
-        $output .=  '<li class="link-item"><a class="link-item-inner effect-apollo" href="' . $bookmark->link_url . '" title="' . $bookmark->link_description . '" target="_blank" rel="friend"><img class="lazyload" onerror="imgError(this,1)" data-src="' . $bookmark->link_image . '" src="https://cdn.jsdelivr.net/gh/moezx/cdn@3.0.2/img/svg/loader/trans.ajax-spinner-preloader.svg"><span class="sitename">'. $bookmark->link_name .'</span><div class="linkdes">'. $bookmark->link_description .'</div></a></li>';
+        $output .=  '<li class="link-item"><a class="link-item-inner effect-apollo" href="' . $bookmark->link_url . '" title="' . $bookmark->link_description . '" target="_blank" rel="friend"><img class="lazyload" onerror="imgError(this,1)" data-src="' . $bookmark->link_image . '" src="https://proxy.nmxc.ltd/gh/moezx/cdn@3.0.2/img/svg/loader/trans.ajax-spinner-preloader.svg"><span class="sitename">'. $bookmark->link_name .'</span><div class="linkdes">'. $bookmark->link_description .'</div></a></li>';
       }
       $output .= '</ul>';
   }
@@ -718,7 +719,7 @@ add_filter( 'login_headerurl', 'custom_loginlogo_url' );
 
 //Login Page Footer
 function custom_html() {
-    $loginbg = akina_option('login_bg') ?: 'https://cdn.jsdelivr.net/gh/mashirozx/Sakura@3.2.7/images/hd.png';
+    $loginbg = akina_option('login_bg') ?: 'https://proxy.nmxc.ltd/gh/mashirozx/Sakura@3.2.7/images/hd.png';
 	echo '<script type="text/javascript" src="'.get_template_directory_uri().'/js/login.js"></script>'."\n";
 	echo '<script type="text/javascript">
     document.body.insertAdjacentHTML("afterbegin","<div id=\"bg\"><img /></div>");
@@ -814,7 +815,7 @@ function comment_mail_notify($comment_id){
       -webkit-box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.12);
       box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.18);">
         <header style="overflow: hidden;">
-            <img style="width:100%;z-index: 666;" src="https://cdn.jsdelivr.net/gh/moezx/cdn@3.1.4/img/other/head.jpg">
+            <img style="width:100%;z-index: 666;" src="https://proxy.nmxc.ltd/gh/moezx/cdn@3.1.4/img/other/head.jpg">
         </header>
         <div style="padding: 5px 20px;">
         <p style="position: relative;
@@ -836,7 +837,7 @@ function comment_mail_notify($comment_id){
         . trim($comment->comment_content) . '</div>
 
       <div style="text-align: center;">
-          <img src="https://cdn.jsdelivr.net/gh/moezx/cdn@3.1.4/img/other/hr.png" alt="hr" style="width:100%;
+          <img src="https://proxy.nmxc.ltd/gh/moezx/cdn@3.1.4/img/other/hr.png" alt="hr" style="width:100%;
                                                                                                   margin:5px auto 5px auto;
                                                                                                   display: block;">
           <a style="text-transform: uppercase;
@@ -854,7 +855,7 @@ function comment_mail_notify($comment_id){
     </div>
 ';
     $message = convert_smilies($message);
-    $message = str_replace("{{",'<img src="https://cdn.jsdelivr.net/gh/bymoye/cdn@1.2/sakura/images/smiliesbilipng/emoji_',$message);
+    $message = str_replace("{{",'<img src="https://proxy.nmxc.ltd/gh/bymoye/cdn@1.2/sakura/images/smiliesbilipng/emoji_',$message);
     $message = str_replace("}}",'.png" alt="emoji" style="height: 2em; max-height: 2em;">',$message);
     
     $message =  str_replace('{UPLOAD}', 'https://i.loli.net/', $message); 
@@ -909,9 +910,9 @@ function comment_picture_support($content) {
     $content =  str_replace('http://', 'https://', $content); // 干掉任何可能的 http
     $content =  str_replace('{UPLOAD}', 'https://i.loli.net/', $content); 
     $content =  str_replace('[/img][img]', '[/img^img]', $content); 
-    $content =  str_replace('[img]', '<br><img src="https://cdn.jsdelivr.net/gh/moezx/cdn@3.0.2/img/svg/loader/trans.ajax-spinner-preloader.svg" data-src="', $content); 
+    $content =  str_replace('[img]', '<br><img src="https://proxy.nmxc.ltd/gh/moezx/cdn@3.0.2/img/svg/loader/trans.ajax-spinner-preloader.svg" data-src="', $content); 
     $content =  str_replace('[/img]', '" class="lazyload comment_inline_img" onerror="imgError(this)"><br>', $content);
-    return str_replace('[/img^img]', '" class="lazyload comment_inline_img" onerror="imgError(this)"><img src="https://cdn.jsdelivr.net/gh/moezx/cdn@3.0.2/img/svg/loader/trans.ajax-spinner-preloader.svg" data-src="', $content);
+    return str_replace('[/img^img]', '" class="lazyload comment_inline_img" onerror="imgError(this)"><img src="https://proxy.nmxc.ltd/gh/moezx/cdn@3.0.2/img/svg/loader/trans.ajax-spinner-preloader.svg" data-src="', $content);
 }
 add_filter( 'comment_text', 'comment_picture_support' );
 
@@ -936,9 +937,9 @@ if ( !get_option('use_smilies'))return false;
     $smiliesgs='.' . $type;
     foreach ($tiebaname as $tieba_Name){
       // 选择面版
-      $return_smiles = $return_smiles . '<span title="'.$tieba_Name.'" onclick="grin('."'".$tieba_Name."'".',type = \'tieba\')"><img loading="lazy" src="https://cdn.jsdelivr.net/gh/bymoye/cdn@1.2/sakura/images/smilies/'. $tiebaimgdir .'icon_'. $tieba_Name . $smiliesgs.'" /></span>';
+      $return_smiles = $return_smiles . '<span title="'.$tieba_Name.'" onclick="grin('."'".$tieba_Name."'".',type = \'tieba\')"><img loading="lazy" src="https://proxy.nmxc.ltd/gh/bymoye/cdn@1.2/sakura/images/smilies/'. $tiebaimgdir .'icon_'. $tieba_Name . $smiliesgs.'" /></span>';
       // 正文转换
-      $wpsmiliestrans['::' . $tieba_Name . '::'] = '<span title="'. $tieba_Name .'" onclick="grin('."'". $tieba_Name ."'".',type = \'tieba\')"><img loading="lazy" src="https://cdn.jsdelivr.net/gh/bymoye/cdn@1.2/sakura/images/smilies/'.$tiebaimgdir.'icon_'. $tieba_Name .$smiliesgs.'" /></span>';
+      $wpsmiliestrans['::' . $tieba_Name . '::'] = '<span title="'. $tieba_Name .'" onclick="grin('."'". $tieba_Name ."'".',type = \'tieba\')"><img loading="lazy" src="https://proxy.nmxc.ltd/gh/bymoye/cdn@1.2/sakura/images/smilies/'.$tiebaimgdir.'icon_'. $tieba_Name .$smiliesgs.'" /></span>';
     }
     return $return_smiles;
   }
@@ -1010,9 +1011,9 @@ function push_bili_smilies(){
   $smiliesgs='.' . $type;
   foreach($name as $smilies_Name){
     // 选择面版
-    $return_smiles = $return_smiles . '<span title="'.$smilies_Name.'" onclick="grin('."'".$smilies_Name."'".',type = \'Math\')"><img loading="lazy" src="https://cdn.jsdelivr.net/gh/bymoye/cdn@1.2/sakura/images/smilies/'. $biliimgdir .'emoji_'. $smilies_Name . $smiliesgs.'" /></span>';
+    $return_smiles = $return_smiles . '<span title="'.$smilies_Name.'" onclick="grin('."'".$smilies_Name."'".',type = \'Math\')"><img loading="lazy" src="https://proxy.nmxc.ltd/gh/bymoye/cdn@1.2/sakura/images/smilies/'. $biliimgdir .'emoji_'. $smilies_Name . $smiliesgs.'" /></span>';
     // 正文转换
-    $bilismiliestrans['{{' . $smilies_Name . '}}'] = '<span title="'. $smilies_Name .'" onclick="grin('."'". $smilies_Name ."'".',type = \'Math\')"><img loading="lazy" src="https://cdn.jsdelivr.net/gh/bymoye/cdn@1.2/sakura/images/smilies/'.$biliimgdir.'emoji_'. $smilies_Name .$smiliesgs.'" /></span>';
+    $bilismiliestrans['{{' . $smilies_Name . '}}'] = '<span title="'. $smilies_Name .'" onclick="grin('."'". $smilies_Name ."'".',type = \'Math\')"><img loading="lazy" src="https://proxy.nmxc.ltd/gh/bymoye/cdn@1.2/sakura/images/smilies/'.$biliimgdir.'emoji_'. $smilies_Name .$smiliesgs.'" /></span>';
     }
     return $return_smiles;
 }
@@ -1040,7 +1041,7 @@ function bili_smile_filter_rss($content) {
     $type = bgapi::check() ? 'webp' : 'png';
     $biliimgdir = 'bili' . $type . '/';
     $smiliesgs='.' . $type;
-    $content = str_replace('{{','<img src="https://cdn.jsdelivr.net/gh/bymoye/cdn@1.2/sakura/images/smilies/'.$biliimgdir,$content);
+    $content = str_replace('{{','<img src="https://proxy.nmxc.ltd/gh/bymoye/cdn@1.2/sakura/images/smilies/'.$biliimgdir,$content);
     $content = str_replace('}}',$smiliesgs.'" alt="emoji" style="height: 2em; max-height: 2em;">',$content);
     $content =  str_replace('[img]', '<img src="', $content);
     return str_replace('[/img]', '" style="display: block;margin-left: auto;margin-right: auto;">', $content);
@@ -1227,7 +1228,7 @@ add_filter('site_url',  'wpadmin_filter', 10, 3);
 function admin_ini() {
   wp_enqueue_style('admin-styles-fix-icon', get_site_url() . '/wp-includes/css/dashicons.css');
   wp_enqueue_style('cus-styles-fit', get_template_directory_uri() . '/inc/css/dashboard-fix.css');
-  wp_enqueue_script( 'lazyload', 'https://cdn.jsdelivr.net/npm/lazyload@2.0.0-rc.2/lazyload.min.js' );
+  wp_enqueue_script( 'lazyload', 'https://proxy.nmxc.ltd/npm/lazyload@2.0.0-rc.2/lazyload.min.js' );
 }
 add_action('admin_enqueue_scripts', 'admin_ini');
 
@@ -1629,7 +1630,7 @@ function CAPTCHA_CHECK( $user, $password) {
 		    if ( ! isset( $_POST['timestamp'] ) || ! isset( $_POST['id'] ) || ! ctype_xdigit( $_POST['id'] ) || ! ctype_digit( $_POST['timestamp'] ) ) {
 			    return new WP_Error( 'prooffail', '<strong>错误</strong>：非法数据' );
 		    }
-		    $check = Sakura\API\CAPTCHA::check_CAPTCHA($_POST['yzm'],$_POST['timestamp'],$_POST['id']);
+		    $check = Sakura\API\CAPTCHA::check_CAPTCHA($_POST['yzm'],(int)$_POST['timestamp'],$_POST['id']);
 	    }else{
 		    $check = Sakura\API\CAPTCHA::check_CAPTCHA($_POST['yzm']);
         }
@@ -1660,7 +1661,7 @@ function lostpassword_CHECK( $errors ) {
             return new WP_Error('prooffail', '<strong>错误</strong>：非法数据');
         }
         include_once('inc/classes/CAPTCHA.php');
-        $check = Sakura\API\CAPTCHA::check_CAPTCHA($_POST['yzm'],$_POST['timestamp'],$_POST['id']);
+        $check = Sakura\API\CAPTCHA::check_CAPTCHA($_POST['yzm'],(int)$_POST['timestamp'],$_POST['id']);
         if($check['code'] != 5){
             return $errors->add( 'invalid_department ', '<strong>错误</strong>：'.$check['msg']);
         }

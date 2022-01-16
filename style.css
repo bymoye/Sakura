@@ -143,7 +143,7 @@ template {
 a {
     background-color: transparent;
     text-decoration: none;
-    cursor: url(https://cdn.jsdelivr.net/gh/moezx/cdn@3.1.9/img/Sakura/cursor/ayuda.cur), auto
+    cursor: url(https://proxy.nmxc.ltd/gh/moezx/cdn@3.1.9/img/Sakura/cursor/ayuda.cur), auto
 }
 
 a:active,
@@ -152,7 +152,7 @@ a:hover {
 }
 
 a:active {
-    cursor: url(https://cdn.jsdelivr.net/gh/moezx/cdn@3.1.9/img/Sakura/cursor/work.cur), alias
+    cursor: url(https://proxy.nmxc.ltd/gh/moezx/cdn@3.1.9/img/Sakura/cursor/work.cur), alias
 }
 
 abbr[title] {
@@ -334,7 +334,7 @@ h6 {
 
 p {
     margin-bottom: 1.5em;
-    cursor: url(https://cdn.jsdelivr.net/gh/moezx/cdn@3.1.9/img/Sakura/cursor/texto.cur), auto
+    cursor: url(https://proxy.nmxc.ltd/gh/moezx/cdn@3.1.9/img/Sakura/cursor/texto.cur), auto
 }
 
 cite,
@@ -401,7 +401,7 @@ html {
 body {
     background: #fff;
     background-attachment: fixed;
-    cursor: url(https://cdn.jsdelivr.net/gh/moezx/cdn@3.1.9/img/Sakura/cursor/normal.cur), auto
+    cursor: url(https://proxy.nmxc.ltd/gh/moezx/cdn@3.1.9/img/Sakura/cursor/normal.cur), auto
 }
 
 blockquote:after,
@@ -3888,7 +3888,7 @@ i.iconfont.js-toggle-search.iconsearch {
     visibility: visible;
     opacity: .99;
     animation: elastic .5s;
-    background-image: url(https://cdn.jsdelivr.net/gh/bymoye/cdn@1/sakura/images/load-loli.gif);
+    background-image: url(https://proxy.nmxc.ltd/gh/bymoye/cdn@1/sakura/images/load-loli.gif);
     background-repeat: no-repeat;
     background-position: bottom right;
     background-color: rgba(255, 255, 255, 0.5);
@@ -4059,7 +4059,7 @@ i.iconfont.js-toggle-search.iconsearch {
 
 .ins-section .ins-section-header,.ins-section .ins-search-item {
 	padding: 8px 15px;
-	cursor: url(https://cdn.jsdelivr.net/gh/moezx/cdn@3.1.9/img/Sakura/cursor/ayuda.cur),auto;
+	cursor: url(https://proxy.nmxc.ltd/gh/moezx/cdn@3.1.9/img/Sakura/cursor/ayuda.cur),auto;
 }
 
 .ins-section .ins-search-item .search-keyword {
@@ -4094,7 +4094,7 @@ i.iconfont.js-toggle-search.iconsearch {
 	font-size: 12px;
 	color: #9a9a9a;
 	margin: 5px 0 0 0px;
-	cursor: url(https://cdn.jsdelivr.net/gh/moezx/cdn@3.1.9/img/Sakura/cursor/ayuda.cur),auto;
+	cursor: url(https://proxy.nmxc.ltd/gh/moezx/cdn@3.1.9/img/Sakura/cursor/ayuda.cur),auto;
 }
 
 .ins-section .ins-search-item:hover,.ins-section .ins-search-item.active {
@@ -5613,7 +5613,7 @@ i.iconfont.down {
     border: 0;
     color: #fff;
     line-height: 1;
-    cursor: url(https://cdn.jsdelivr.net/gh/moezx/cdn@3.1.9/img/Sakura/cursor/No_Disponible.cur), auto;
+    cursor: url(https://proxy.nmxc.ltd/gh/moezx/cdn@3.1.9/img/Sakura/cursor/No_Disponible.cur), auto;
     font-size: 14px;
     font-weight: 500;
     padding: 7px 15px;
@@ -5748,7 +5748,7 @@ input.botui-actions-text-input::-moz-focus-inner {
 }
 
 button.botui-actions-buttons-button {
-    cursor: url(https://cdn.jsdelivr.net/gh/moezx/cdn@3.1.9/img/Sakura/cursor/No_Disponible.cur), auto;
+    cursor: url(https://proxy.nmxc.ltd/gh/moezx/cdn@3.1.9/img/Sakura/cursor/No_Disponible.cur), auto;
     -webkit-appearance: button
 }
 
@@ -6635,7 +6635,7 @@ a.toc-link {
 .emotion-item,
 .on-hover,
 .tieba-container span {
-    cursor: url(https://cdn.jsdelivr.net/gh/moezx/cdn@3.1.9/img/Sakura/cursor/No_Disponible.cur), auto
+    cursor: url(https://proxy.nmxc.ltd/gh/moezx/cdn@3.1.9/img/Sakura/cursor/No_Disponible.cur), auto
 }
 
 .alignright {
@@ -7099,7 +7099,7 @@ a.toc-link {
     padding: 2px;
     text-shadow: none;
     border-radius: 0 0 5px 5px;
-    cursor: url(https://cdn.jsdelivr.net/gh/moezx/cdn@3.1.9/img/Sakura/cursor/texto.cur), auto
+    cursor: url(https://proxy.nmxc.ltd/gh/moezx/cdn@3.1.9/img/Sakura/cursor/texto.cur), auto
 }
 
 .highlight-wrap code[data-rel]:before {

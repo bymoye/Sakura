@@ -161,7 +161,7 @@ if(!function_exists('siren_ajax_comment_callback')) {
                       <h4 class="author"><a href="<?php comment_author_url(); ?>"><?php echo get_avatar( $comment->comment_author_email, '80', '', get_comment_author() ); ?><?php comment_author(); ?> <span class="isauthor" title="<?php esc_attr_e('Author', 'sakura'); ?>"></span></a></h4>
                     </div>
                     <div class="right">
-                      <div class="info"><time datetime="<?php comment_date('Y-m-d'); ?>"><?php echo poi_time_since(strtotime($comment->comment_date), true );//comment_date(get_option('date_format')); ?></time></div>
+                      <div class="info"><time datetime="<?php comment_date('Y-m-d'); ?>"><?php echo poi_time_since(strtotime($comment->comment_date_gmt), true );//comment_date(get_option('date_format')); ?></time></div>
                     </div>
                   </section>
                 </div>
@@ -320,7 +320,7 @@ function the_headPattern():void{
   }
   if(akina_option('patternimg')) $full_image_url = false;
   if(!is_home() && $full_image_url) : 
-    $full_image_lazyload = $full_image_url['md'] ?? 'https://cdn.jsdelivr.net/gh/moezx/cdn@3.0.1/img/svg/loader/orange.progress-bar-stripe-loader.svg';
+    $full_image_lazyload = $full_image_url['md'] ?? 'https://proxy.nmxc.ltd/gh/moezx/cdn@3.0.1/img/svg/loader/orange.progress-bar-stripe-loader.svg';
     $full_image_url_src = $full_image_url['th'] ?? $full_image_url;
   ?>
   <div class="pattern-center-blank"></div>
@@ -374,13 +374,13 @@ function the_video_headPattern_hls():void{
     $t .= the_title( '<h1 class="entry-title">', '</h1>', false);
   }elseif(is_archive()){
     $full_image_url = z_taxonomy_image_url();
-    $thubm_image_url = 'https://cdn.jsdelivr.net/gh/moezx/cdn@3.0.1/img/svg/loader/orange.progress-bar-stripe-loader.svg';
+    $thubm_image_url = 'https://proxy.nmxc.ltd/gh/moezx/cdn@3.0.1/img/svg/loader/orange.progress-bar-stripe-loader.svg';
     $des = category_description() ?: ''; // 描述
     $t .= '<h1 class="cat-title">'.single_cat_title('', false).'</h1>';
     $t .= ' <span class="cat-des">'.$des.'</span>';
   }elseif(is_search()){
     $full_image_url = DEFAULT_FEATURE_IMAGE();
-    $thubm_image_url = 'https://cdn.jsdelivr.net/gh/moezx/cdn@3.0.1/img/svg/loader/orange.progress-bar-stripe-loader.svg';
+    $thubm_image_url = 'https://proxy.nmxc.ltd/gh/moezx/cdn@3.0.1/img/svg/loader/orange.progress-bar-stripe-loader.svg';
     $t .= '<h1 class="entry-title search-title"> '.sprintf( __( "Search results for \" %s \"","sakura" ), get_search_query()) ./*关于“ '.get_search_query().' ”的搜索结果*/'</h1>';
   }
   $thubm_image_url = $thubm_image_url . "#lazyload-blur";
@@ -444,13 +444,13 @@ function the_video_headPattern_normal():void{
     $t .= the_title( '<h1 class="entry-title">', '</h1>', false);
   }elseif(is_archive()){
     $full_image_url = z_taxonomy_image_url();
-    $thubm_image_url = 'https://cdn.jsdelivr.net/gh/moezx/cdn@3.0.1/img/svg/loader/orange.progress-bar-stripe-loader.svg';
+    $thubm_image_url = 'https://proxy.nmxc.ltd/gh/moezx/cdn@3.0.1/img/svg/loader/orange.progress-bar-stripe-loader.svg';
     $des = category_description() ? category_description() : ''; // 描述
     $t .= '<h1 class="cat-title">'.single_cat_title('', false).'</h1>';
     $t .= ' <span class="cat-des">'.$des.'</span>';
   }elseif(is_search()){
     $full_image_url = DEFAULT_FEATURE_IMAGE();
-    $thubm_image_url = 'https://cdn.jsdelivr.net/gh/moezx/cdn@3.0.1/img/svg/loader/orange.progress-bar-stripe-loader.svg';
+    $thubm_image_url = 'https://proxy.nmxc.ltd/gh/moezx/cdn@3.0.1/img/svg/loader/orange.progress-bar-stripe-loader.svg';
     $t .= '<h1 class="entry-title search-title"> '.sprintf( __( "Search results for \" %s \"","sakura" ), get_search_query()) ./*关于“ '.get_search_query().' ”的搜索结果*/'</h1>';
   }
   $thubm_image_url = $thubm_image_url . "#lazyload-blur";
@@ -889,23 +889,23 @@ function siren_get_os(string $ua):array{
 function siren_get_useragent(string $ua):string{
   if(akina_option('open_useragent')){
     // $imgurl = get_bloginfo('template_directory') . '/images/ua/';
-    $imgurl = 'https://cdn.jsdelivr.net/gh/moezx/cdn@3.2.7/img/Sakura/images/ua/svg/';
+    $imgurl = 'https://proxy.nmxc.ltd/gh/moezx/cdn@3.2.7/img/Sakura/images/ua/svg/';
     $browser = siren_get_browsers($ua);
     $os = siren_get_os($ua);
-    return '&nbsp;&nbsp;<span class="useragent-info">( <img src="'. $imgurl.$browser['icon'] .'.svg">&nbsp;'. $browser['title'] .'&nbsp;&nbsp;<img src="'. $imgurl.$os['icon'] .'.svg">&nbsp;'. $os[0] .' )</span>';
+    return '&nbsp;&nbsp;<span class="useragent-info">( <img src="'. $imgurl.$browser['icon'] .'.svg">&nbsp;'. $browser['title'] .'&nbsp;&nbsp;<img src="'. $imgurl.$os['icon'] .'.svg">&nbsp;'. $os['title'] .' )</span>';
   }
   return '';
 }
 
 // UA 显示移动定制
-function mobile_get_useragent_icon($ua){
+function mobile_get_useragent_icon(string $ua):string{
   if(akina_option('open_useragent')){
-    $imgurl = 'https://cdn.jsdelivr.net/gh/moezx/cdn@3.2.7/img/Sakura/images/ua/svg/';
+    $imgurl = 'https://proxy.nmxc.ltd/gh/moezx/cdn@3.2.7/img/Sakura/images/ua/svg/';
     $browser = siren_get_browsers($ua);
     $os = siren_get_os($ua);
     return '<span class="useragent-info-m">( <img src="'. $imgurl.$browser['icon'] .'.svg">&nbsp;&nbsp;<img src="'. $imgurl.$os['icon'] .'.svg"> )</span>';
   }
-  return false;
+  return '';
 }
 
 /*
