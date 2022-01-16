@@ -28,6 +28,7 @@ $opt = [
         'bili' => [
             'href' => akina_option('bili'),
             'title' => 'bilibili',
+            'icon' => 'bilibili',
             'color' => '#f689aa'
         ],
         'youku' => [
