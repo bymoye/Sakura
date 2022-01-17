@@ -346,7 +346,7 @@ function convertip($ip)
             }
 
             $AddrSeek = implode('', unpack('L', $AddrSeek . chr(0)));
-            fseek($fd, $AddrSeek);
+            fseek($fd, (int)$AddrSeek);
             while (($char = fread($fd, 1)) != chr(0)) {
                 $ipAddr1 .= $char;
             }
