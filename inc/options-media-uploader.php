@@ -17,12 +17,7 @@ function optionsframework_uploader( $_id, $_value, $_desc = '', $_name = '' ) {
 	$optionsframework_settings = get_option( 'optionsframework' );
 
 	// Gets the unique option id
-	if ( isset( $optionsframework_settings['id'] ) ) {
-		$option_name = $optionsframework_settings['id'];
-	}
-	else {
-		$option_name = 'options_framework_theme';
-	}
+	$option_name = $optionsframework_settings['id'] ?? 'options_framework_theme';
 
 	$output = '';
 	$id = '';
@@ -34,7 +29,7 @@ function optionsframework_uploader( $_id, $_value, $_desc = '', $_name = '' ) {
 	$id = strip_tags( strtolower( $_id ) );
 
 	// If a value is passed and we don't have a stored value, use the value that's passed through.
-	if ( $_value != '' && $value == '' ) {
+	if ( $_value != '' ) {
 		$value = $_value;
 	}
 
@@ -69,10 +64,10 @@ function optionsframework_uploader( $_id, $_value, $_desc = '', $_name = '' ) {
 		$remove = '<a class="remove-image">Remove</a>';
 		$image = preg_match( '/(^.*\.jpg|jpeg|png|gif|ico*)/i', $value );
 		if ( $image ) {
-			$output .= '<img src="' . $value . '" alt="" />'.$remove.'';
+			$output .= '<img src="' . $value . '" alt="" />' . $remove;
 		} else {
 			$parts = explode( "/", $value );
-			for( $i = 0; $i < sizeof( $parts ); ++$i ) {
+			for( $i = 0; $i < count( $parts ); ++$i ) {
 				$title = $parts[$i];
 			}
 

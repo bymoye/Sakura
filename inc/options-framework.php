@@ -82,9 +82,7 @@ function optionsframework_init() {
 		$default_themename = preg_replace("/\W/", "_", strtolower($default_themename) );
 		$default_themename = 'optionsframework_' . $default_themename;
 		if ( isset( $optionsframework_settings['id'] ) ) {
-			if ( $optionsframework_settings['id'] == $default_themename ) {
-				// All good, using default theme id
-			} else {
+			if ( $optionsframework_settings['id'] != $default_themename ) {
 				$optionsframework_settings['id'] = $default_themename;
 				update_option( 'optionsframework', $optionsframework_settings );
 			}
@@ -146,7 +144,7 @@ function optionsframework_setdefaults() {
 	if ( isset( $optionsframework_settings['knownoptions'] ) ) {
 		$knownoptions =  $optionsframework_settings['knownoptions'];
 		if ( !in_array( $option_name, $knownoptions ) ) {
-			array_push( $knownoptions, $option_name );
+			$knownoptions[]                            = $option_name;
 			$optionsframework_settings['knownoptions'] = $knownoptions;
 			update_option( 'optionsframework', $optionsframework_settings );
 		}

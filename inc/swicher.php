@@ -1,6 +1,6 @@
 <?php
 function font_end_js_control() { 
-    $check = fn($a):bool => $a ? true : false;
+    $check = fn($a):bool => (bool) $a;
     $x = akina_option('app_no_jsdelivr_cdn');
     $app_cdn_url = $x ? get_template_directory_uri() : 'https://proxy.nmxc.ltd/gh/bymoye/Sakura';
     $app_file = '/cdn/theme/' . akina_option('entry_content_theme').($x ? '.css' : '.min.css');

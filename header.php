@@ -25,7 +25,6 @@ if (akina_option('akina_meta') == true) {
 	$keywords = '';
 	$description = '';
 	if ( is_singular() ) {
-		$keywords = '';
 		$tags = get_the_tags();
 		$categories = get_the_category();
 		if ($tags) {

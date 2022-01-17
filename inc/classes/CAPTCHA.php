@@ -12,8 +12,7 @@ class CAPTCHA
     {
 		if (class_exists('Redis')){
 			try {
-				$redis = _Redis::getRedis();
-				return $redis;
+				return _Redis::getRedis();
 			} catch (Exception $e) {
 				return ['msg'=>$e->getMessage()];
 			}
@@ -188,7 +187,7 @@ class CAPTCHA
     private static function _check_CAPTCHA(string $captcha,int|null $timestamp,string|null $id): array{
         $temp = time();
         $temp1 = $temp-60;
-        if (!isset($timestamp) || !isset($id) || !ctype_xdigit((string)$id) || !ctype_digit((string)$timestamp)){
+        if (!isset($timestamp) || !isset($id) || !ctype_xdigit( $id ) || !ctype_digit((string)$timestamp)){
             $code = 3;
             $msg = '非法请求';
         }

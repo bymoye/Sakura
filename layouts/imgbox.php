@@ -11,7 +11,7 @@ $icon_Version = 'icon_' . $Version . '_svg';
             </h1>
         <?php else: ?>
             <div class="header-tou">
-                <a href="<?=bloginfo('url')?>">
+                <a href="<?php bloginfo('url')?>">
                     <img src="<?=akina_option('focus_logo', '') ?: (bloginfo('template_url').'/images/avatar.jpg')?>" alt="">
                 </a>
             </div>

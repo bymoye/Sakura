@@ -103,7 +103,7 @@ if(akina_option('classify_display')){
  */
 function comment_add_at(string $comment_text, WP_Comment $comment = null):string {
   if( $comment?->comment_parent > 0) {
-       if(substr($comment_text, 0, 3) === '<p>') 
+       if( str_starts_with( $comment_text, '<p>' ) )
         $comment_text = str_replace(substr($comment_text, 0, 3), '<p><a href="#comment-' . $comment->comment_parent . '" class="comment-at">@'.get_comment_author( $comment->comment_parent ) . '</a>&nbsp;', $comment_text);
       else $comment_text = '<a href="#comment-' . $comment->comment_parent . '" class="comment-at">@'.get_comment_author( $comment->comment_parent ) . '</a>&nbsp;' . $comment_text;
   }
@@ -148,7 +148,7 @@ if(!function_exists('siren_ajax_comment_callback')) {
       do_action('set_comment_cookies', $comment, $user);
       $GLOBALS['comment'] = $comment; //根据你的评论结构自行修改，如使用默认主题则无需修改
       ?>
-      <li <?php comment_class(); ?> id="comment-<?php echo esc_attr(comment_ID()); ?>">
+      <li <?php comment_class(); ?> id="comment-<?php comment_ID(); ?>">
         <div class="contents">
           <div class="comment-arrow">
             <div class="main shadow">
@@ -221,12 +221,12 @@ function Exuser_center(){ ?>
   </script>    
   <?php if(current_user_can('level_10')){ ?>
   <div class="admin-login-check">
-    <?php echo login_ok(); ?>
+    <?php login_ok(); ?>
     <?php if(akina_option('login_urlskip')){ ?><script>window.open("<?php bloginfo('url'); ?>/wp-admin/",1);gopage("<?php bloginfo('url'); ?>",0);</script><?php } ?>
   </div>
   <?php }else{ ?>
   <div class="user-login-check">
-    <?php echo login_ok(); ?>
+    <?php login_ok(); ?>
     <?php if(akina_option('login_urlskip')){ ?><script>gopage("<?php bloginfo('url'); ?>",0);</script><?php } ?>
   </div>
 <?php 
@@ -337,7 +337,7 @@ function the_headPattern():void{
 function the_video_headPattern_hls():void{
   $t = ''; // 标题
   $full_image_url = wp_get_attachment_image_src(get_post_thumbnail_id(get_the_ID()), 'full');
-  $thubm_image_url = wp_get_attachment_image_src( get_post_thumbnail_id(get_the_ID()), 'thumbnail');
+  $thubm_image_url = wp_get_attachment_image_src( get_post_thumbnail_id(get_the_ID()) );
   
     $video_cover = get_post_meta(get_the_ID(), 'video_cover', true);
     $video_cover_thumb = get_post_meta(get_the_ID(), 'video_cover_thumb', true);
@@ -408,7 +408,7 @@ function the_video_headPattern_hls():void{
 function the_video_headPattern_normal():void{
   $t = ''; // 标题
   $full_image_url = wp_get_attachment_image_src(get_post_thumbnail_id(get_the_ID()), 'full');
-  $thubm_image_url = wp_get_attachment_image_src( get_post_thumbnail_id(get_the_ID()), 'thumbnail');
+  $thubm_image_url = wp_get_attachment_image_src( get_post_thumbnail_id(get_the_ID()) );
   
     $video_cover = get_post_meta(get_the_ID(), 'video_cover', true);
     $video_cover_thumb = get_post_meta(get_the_ID(), 'video_cover_thumb', true);
@@ -577,7 +577,9 @@ return '';
 
 /**
  * 文章摘要
- * @param $more
+ *
+ * @param string $more
+ *
  * @return string
  */
 function changes_post_excerpt_more(string $more ):string {
@@ -801,7 +803,9 @@ add_action('admin_menu', 'disable_dashboard_widgets');
 
 /**
  * 获取用户UA信息
- * @param $ua
+ *
+ * @param string $ua
+ *
  * @return string[]
  */
 // 浏览器信息
@@ -871,7 +875,7 @@ function siren_get_os(string $ua):array{
       $mac_code_name = $mac_code_list[$mac_ver];
     }
     $matches[1] = $mac_code_name.' '.$matches[1];
-    $title = 'macOS '.($has_x?'X':''.' ').str_replace('_','.',$matches[1]);
+    $title = 'macOS '.($has_x?'X': ' ' ) . str_replace('_','.',$matches[1]);
     $icon = "macos";
   }elseif (strpos($ua, 'Macintosh')) {
     $title = "macOS";

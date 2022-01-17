@@ -87,7 +87,6 @@
 	<aside id="secondary" class="widget-area" role="complementary" style="left: -400px;">
     <div class="heading"><?php _e('Widgets') /*小工具*/ ?></div>
     <div class="sakura_widget">
-	<?php if (function_exists('dynamic_sidebar') && dynamic_sidebar('sakura_widget')) : endif; ?>
 	</div>
 	<div class="show-hide-wrap"><button class="show-hide"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M22 16l-10.105-10.6-1.895 1.987 8.211 8.613-8.211 8.612 1.895 1.988 8.211-8.613z"></path></svg></button></div>
     </aside>

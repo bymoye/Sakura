@@ -145,7 +145,7 @@ class Parsedown
 
         foreach ($lines as $line)
         {
-            if (chop($line) === '')
+            if (rtrim($line) === '')
             {
                 if (isset($CurrentBlock))
                 {
@@ -707,7 +707,7 @@ class Parsedown
             return;
         }
 
-        if (chop($Line['text'], $Line['text'][0]) === '')
+        if (rtrim($Line['text'], $Line['text'][0]) === '')
         {
             $Block['element']['name'] = $Line['text'][0] === '=' ? 'h1' : 'h2';
 
@@ -843,7 +843,7 @@ class Parsedown
             return;
         }
 
-        if (str_contains($Block['element']['text'], '|') and chop($Line['text'], ' -:|') === '')
+        if (str_contains($Block['element']['text'], '|') and rtrim($Line['text'], ' -:|') === '')
         {
             $alignments = array();
 
@@ -870,7 +870,7 @@ class Parsedown
                     $alignment = 'left';
                 }
 
-                if (substr($dividerCell, - 1) === ':')
+                if ( str_ends_with( $dividerCell, ':' ) )
                 {
                     $alignment = $alignment === 'left' ? 'center' : 'right';
                 }
@@ -1540,7 +1540,7 @@ class Parsedown
 
         $trimmedMarkup = trim($markup);
 
-        if ( ! in_array('', $lines) and substr($trimmedMarkup, 0, 3) === '<p>')
+        if ( ! in_array('', $lines) and str_starts_with( $trimmedMarkup, '<p>' ) )
         {
             $markup = $trimmedMarkup;
             $markup = substr($markup, 3);

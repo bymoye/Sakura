@@ -420,11 +420,11 @@ if(!function_exists('akina_comment_format')){
 						<div class="commentinfo">
 							<section class="commeta">
 								<div class="left">
-									<h4 class="author"><a href="<?php comment_author_url(); ?>" target="_blank" rel="nofollow"><?php echo get_avatar( $comment->comment_author_email, '24', '', get_comment_author() ); ?><span class="bb-comment isauthor" title="<?php _e('Author', 'sakura'); ?>"><?php _e('Blogger', 'sakura'); /*博主*/?></span> <?php comment_author(); ?> <?php echo get_author_class($comment->comment_author_email,$comment->user_id); ?></a></h4>
+									<h4 class="author"><a href="<?php comment_author_url(); ?>" target="_blank" rel="nofollow"><?php echo get_avatar( $comment->comment_author_email, '24', '', get_comment_author() ); ?><span class="bb-comment isauthor" title="<?php _e('Author', 'sakura'); ?>"><?php _e('Blogger', 'sakura'); /*博主*/?></span> <?php comment_author(); ?> <?php get_author_class($comment->comment_author_email,$comment->user_id); ?></a></h4>
 								</div>
 								<?php comment_reply_link(array_merge($args, array('depth' => $depth, 'max_depth' => $args['max_depth']))); ?>
 								<div class="right">
-									<div class="info"><time datetime="<?php comment_date('Y-m-d'); ?>"><?php echo poi_time_since(strtotime($comment->comment_date_gmt), true );//comment_date(get_option('date_format')); ?></time><?php echo siren_get_useragent($comment->comment_agent); ?><?php echo mobile_get_useragent_icon($comment->comment_agent); ?>&nbsp;<?php _e('Location', 'sakura'); /*来自*/?>: <?php echo convertip(get_comment_author_ip()); ?>
+									<div class="info"><time datetime="<?php comment_date('Y-m-d'); ?>"><?php echo poi_time_since(strtotime($comment->comment_date_gmt), true );//comment_date(get_option('date_format')); ?></time><?php echo siren_get_useragent($comment->comment_agent); ?><?php echo mobile_get_useragent_icon($comment->comment_agent); ?>&nbsp;<?php _e('Location', 'sakura'); /*来自*/?>: <?php echo $comment->comment_author_IP_address; ?>
     									<?php if (current_user_can('manage_options') and (wp_is_mobile() == false) ) {
                                             $comment_ID = $comment->comment_ID;
                                             $i_private = get_comment_meta($comment_ID, '_private', true);
@@ -437,8 +437,8 @@ if(!function_exists('akina_comment_format')){
                                                 $flag .= __("No", "sakura").' <i class="post_icon_svg" style="--svg-name: var(--svg_unlock);--size: 12px;--color:#7E8892;"></i>';
                                             }
                                             $flag .= '</span></a>';
-                                            $flag .= edit_comment_link('<i class="post_icon_svg" style="--svg-name: var(--svg_edit);--size: 12px;--color:#e67474;margin:0"></i> '.__("Edit", "mashiro"), ' <span style="color:rgba(0,0,0,.35)">', '</span>');
                                             echo $flag;
+										    edit_comment_link('<i class="post_icon_svg" style="--svg-name: var(--svg_edit);--size: 12px;--color:#e67474;margin:0"></i> '.__("Edit", "mashiro"), ' <span style="color:rgba(0,0,0,.35)">', '</span>');
                                         } ?></div>
 								</div>
 							</section>
@@ -492,7 +492,7 @@ function restyle_text($number) {
 function set_post_views() {
     if (is_singular()) {
         global $post;
-        $post_id = intval($post->ID);
+        $post_id = $post->ID;
         if($post_id) {
             $views = (int)get_post_meta($post_id, 'views', true);
             if(!update_post_meta($post_id, 'views', ($views + 1))) {
@@ -1103,7 +1103,7 @@ function siren_private(){
         $i_private = get_comment_meta($comment_ID, '_private', true);
         echo !empty($i_private) ? '否' : '是';
     }
-    die;
+    exit();
 }
 
 //时间序列
@@ -1363,7 +1363,7 @@ function codecheese_register_post( $sanitized_user_login, $user_email, $errors )
 	// Get visitor email domain
         $email = explode( '@', $user_email );
 	// Check and display error message for the registration form if exists
-	if( empty($email) && in_array( $email[1], $domains ) )
+	if(in_array( $email[1], $domains ) )
 		$errors->add('invalid_email', __('<b>ERROR</b>: This email domain (<b>@'.$email[1].'</b>) has been blocked. Please use another email.'));
 }
 
@@ -1420,11 +1420,9 @@ function add_comments_columns( $columns ){
     return $columns;
 }
 function output_comments_qq_columns( $column_name, $comment_id ){
-    switch( $column_name ) {
-		case "new_field_qq" :
-		 // 这是输出值，可以拿来在前端输出，这里已经在钩子manage_comments_custom_column上输出了
+	// 这是输出值，可以拿来在前端输出，这里已经在钩子manage_comments_custom_column上输出了
+	if ( $column_name == "new_field_qq" ) {
 		echo get_comment_meta( $comment_id, 'new_field_qq', true );
-		break;
 	}
 }
 /**
@@ -1468,7 +1466,7 @@ function get_random_bg_url(): array|string {
 //防止设置置顶文章造成的图片同侧bug
 add_action( 'pre_get_posts', function($q){
     if ($q->is_home() && $q->is_main_query()){
-        $q->set( 'posts_per_page', get_option('posts_per_page') - sizeof(get_option( 'sticky_posts' )) );
+        $q->set( 'posts_per_page', get_option('posts_per_page') - 	count(get_option( 'sticky_posts' )) );
         if ( $q->get('paged') > 1 )
             $q->set('post__not_in', get_option( 'sticky_posts'));
     }
@@ -1505,10 +1503,15 @@ function markdown_parser($incoming_comment) {
     }
     // $myCustomer = $wpdb->get_row("SELECT * FROM wp_comments");
     //Add column if not present.
-    $column_names = $wpdb->get_row("SELECT * FROM information_schema.columns where 
-    table_name='wp_comments' and column_name = 'comment_markdown' LIMIT 1");
-    if (!isset($column_names)) {
+    // 检查comment_mardown 字段是否存在
+    $column_names = $wpdb->get_row("SELECT data_TYPE FROM information_schema.columns where table_name='wp_comments' and column_name = 'comment_markdown' LIMIT 1");
+    if (!$column_names) {
         $wpdb->query("ALTER TABLE wp_comments ADD comment_markdown text");
+    }
+    // 检查 comment_author_IP_address 字段是否存在
+    $column_names = $wpdb->get_row("SELECT data_TYPE FROM information_schema.columns where table_name='wp_comments' and column_name = 'comment_author_IP_address' LIMIT 1");
+    if (!$column_names) {
+        $wpdb->query("ALTER TABLE wp_comments ADD comment_author_IP_address VARCHAR(255)");
     }
     $comment_markdown_content = $incoming_comment['comment_content'];
     include 'inc/classes/Parsedown.php';
@@ -1519,13 +1522,24 @@ function markdown_parser($incoming_comment) {
 add_filter('preprocess_comment' , 'markdown_parser');
 remove_filter( 'comment_text', 'make_clickable', 9 );
 
+
+
 //保存Markdown评论
 function save_markdown_comment($comment_ID, $comment_approved) {
     global $wpdb,$comment_markdown_content;
     $comment = get_comment($comment_ID);
     $comment_content = $comment_markdown_content;
+    $address = convertip($comment->comment_author_IP);
     //store markdow content
-    $wpdb->query("UPDATE wp_comments SET comment_markdown='".$comment_content."' WHERE comment_ID='".$comment_ID."';");
+    $wpdb->update('wp_comments',[
+        'comment_markdown' => $comment_content,
+        'comment_author_IP_address' => $address
+        ],
+        ['comment_ID' => $comment_ID],
+        ['%s','%s'],
+        ['%d']
+    );
+    // $wpdb->query($wpdb->prepare("UPDATE wp_comments SET comment_markdown = %s,comment_author_IP_address = %s WHERE comment_ID = %d", $comment_content,$address, $comment_ID));
 }
 add_action('comment_post', 'save_markdown_comment', 10, 2);
 

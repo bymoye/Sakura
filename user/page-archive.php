@@ -29,9 +29,9 @@ get_header();
                 $all[$year] = array();      
             }      
             if ($mon != $mon_tmp) { // 输出月份      
-                $mon = $mon_tmp;     
-                array_push($all[$year], $mon);      
-                $output .= "<div class='archive-title' id='arti-$year-$mon'><span class='ar-time'><i><em class='post_icon_svg' style='--svg-name: var(--svg_calendar);--size: 17px;--color:white;vertical-align: text-top;margin:0'></em></i></span><h3>$year-$mon</h3><div class='archives archives-$mon' id='monlist' data-date='$year-$mon'>";      
+                $mon            = $mon_tmp;
+                $all[ $year ][] = $mon;
+                $output         .= "<div class='archive-title' id='arti-$year-$mon'><span class='ar-time'><i><em class='post_icon_svg' style='--svg-name: var(--svg_calendar);--size: 17px;--color:white;vertical-align: text-top;margin:0'></em></i></span><h3>$year-$mon</h3><div class='archives archives-$mon' id='monlist' data-date='$year-$mon'>";
             }      
             $output .= '<span class="ar-circle"></span><div class="arrow-left-ar"></div><div class="brick"><a href="'.get_permalink() .'"><span class="time"><i class="post_icon_svg" style="--svg-name: var(--svg_time);"></i>'.get_the_time('n-d').'</span>'.get_the_title() .'<em>('. get_comments_number('0', '1', '%') .')</em></a></div>';      
         endwhile;      

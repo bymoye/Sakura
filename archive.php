@@ -19,7 +19,7 @@ get_header(); ?>
 			<span class="cat-des">
 			<?php 
 				if(category_description() != ""){ 
-					echo "" . category_description(); 
+					echo category_description();
 				} 
 			?>
 			</span>
