@@ -320,7 +320,7 @@ function convertip($ip)
                 return 'System Error';
             }
             $ipSeek = implode('', unpack('L', $ipSeek . chr(0)));
-            fseek($fd, $ipSeek);
+            fseek($fd, (int)$ipSeek);
             $ipFlag = fread($fd, 1);
         }
         if ($ipFlag == chr(2)) {
