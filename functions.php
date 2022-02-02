@@ -130,9 +130,8 @@ function akina_setup() {
 	function disable_emojis_tinymce( $plugins ) {
 	 if ( is_array( $plugins ) ) {
 	 return array_diff( $plugins, [ 'wpemoji' ] );
-	 } else {
-	 return [];
 	 }
+	 return [];
 	}
 	
 	// 移除菜单冗余代码
@@ -187,27 +186,6 @@ function sakura_scripts() {
 	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
 		wp_enqueue_script( 'comment-reply' );
 	}
-
-	// 20161116 @Louie
-	$mv_live = akina_option('focus_mvlive') ? 'open' : 'close';
-	$movies = akina_option('focus_amv') ? array('url' => akina_option('amv_url'), 'name' => akina_option('amv_title'), 'live' => $mv_live) : 'close';
-	$auto_height = akina_option('focus_height') ? 'fixed' : 'auto';
-	$code_lamp = 'close';
-	//if(wp_is_mobile()) $auto_height = 'fixed'; //拦截移动端
-    $reply_link_version = version_compare( $GLOBALS['wp_version'], '5.1', '>=' ) ? 'new' : 'old';
-	wp_localize_script('app', 'Poi' , array(
-		'pjax' => akina_option('poi_pjax'),
-		'movies' => $movies,
-		'windowheight' => $auto_height,
-		'codelamp' => $code_lamp,
-		'ajaxurl' => admin_url('admin-ajax.php'),
-		'order' => get_option('comment_order'), // ajax comments
-		'formpostion' => 'bottom', // ajax comments 默认为bottom，如果你的表单在顶部则设置为top。
-        'reply_link_version' => $reply_link_version,
-        'api' => esc_url_raw(rest_url()),
-        'nonce' => wp_create_nonce('wp_rest'),
-        'google_analytics_id' => akina_option('google_analytics_id', '')
-	));
 }
 add_action('wp_enqueue_scripts', 'sakura_scripts');
 
@@ -1251,21 +1229,14 @@ add_action('admin_footer', 'custom_admin_js');
  * 后台通知
  */
 function scheme_tip() {
-	$msg = '<b>Why not try the new admin dashboard color scheme <a href="/wp-admin/profile.php">here</a>?</b>';
-	if ( get_user_locale( get_current_user_id() ) == "zh_CN") {
-		$msg = '<b>试一试新后台界面<a href="/wp-admin/profile.php">配色方案</a>吧？</b>';
-	}
-	if ( get_user_locale( get_current_user_id() ) == "zh_TW") {
-		$msg = '<b>試一試新後台界面<a href="/wp-admin/profile.php">色彩配置</a>吧？</b>';
-	}
-	if ( get_user_locale( get_current_user_id() ) == "ja") {
-		$msg = '<b>新しい<a href="/wp-admin/profile.php">管理画面の配色</a>を試しますか？</b>';
-	}
-	if ( get_user_locale( get_current_user_id() ) == "ja-JP") {
-		$msg = '<b>新しい<a href="/wp-admin/profile.php">管理画面の配色</a>を試しますか？</b>';
-	}
-    
     $user_id = get_current_user_id();
+    $msg = match(get_user_locale($user_id)){
+        'zh_CN' => '<b>试一试新后台界面<a href="/wp-admin/profile.php">配色方案</a>吧？</b>',
+        'zh_TW' => '<b>試一試新後台界面<a href="/wp-admin/profile.php">色彩配置</a>吧？</b>',
+        'ja','ja-JP' => '<b>新しい<a href="/wp-admin/profile.php">管理画面の配色</a>を試しますか？</b>',
+        default => '<b>Why not try the new admin dashboard color scheme <a href="/wp-admin/profile.php">here</a>?</b>'
+    };
+
     if ( !get_user_meta( $user_id, 'scheme-tip-dismissed'.BUILD_VERSION ) ) {
         echo '<div class="notice notice-success is-dismissible" id="scheme-tip"><p><b>'.$msg.'</b></p></div>';
     }
@@ -1432,15 +1403,12 @@ add_filter( 'get_avatar', 'change_avatar', 10, 3 );
 function change_avatar($avatar){
     global $comment;
     if ($comment) {
-        if( get_comment_meta( $comment->comment_ID, 'new_field_qq', true )){
-            $qq_number =  get_comment_meta( $comment->comment_ID, 'new_field_qq', true );
+        $qq_number = get_comment_meta( $comment->comment_ID, 'new_field_qq', true );
+        if($qq_number){
             return '<img src="https://q2.qlogo.cn/headimg_dl?dst_uin='.$qq_number.'&spec=100" class="lazyload avatar avatar-24 photo" alt="😀" width="24" height="24" onerror="imgError(this,1)">';
-        }else{
-            return $avatar ;
         }
-    } else{
-        return $avatar ;
     }
+    return $avatar ;
 }
 
 function DEFAULT_FEATURE_IMAGE(): array|bool|string {

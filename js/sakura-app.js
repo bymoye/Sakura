@@ -6,12 +6,9 @@
  */
 "use strict";
 
-mashiro_global.variables = new function () {
-    this.has_hls = false;
-};
-
-mashiro_global.ini = new function () {
-    this.normalize = function () { // initial functions when page first load (首次加载页面时的初始化函数)
+nazo_option.global.ini = {
+    has_hls : false,
+    normalize :() => {
         lazyload();
         post_list_show_animation();
         copy_code_block();
@@ -20,8 +17,8 @@ mashiro_global.ini = new function () {
         scrollBar();
         load_bangumi();
         sm();
-    }
-    this.pjax = function () { // pjax reload functions (pjax 重载函数)
+    },
+    pjax :() => {
         pjaxInit();
         post_list_show_animation();
         copy_code_block();
@@ -30,7 +27,7 @@ mashiro_global.ini = new function () {
         load_bangumi();
         sm();
     }
-}
+};
 
 function imgError(ele, type) {
     switch (type) {
@@ -139,7 +136,7 @@ function attach_image() {
             formData.append('cmt_img_file', f);
             cached.innerHTML = '<i class="picture_icon_svg" style="--svg-name: var(--svg_loading);"></i>';
             addComment.createButterbar("上传中...<br>Uploading...");
-            fetch(Poi.api + 'sakura/v1/image/upload?_wpnonce=' + Poi.nonce, {
+            fetch(nazo_option.api + 'sakura/v1/image/upload?_wpnonce=' + nazo_option.nonce, {
                 method : "POST",
                 body : formData
             })
@@ -237,7 +234,7 @@ function scrollBar() {
         sc = document.querySelector(".site-content");
     let blur_rs,
         s = 0, a, b, c, result;
-    if (Poi.pjax) {
+    if (nazo_option.pjax) {
         let flag = false,
             blur = document.querySelector("feGaussianBlur"),
             __blur = Number(blur.getAttribute("stdDeviation"));
@@ -283,12 +280,12 @@ function scrollBar() {
         if (f && sc) {
             f.style.height = sc.getBoundingClientRect(outerHeight)["height"] + "px";
         }
-        if (Poi.pjax) blur_rs();
+        if (nazo_option.pjax) blur_rs();
     });
 }
 
 function iconsvg() {
-    if (!document.getElementById("svg_blurfilter") && Poi.pjax) {
+    if (!document.getElementById("svg_blurfilter") && nazo_option.pjax) {
             const a = "http://www.w3.org/2000/svg",
                 svg = document.querySelector("svg"),
                 filter = document.createElementNS(a, "filter"),
@@ -555,13 +552,13 @@ function loadJS(url, callback) {
 function coverVideoIni() {
     const video = document.getElementsByTagName('video')[0];
     if (video && video.classList.contains('hls')) {
-        if (mashiro_global.variables.has_hls) {
+        if (nazo_option.global.ini.has_hls) {
             loadHls();
         } else {
             //不保证可用 需测试
             loadJS("https://proxy.nmxc.ltd/gh/bymoye/sakura@0.0.3/cdn/js/src/16.hls.js", function () {
                 loadHls();
-                mashiro_global.variables.has_hls = true;
+                nazo_option.global.ini.has_hls = true;
             })
         }
     }
@@ -585,7 +582,7 @@ function tableOfContentScroll(flag) {
     } else {
         if (flag) {
             let id = 1,
-                heading_fix = mashiro_option.entry_content_theme === "sakura" ? (document.querySelector("article.type-post") ? (document.querySelector("div.pattern-attachment-img") ? -75 : 200) : 375) : window.innerHeight / 2;
+                heading_fix = nazo_option.entry_content_theme === "sakura" ? (document.querySelector("article.type-post") ? (document.querySelector("div.pattern-attachment-img") ? -75 : 200) : 375) : window.innerHeight / 2;
             const _els = document.querySelectorAll('.entry-content,.links');
                 for(let i = 0;i<_els.length;i++){
                     const _el = _els[i].querySelectorAll('h1,h2,h3,h4,h5');
@@ -648,7 +645,7 @@ const cm_click = (e)=>{
 function sm() {
     const sm = document.getElementsByClassName('sm'),
         cm = document.querySelector(".comments-main");
-        if (Poi.reply_link_version === 'new' && cm) {
+        if (cm) {
             cm.addEventListener("click",cm_click);
         }
     if (!sm.length) return;
@@ -755,8 +752,8 @@ function grin(tag, type, before, after) {
 const copytext = (e) => {
     const setClipboardText = (event) => {
         event.preventDefault();
-        const htmlData = "# 商业转载请联系作者获得授权，非商业转载请注明出处。<br>" + "# For commercial use, please contact the author for authorization. For non-commercial use, please indicate the source.<br>" + "# 协议(License)：署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0)<br>" + "# 作者(Author)：" + mashiro_option.author_name + "<br>" + "# 链接(URL)：" + window.location.href + "<br>" + "# 来源(Source)：" + mashiro_option.site_name + "<br><br>" + window.getSelection().toString().replace(/\r\n/g, "<br>"),
-            textData = "# 商业转载请联系作者获得授权，非商业转载请注明出处。\n" + "# For commercial use, please contact the author for authorization. For non-commercial use, please indicate the source.\n" + "# 协议(License)：署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0)\n" + "# 作者(Author)：" + mashiro_option.author_name + "\n" + "# 链接(URL)：" + window.location.href + "\n" + "# 来源(Source)：" + mashiro_option.site_name + "\n\n" + window.getSelection().toString().replace(/\r\n/g, "\n");
+        const htmlData = "# 商业转载请联系作者获得授权，非商业转载请注明出处。<br>" + "# For commercial use, please contact the author for authorization. For non-commercial use, please indicate the source.<br>" + "# 协议(License)：署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0)<br>" + "# 作者(Author)：" + nazo_option.author_name + "<br>" + "# 链接(URL)：" + window.location.href + "<br>" + "# 来源(Source)：" + nazo_option.site_name + "<br><br>" + window.getSelection().toString().replace(/\r\n/g, "<br>"),
+            textData = "# 商业转载请联系作者获得授权，非商业转载请注明出处。\n" + "# For commercial use, please contact the author for authorization. For non-commercial use, please indicate the source.\n" + "# 协议(License)：署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0)\n" + "# 作者(Author)：" + nazo_option.author_name + "\n" + "# 链接(URL)：" + window.location.href + "\n" + "# 来源(Source)：" + nazo_option.site_name + "\n\n" + window.getSelection().toString().replace(/\r\n/g, "\n");
         if (event.clipboardData) {
             event.clipboardData.setData("text/html", htmlData);
             event.clipboardData.setData("text/plain", textData);
@@ -764,7 +761,7 @@ const copytext = (e) => {
             return window.clipboardData.setData("text", textData);
         }
     }
-    if (window.getSelection().toString().length > 30 && mashiro_option.clipboardCopyright) {
+    if (window.getSelection().toString().length > 30 && nazo_option.clipboardCopyright) {
         setClipboardText(e);
     }
     addComment.createButterbar("复制成功！<br>Copied to clipboard successfully!", 1000);
@@ -795,7 +792,7 @@ function getqqinfo() {
         author.value = localStorage.getItem('user_author');
         email.value = localStorage.getItem('user_qq') + '@qq.com';
         qq.value = localStorage.getItem('user_qq');
-        if (mashiro_option.qzone_autocomplete) {
+        if (nazo_option.qzone_autocomplete) {
             url.value = 'https://user.qzone.qq.com/' + localStorage.getItem('user_qq');
         }
         if (qq.value) {
@@ -817,7 +814,7 @@ function getqqinfo() {
             gravatar_check.style.display = "block";
         } else {
             addComment.createButterbar("正在获取qq信息...", 1000);
-            fetch(mashiro_option.qq_api_url + i_qq)
+            fetch(nazo_option.qq_api_url + i_qq)
             .then(res=>{
                 if(res.ok){
                     return res.json();
@@ -828,7 +825,7 @@ function getqqinfo() {
             .then(data=>{
                 author.value = data['qqname'];
                 email.value = i_qq.trim() + "@qq.com";
-                if (mashiro_option.qzone_autocomplete) {
+                if (nazo_option.qzone_autocomplete) {
                     url.value = "https://user.qzone.qq.com/" + qq.trim();
                 }
                 // user_avatar_img.setAttribute("src", "https://q2.qlogo.cn/headimg_dl?dst_uin=" + i_qq + "&spec=100");
@@ -901,7 +898,7 @@ function getqqinfo() {
 }
 
 function mail_me() {
-    const mail = "mailto:" + mashiro_option.email_name + "@" + mashiro_option.email_domain;
+    const mail = "mailto:" + nazo_option.email_name + "@" + nazo_option.email_domain;
     window.open(mail);
 }
 
@@ -930,7 +927,7 @@ const bgmlistener = (e)=>{
         if (target.classList.contains("loading")) return;
         target.classList.add("loading");
         target.textContent = "";
-        fetch(target.href + "&_wpnonce=" + Poi.nonce,{method:"POST"})
+        fetch(target.href + "&_wpnonce=" + nazo_option.nonce,{method:"POST"})
         .then(async res=>{
             const data = await res.json();
             if (res.ok){
@@ -961,9 +958,9 @@ function load_bangumi() {
 }
 }
 
-mashiro_global.ini.normalize();
-loadCSS(mashiro_option.jsdelivr_css_src);
-loadCSS(mashiro_option.entry_content_theme_src);
+nazo_option.global.ini.normalize();
+loadCSS(nazo_option.jsdelivr_css_src);
+loadCSS(nazo_option.entry_content_theme_src);
 
 function serialize(form) {
     const formData = new FormData(form),
@@ -1005,7 +1002,7 @@ const Siren = {
             }
         },
         splay: function () {
-            if (Poi.movies !== 'close'){
+            if (nazo_option.movies !== 'close'){
                 const video_btn = document.getElementById("video-btn");
                 video_btn.classList.add("video-pause");
                 video_btn.classList.remove("video-play");
@@ -1019,7 +1016,7 @@ const Siren = {
             }
         },
         spause: function () {
-            if (Poi.movies !== 'close'){
+            if (nazo_option.movies !== 'close'){
                 try {
                     const video_btn = document.getElementById("video-btn");
                     video_btn.classList.add("video-play");
@@ -1030,14 +1027,14 @@ const Siren = {
             }
         },
         liveplay: function () {
-            if (Poi.movies !== 'close' && s.oncanplay != null && document.querySelector(".haslive")) {
+            if (nazo_option.movies !== 'close' && s.oncanplay != null && document.querySelector(".haslive")) {
                 if (document.querySelector(".videolive")) {
                     Siren.splay();
                 }
             }
         },
         livepause: function () {
-            if (Poi.movies !== 'close' && s.oncanplay != null && document.querySelector(".haslive")) {
+            if (nazo_option.movies !== 'close' && s.oncanplay != null && document.querySelector(".haslive")) {
                 Siren.spause();
                 const video_stu = document.getElementsByClassName("video-stu")[0];
                 video_stu.style.transform = "";
@@ -1045,19 +1042,19 @@ const Siren = {
             }
         },
         addsource: function () {
-            if (Poi.movies !== 'close'){
+            if (nazo_option.movies !== 'close'){
                 const video_stu = document.getElementsByClassName("video-stu")[0];
                 video_stu.innerHTML = "正在载入视频 ...";
                 video_stu.style.transform = "translateY(-39px)";
-                const t = Poi.movies.name.split(","),
+                const t = nazo_option.movies.name.split(","),
                     _t = t[~~(Math.random() * t.length)],
                     bgvideo = document.getElementById("bgvideo");
-                bgvideo.setAttribute("src", Poi.movies.url + '/' + _t + '.mp4');
+                bgvideo.setAttribute("src", nazo_option.movies.url + '/' + _t + '.mp4');
                 bgvideo.setAttribute("video-name", _t);
             }
         },
         LV: function () {
-            if (Poi.movies !== 'close'){
+            if (nazo_option.movies !== 'close'){
                 const _btn = document.getElementById("video-btn");
                 const add =  document.getElementById("video-add");
                 _btn && _btn.addEventListener("click", function () {
@@ -1095,7 +1092,7 @@ const Siren = {
             }
         },
         AH: function () {
-            if (Poi.windowheight === 'auto' && mashiro_option.windowheight === 'auto') {
+            if (nazo_option.windowheight === 'auto') {
                 if (document.querySelector(".main-title")) {
                     document.getElementById("centerbg").style.height = "100vh";
                     const bgvideo = document.getElementById("bgvideo");
@@ -1113,7 +1110,7 @@ const Siren = {
                 if (document.querySelector(".main-title")) {
                      if(blank) blank.style.paddingTop = "0px";
                     headertop.style.display = "block";
-                    if (Poi.movies.live === 'open') Siren.liveplay();
+                    if (nazo_option.movies.live === 'open') Siren.liveplay();
                 } else {
                     if(blank) blank.style.paddingTop = "75px";
                     headertop.style.display = "none";
@@ -1147,7 +1144,7 @@ const Siren = {
                     })
                 }
             }
-            if (mashiro_option.baguetteBoxON) {
+            if (nazo_option.baguetteBoxON) {
                 window.addEventListener('load', function() {baguetteBox.run('.entry-content');});
                 // baguetteBox.run('.entry-content', {
                 //     captions: function (element) {
@@ -1159,11 +1156,11 @@ const Siren = {
                 document.querySelector(".js-toggle-search").classList.toggle("is-active");
                 document.querySelector(".js-search").classList.toggle("is-visible");
                 document.documentElement.style.overflowY = "hidden";
-                if (mashiro_option.live_search) {
+                if (nazo_option.live_search) {
                     let QueryStorage = [],
                     list = document.getElementById("PostlistBox"),
                     Record = list.innerHTML;
-                    search_a(Poi.api + "sakura/v1/cache_search/json?_wpnonce=" + Poi.nonce);
+                    search_a(nazo_option.api + "sakura/v1/cache_search/json?_wpnonce=" + nazo_option.nonce);
 
                     let otxt = document.getElementById("search-input"),
                         searchFlag = null;
@@ -1395,7 +1392,7 @@ const Siren = {
                         for (let i=0;i<result.length;i++){
                             main.append(result[i]);
                         }
-                        // if(Poi.pjax)_pjax.refresh(document.querySelector("#content"));
+                        // if(nazo_option.pjax)_pjax.refresh(document.querySelector("#content"));
                         const dpga = document.querySelector("#pagination a"),
                         addps = document.querySelector("#add_post span");
                         if(dpga){
@@ -1430,7 +1427,7 @@ const Siren = {
                     e.stopPropagation();
                     const from_Data = document.querySelector("form#commentform.comment-form");
                     addComment.createButterbar("提交中(Commiting)....");
-                    fetch(Poi.ajaxurl,{
+                    fetch(nazo_option.ajaxurl,{
                         method:"POST",
                         headers:{"Content-type":"application/x-www-form-urlencoded"},
                         body:serialize(from_Data) + "&action=ajax_comment"
@@ -1444,13 +1441,13 @@ const Siren = {
                             if (document.getElementById('comment_parent').value != '0') {
                                 document.getElementById("respond").insertAdjacentHTML('beforebegin', '<ol class="children">' + data + '</ol>');
                             } else if (!document.getElementsByClassName(__list).length) {
-                                if (Poi.formpostion == 'bottom') {
+                                if (nazo_option.formpostion == 'bottom') {
                                     document.getElementById("respond").insertAdjacentHTML('beforebegin', '<ol class="' + __list + '">' + data + '</ol>');
                                 } else {
                                     document.getElementById("respond").insertAdjacentHTML('afterend', '<ol class="' + __list + '">' + data + '</ol>');
                                 }
                             } else {
-                                if (Poi.order == 'asc') {
+                                if (nazo_option.order == 'asc') {
                                     document.getElementsByClassName("commentwrap")[1].insertAdjacentHTML('beforeend', data);
                                 } else {
                                     document.getElementsByClassName("commentwrap")[1].insertAdjacentHTML('afterbegin', data);
@@ -1577,7 +1574,7 @@ const Siren = {
                         document.querySelector("ul.commentwrap").insertAdjacentHTML('afterend', nextlink.outerHTML);
                         lazyload();
                         if (window.gtag) {
-                            gtag('config', Poi.google_analytics_id, {
+                            gtag('config', nazo_option.google_analytics_id, {
                                 'page_path': path
                             });
                         }
@@ -1642,7 +1639,7 @@ const Siren = {
         },
     }
 
-if (Poi.pjax) {
+if (nazo_option.pjax) {
     const pjax = new Pjax({
         // defaultTrigger: false,
         selectors: ["#page", "title", ".footer-device"],
@@ -1661,7 +1658,7 @@ if (Poi.pjax) {
             }
         }
         document.getElementById("bar").style.setProperty("--barwidth","0%");
-        if (mashiro_option.NProgressON) NProgress.start();
+        if (nazo_option.NProgressON) NProgress.start();
         Siren.MNH();
     });
     document.addEventListener("pjax:complete", function () {
@@ -1670,14 +1667,11 @@ if (Poi.pjax) {
         Siren.PE();
         Siren.CE();
         //Siren.XLS();
-        if (mashiro_option.NProgressON) NProgress.done();
-        mashiro_global.ini.pjax();
+        if (nazo_option.NProgressON) NProgress.done();
+        nazo_option.global.ini.pjax();
         let loading = document.getElementById("loading");
         loading && loading.classList.add("hide");
         loading && loading.classList.remove("show");
-        if (Poi.codelamp == 'open') {
-            self.Prism.highlightAll(event)
-        }
         if (document.querySelector(".js-search.is-visible")) {
             document.getElementsByClassName("js-toggle-search")[0].classList.toggle("is-active");
             document.getElementsByClassName("js-search")[0].classList.toggle("is-visible");
@@ -1686,7 +1680,7 @@ if (Poi.pjax) {
     });
     document.addEventListener("pjax:success", function () {
         if (window.gtag) {
-            gtag('config', Poi.google_analytics_id, {
+            gtag('config', nazo_option.google_analytics_id, {
                 'page_path': window.location.pathname
             });
         }
