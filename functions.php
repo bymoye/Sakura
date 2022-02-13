@@ -324,7 +324,7 @@ function convertip($ip)
                     return 'System Error';
                 }
                 $AddrSeek2 = implode('', unpack('L', $AddrSeek2 . chr(0)));
-                fseek($fd, $AddrSeek2);
+                fseek($fd, (int)$AddrSeek2);
             } else {
                 fseek($fd, -1, SEEK_CUR);
             }
