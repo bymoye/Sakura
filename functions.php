@@ -189,6 +189,15 @@ function sakura_scripts() {
 }
 add_action('wp_enqueue_scripts', 'sakura_scripts');
 
+// function add_data_attribute($tag, $handle):string {
+//     if ($handle === 'app') {
+//         $tag = strtr($tag, ['<script type=\'text/javascript\' src=' => '<script type="module" src=']);
+//     }
+//     return $tag;
+// }
+// add_filter('script_loader_tag', 'add_data_attribute', 10, 2);
+
+
 /**
  * load .php.
  */
@@ -385,6 +394,19 @@ function convertip($ip)
  *
  */
 if(!function_exists('akina_comment_format')){
+    function add_comments_ipaddress($comment_ID,$comment_author_IP):string{
+        global $wpdb;
+        $address = convertip($comment_author_IP);
+        $wpdb->update($table = 'wp_comments',
+                    $data = [
+                    'comment_author_IP_address' => $address
+                    ],
+                    $where = ['comment_ID' => $comment_ID],
+                    $format = ['%s'],
+                    $where_format = ['%d']
+        );
+        return $address;
+    }
 	function akina_comment_format($comment, $args, $depth){
         $GLOBALS['comment'] = $comment;
 		?>
@@ -402,7 +424,9 @@ if(!function_exists('akina_comment_format')){
 								</div>
 								<?php comment_reply_link(array_merge($args, array('depth' => $depth, 'max_depth' => $args['max_depth']))); ?>
 								<div class="right">
-									<div class="info"><time datetime="<?php comment_date('Y-m-d'); ?>"><?php echo poi_time_since(strtotime($comment->comment_date_gmt), true );//comment_date(get_option('date_format')); ?></time><?php echo siren_get_useragent($comment->comment_agent); ?><?php echo mobile_get_useragent_icon($comment->comment_agent); ?>&nbsp;<?php _e('Location', 'sakura'); /*来自*/?>: <?php echo $comment->comment_author_IP_address; ?>
+									<div class="info"><?php echo '<time datetime="'.comment_date('Y-m-d').'">'.poi_time_since(strtotime($comment->comment_date_gmt), true).'</time>'.siren_get_useragent($comment->comment_agent) . mobile_get_useragent_icon($comment->comment_agent). '&nbsp;来自: '. ($comment->comment_author_IP_address ?: add_comments_ipaddress($comment->comment_ID,$comment->comment_author_IP));
+                                    ?>
+
     									<?php if (current_user_can('manage_options') and (wp_is_mobile() == false) ) {
                                             $comment_ID = $comment->comment_ID;
                                             $i_private = get_comment_meta($comment_ID, '_private', true);
@@ -440,8 +464,9 @@ if(!function_exists('akina_comment_format')){
  */
     function get_author_class($comment_author_email, $user_id){
         global $wpdb;
-        $author_count = count($wpdb->get_results(
-        "SELECT comment_ID as author_count FROM $wpdb->comments WHERE comment_author_email = '$comment_author_email' "));
+        $author_count = count($wpdb->get_results($wpdb->prepare(
+            "SELECT comment_ID as author_count FROM {$wpdb->comments} WHERE comment_author_email = %s",$comment_author_email)
+        ));
         echo match(true){
             $author_count < 5 => '<i class="post_icon_svg" style="--svg-name: var(--svg_level_0);--size:1.5em;--color:#BFBFBF;margin: 0 3px;"></i>',
             $author_count < 10 => '<i class="post_icon_svg" style="--svg-name: var(--svg_level_1);--size:1.5em;--color:#BFBFBF;margin: 0 3px;"></i>',
@@ -1499,14 +1524,15 @@ function save_markdown_comment($comment_ID, $comment_approved) {
     $comment_content = $comment_markdown_content;
     $address = convertip($comment->comment_author_IP);
     //store markdow content
-    $wpdb->update('wp_comments',[
-        'comment_markdown' => $comment_content,
-        'comment_author_IP_address' => $address
-        ],
-        ['comment_ID' => $comment_ID],
-        ['%s','%s'],
-        ['%d']
-    );
+    $wpdb->update($table = 'wp_comments',
+                $data = [
+                'comment_markdown' => $comment_content,
+                'comment_author_IP_address' => $address
+                ],
+                $where = ['comment_ID' => $comment_ID],
+                $format = ['%s','%s'],
+                $where_format = ['%d']
+            );
     // $wpdb->query($wpdb->prepare("UPDATE wp_comments SET comment_markdown = %s,comment_author_IP_address = %s WHERE comment_ID = %d", $comment_content,$address, $comment_ID));
 }
 add_action('comment_post', 'save_markdown_comment', 10, 2);

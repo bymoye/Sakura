@@ -43,36 +43,109 @@ function imgError(ele, type) {
 }
 
 function post_list_show_animation() {
-    if (document.querySelector('article') && document.querySelector('article').classList.contains("post-list-thumb")) {
-        const options = {
-            root: null,
-            threshold: [0.4]
-        },
-            articles = document.getElementsByClassName('post-list-thumb'),
-            callback = (entries) => {
-                for (let i = 0; i < entries.length; i++) {
-                    let article = entries[i];
-                    if (!window.IntersectionObserver || article.target.classList.contains("post-list-show")) {
-                        if (article.target.classList.contains("post-list-show") === false) {
-                            article.target.classList.add("post-list-show");
-                            io.unobserve(article.target);
+    const article = document.querySelector('article');
+    if (article && article.classList.contains("post-list-thumb")) {
+        const articles = document.getElementsByClassName('post-list-thumb'),
+              options = {
+                    root: null,
+                    threshold: 0.4
+              },
+              io_callback = (entries) => {
+                entries.forEach(window.IntersectionObserver ? (entry) => {
+                    const {classList} = entry.target;
+                    if (classList.contains("post-list-show")) {
+                        if (classList.contains("post-list-show") === false) {
+                            classList.add("post-list-show");
+                            io.unobserve(entry.target);
                         }
-                    }else {
-                            if (article.isIntersecting) {
-                                article.target.classList.add("post-list-show");
-                                io.unobserve(article.target);
+                    }else if (entry.isIntersecting) {
+                                classList.add("post-list-show");
+                                io.unobserve(entry.target);
                             }
-                        }
+                } : (entry) =>{
+                    if (entry.target.classList.contains("post-list-show") === false){
+                        entry.target.classList.add("post-list-show");
                     }
-                },
-            io = new IntersectionObserver(callback, options);
-        for (let a = 0; a < articles.length; a++) {
-            io.observe(articles[a]);
+                    }
+                )},
+            io = new IntersectionObserver(io_callback,options)
+        for (const article of articles) {
+            if (article.classList.contains("post-list-show")) continue;
+            io.observe(article);
         }
     }
 }
 
-let ec_click = (e)=>{
+const addComment = {
+    respondId: '',
+    moveForm(commId, parentId, respondId){
+        const div = document.getElementById('wp-temp-form-div') || document.createElement('div'),
+                comm = document.getElementById(commId),
+                respond = document.getElementById(respondId),
+                cancel = document.getElementById('cancel-comment-reply-link'),
+                comment_parent = document.getElementById('comment_parent');
+        this.respondId = respondId;
+        if (!div.id){
+            div.id = 'wp-temp-form-div';
+            div.style.display = 'none';
+            respond.parentNode.insertBefore(div, respond);
+        }
+        if (!comm){
+            comment_parent.value = '0'
+            div.parentNode.insertBefore(respond, div);
+            div.remove()
+        }else{
+            comm.parentNode.insertBefore(respond, comm.nextSibling);
+        }
+        const respondDom = document.getElementById("respond");
+        window.scrollTo({
+            top: respondDom.getBoundingClientRect().top + window.pageYOffset - respondDom.clientTop - 100,
+            behavior: "smooth"
+        });
+        comment_parent.value = parentId;
+        cancel.addEventListener('click', function cancelEvent(e){
+            e.preventDefault();
+            e.stopPropagation()
+            let temp = document.getElementById('wp-temp-form-div'),
+            respond = document.getElementById(addComment.respondId);
+            document.getElementById('comment_parent').value = '0';
+            if (temp && respond){
+                temp.parentNode.insertBefore(respond, temp);
+                temp.remove();
+                temp = null;
+                respond = null;
+            }
+            this.style.display = 'none';
+            cancel.removeEventListener('click', cancelEvent);
+        });
+        cancel.style.display = '';
+        const comment = document.getElementById('comment');
+        comment && comment.focus()
+        return false;
+    },
+    clearButterbar(){
+        const butterBar = document.getElementsByClassName("butterBar");
+        if (butterBar.length > 0) {
+            for(let i=0;i<butterBar.length;i++){
+                butterBar[i].remove();
+            }
+        }
+    },
+
+    createButterbar(message, showtime){
+        this.clearButterbar();
+        const div = document.createElement('div');
+        const p = document.createElement('p');
+        div.classList.add('butterBar','butterBar--center')
+        p.classList.add('butterBar-message')
+        p.innerHTML = message;
+        div.appendChild(p);
+        document.body.appendChild(div);
+        setTimeout(() => { addComment.clearButterbar() }, showtime > 0 ? showtime : 6000);
+    }
+};
+
+function ec_click (e){
     if (!e.target.classList.contains("highlight-wrap")) return;
     e.target.classList.toggle("code-block-fullscreen");
     document.documentElement.classList.toggle('code-block-fullscreen-html-scroll');
@@ -91,17 +164,20 @@ function code_highlight_style() {
     },
     gen_top_bar=(i)=>{
         let ele_name = pre[i].children[0].className,
-            lang = ele_name.substr(0, ele_name.indexOf(" ")).replace('language-', ''),
+            lang = ele_name.substring(0, ele_name.indexOf(" ")).replace('language-', ''),
             code_a = code[i];
-        if (lang.toLowerCase() === "hljs") lang = code_a.className.replace('hljs', '') ? code_a.className.replace('hljs', '') : "text";
+        if (lang.toLowerCase() === "hljs") lang = code_a.className.replace('hljs', '');
         pre[i].classList.add("highlight-wrap");
         for (const t in attributes){
             pre[i].setAttribute(t, attributes[t]);
         }
         code_a.setAttribute('data-rel', lang.toUpperCase());
     }
+    // new ClipboardJS('.copy-code');
     for (let i = 0; i < code.length; i++) {
         hljs.highlightBlock(code[i]);
+        // code[i].setAttribute('id', 'hljs-' + i);
+        // code[i].insertAdjacentHTML('afterend', '<a class="copy-code" href="javascript:" data-clipboard-target="#hljs-' + i + '" title="拷贝代码"><i class="post_icon_svg" style="--svg-name: var(--svg_clipboard);--size: 14px;"></i></a>');
     }
     for (let i = 0; i < pre.length; i++) {
         gen_top_bar(i);
@@ -154,12 +230,12 @@ function attach_image() {
                 }, 1000);
                 if (data.status === 200){
                     const get_the_url = data.proxy;
-                    document.getElementById("upload-img-show").insertAdjacentHTML('afterend', '<img class="lazyload upload-image-preview" src="https://proxy.nmxc.ltd/gh/moezx/cdn@3.0.2/img/svg/loader/trans.ajax-spinner-preloader.svg" data-src="' + get_the_url + '" onclick="window.open(\'' + get_the_url + '\')" onerror="imgError(this)"  alt=""/>');
+                    document.getElementById("upload-img-show").insertAdjacentHTML('afterend', `<img class="lazyload upload-image-preview" src="https://proxy.nmxc.ltd/gh/moezx/cdn@3.0.2/img/svg/loader/trans.ajax-spinner-preloader.svg" data-src="${get_the_url}" onclick="window.open('${get_the_url}')" onerror="imgError(this)"  alt=""/>`);
                     lazyload();
                     addComment.createButterbar("图片上传成功~<br>Uploaded successfully~");
                     grin(get_the_url,'Img');
                 }else{
-                    addComment.createButterbar("上传失败！<br>Uploaded failed!<br> 文件名/Filename: " + f.name + "<br>code: " + res.status + "<br>" + res.message, 3000);
+                    addComment.createButterbar(`上传失败！<br>Uploaded failed!<br> 文件名/Filename: ${f.name}<br>code: ${res.status}<br>${res.message}`, 3000);
                 }
             })
             .catch(e=>{
@@ -233,7 +309,7 @@ function scrollBar() {
         f = document.querySelector(".toc-container"),
         sc = document.querySelector(".site-content");
     let blur_rs,
-        s = 0, a, b, c, result;
+        s = 0, a, color,b, result;
     if (nazo_option.pjax) {
         let flag = false,
             blur = document.querySelector("feGaussianBlur"),
@@ -269,14 +345,14 @@ function scrollBar() {
             result = parseInt(s / (a - b) * 100);
         cached.style.setProperty("--barwidth", result + "%");
         switch (true) {
-            case (result <= 19): c = '#00BCD4'; break;
-            case (result <= 39): c = '#50bcb6'; break;
-            case (result <= 59): c = '#85c440'; break;
-            case (result <= 79): c = '#f2b63c'; break;
-            case (result <= 99): c = '#FF0000'; break;
-            case (result === 100): c = '#5aaadb'; break;
+            case (result <= 19): color = '#00BCD4'; break;
+            case (result <= 39): color = '#50bcb6'; break;
+            case (result <= 59): color = '#85c440'; break;
+            case (result <= 79): color = '#f2b63c'; break;
+            case (result <= 99): color = '#FF0000'; break;
+            default: color = '#5aaadb'; break;
         }
-        cached.style.setProperty("--barcolor", c);
+        cached.style.setProperty("--barcolor", color);
         if (f && sc) {
             f.style.height = sc.getBoundingClientRect(outerHeight)["height"] + "px";
         }
@@ -319,6 +395,10 @@ function iconsvg() {
             addevent = ()=>{
                 if (_dom.length != 0){
                     const background = ()=>{
+                            if (imgurl_total == 1){
+                                clearInterval(timer1);
+                                return false;
+                            }
                             j = j == imgurl_total -1 ? 0 : ++j;
                             let image = document.querySelector("svg image"),
                                 opacity = createanimate();
@@ -357,14 +437,14 @@ function iconsvg() {
                 .then(async res=>{
                     const data = await res.json();
                     if (res.ok){
-                        const imgurl = data.url;
+                        const imgurl = data.url[0];
                         imgurl.unshift(document.querySelector("svg image").href.baseVal);
                         imgurl_total = imgurl.length;
                         for (let i = 0; i<imgurl_total; i++){
                             _dom[i] = createimage(imgurl[i])
                             const f = ()=>{
                                 _dom.splice(i,1);
-                                imgurl_total = imgurl.length;
+                                imgurl_total--;
                             }
                             _dom[i].addEventListener("error",f);
                             _dom[i].addEventListener("load",function n(){
@@ -566,10 +646,10 @@ function coverVideoIni() {
 
 function copy_code_block() {
     const ele = document.querySelectorAll("pre code");
-    for (let j = 0; j < ele.length; j++) {
-        ele[j].setAttribute('id', 'hljs-' + j);
-        ele[j].insertAdjacentHTML('afterend', '<a class="copy-code" href="javascript:" data-clipboard-target="#hljs-' + j + '" title="拷贝代码"><i class="post_icon_svg" style="--svg-name: var(--svg_clipboard);--size: 14px;"></i></a>');
-    }
+    ele.forEach((ecurrentValue,currentIndex) =>{
+        ecurrentValue.setAttribute('id', `hljs-${currentIndex}`);
+        ecurrentValue.insertAdjacentHTML('afterend', `<a class="copy-code" href="javascript:" data-clipboard-target="#hljs-${currentIndex}" title="拷贝代码"><i class="post_icon_svg" style="--svg-name: var(--svg_clipboard);--size: 14px;"></i></a>`);
+    })
     new ClipboardJS('.copy-code');
 }
 
@@ -1474,79 +1554,6 @@ const Siren = {
                     })
                 }
             });
-            const addComment = {
-                moveForm: function (commId, parentId, respondId) {
-                    let t = this,
-                        div, comm = document.getElementById(commId),
-                        respond = document.getElementById(respondId),
-                        cancel = document.getElementById('cancel-comment-reply-link'),
-                        parent = document.getElementById('comment_parent'),
-                        //post = document.getElementById('comment_post_ID'),
-                        temp;
-                    t.respondId = respondId;
-                    if (!document.getElementById('wp-temp-form-div')) {
-                        div = document.createElement('div');
-                        div.id = 'wp-temp-form-div';
-                        div.style.display = 'none';
-                        respond.parentNode.insertBefore(div, respond)
-                    }
-                    !comm ? (temp = document.getElementById('wp-temp-form-div'), document.getElementById('comment_parent').value = '0', temp.parentNode.insertBefore(respond, temp), temp.remove(),temp = null) : comm.parentNode.insertBefore(respond, comm.nextSibling);
-                    const _respond = document.getElementById("respond");
-                    window.scrollTo({
-                        top: _respond.getBoundingClientRect().top + window.pageYOffset - _respond.clientTop - 100,
-                        behavior: "smooth"
-                    });
-                    parent.value = parentId;
-                    cancel.style.display = '';
-                    cancel.onclick = function () {
-                        let t = addComment,
-                            temp = document.getElementById('wp-temp-form-div'),
-                            respond = document.getElementById(t.respondId);
-                        document.getElementById('comment_parent').value = '0';
-                        if (temp && respond) {
-                            temp.parentNode.insertBefore(respond, temp);
-                            temp.remove();
-                            temp = null;
-                        }
-                        this.style.display = 'none';
-                        this.onclick = null;
-                        return false;
-                    };
-                    try {
-                        document.getElementById('comment').focus();
-                    } catch { }
-                    return false;
-                },
-                clearButterbar: function (e) {
-                    let butterBar = document.getElementsByClassName("butterBar");
-                    if (butterBar.length > 0) {
-                        for(let i=0;i<butterBar.length;i++){
-                            let a = butterBar[i];
-                            a.remove();
-                            a = null;
-                        }
-                    }
-                },
-                createButterbar: function (message, showtime) {
-                    let t = this;
-                    t.clearButterbar();
-                    document.body.insertAdjacentHTML('beforeend', '<div class="butterBar butterBar--center"><p class="butterBar-message">' + message + '</p></div>');
-                    let butterBar = () => {
-                        let _butterBar = document.getElementsByClassName("butterBar");
-                        if (_butterBar.length === 0) return;
-                        for (let i=0;i<_butterBar.length;i++){
-                            let a = _butterBar[i];
-                            a.remove();
-                            a = null;
-                        }
-                    }
-                    if (showtime > 0) {
-                        setTimeout(() => { butterBar() }, showtime);
-                    } else {
-                        setTimeout(() => { butterBar() }, 6000);
-                    }
-                }
-            };
         },
         XCP: function () {
             document.body.addEventListener('click', function (e) {
@@ -1712,24 +1719,16 @@ ready(()=>{
     console.log("%c 原作者 %c", "background:#2196F3; color:#ffffff", "", "https://github.com/mashirozx/Sakura/");
 });
 
-{
-    const isWebkit = navigator.userAgent.toLowerCase().indexOf('webkit') > -1,
-        isOpera = navigator.userAgent.toLowerCase().indexOf('opera') > -1,
-        isIe = navigator.userAgent.toLowerCase().indexOf('msie') > -1;
-    if ((isWebkit || isOpera || isIe) && document.getElementById && window.addEventListener) {
-        window.addEventListener('hashchange', function () {
-            let id = location.hash.substring(1),
-                element;
-            if (!(/^[A-z0-9_-]+$/.test(id))) {
-                return;
-            }
-            element = document.getElementById(id);
-            if (element) {
-                if (!(/^(?:a|select|input|button|textarea)$/i.test(element.tagName))) {
-                    element.tabIndex = -1;
-                }
-                element.focus();
-            }
-        }, false);
+window.addEventListener('hashchange', function () {
+    const id = location.hash.substring(1);
+    if (!(/^[A-z0-9_-]+$/.test(id))) {
+        return false;
     }
-}
+    const element = document.getElementById(id);
+    if (element) {
+        if (!(/^(?:a|select|input|button|textarea)$/i.test(element.tagName))) {
+            element.tabIndex = -1;
+        }
+        element.focus();
+    }
+}, false);
