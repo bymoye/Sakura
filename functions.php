@@ -9,7 +9,7 @@ declare(strict_types=1);
  */
 
 
-const NMX_VERSION = '1.3.5';
+const NMX_VERSION = '1.3.6';
 const BUILD_VERSION = '3';
 
 //error_reporting(E_ALL);   
