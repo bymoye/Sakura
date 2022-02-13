@@ -424,7 +424,7 @@ if(!function_exists('akina_comment_format')){
 								</div>
 								<?php comment_reply_link(array_merge($args, array('depth' => $depth, 'max_depth' => $args['max_depth']))); ?>
 								<div class="right">
-									<div class="info"><?php echo '<time datetime="'.comment_date('Y-m-d').'">'.poi_time_since(strtotime($comment->comment_date_gmt), true).'</time>'.siren_get_useragent($comment->comment_agent) . mobile_get_useragent_icon($comment->comment_agent). '&nbsp;来自: '. ($comment->comment_author_IP_address ?: add_comments_ipaddress($comment->comment_ID,$comment->comment_author_IP));
+									<div class="info"><?php echo '<time datetime="'.get_comment_date('Y-m-d').'">'.poi_time_since(strtotime($comment->comment_date_gmt), true).'</time>'.siren_get_useragent($comment->comment_agent) . mobile_get_useragent_icon($comment->comment_agent). '&nbsp;来自: '. ($comment->comment_author_IP_address ?: add_comments_ipaddress($comment->comment_ID,$comment->comment_author_IP));
                                     ?>
 
     									<?php if (current_user_can('manage_options') and (wp_is_mobile() == false) ) {
