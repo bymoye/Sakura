@@ -9,7 +9,7 @@ declare(strict_types=1);
  */
 
 
-const NMX_VERSION = '1.3.4';
+const NMX_VERSION = '1.3.5';
 const BUILD_VERSION = '3';
 
 //error_reporting(E_ALL);   
@@ -396,7 +396,7 @@ function convertip($ip)
 if(!function_exists('akina_comment_format')){
     function add_comments_ipaddress($comment_ID,$comment_author_IP):string{
         global $wpdb;
-        $address = convertip($comment_author_IP);
+        $address = esc_attr(convertip($comment_author_IP));
         $wpdb->update($table = 'wp_comments',
                     $data = [
                     'comment_author_IP_address' => $address
@@ -786,7 +786,7 @@ add_filter( 'retrieve_password_message', 'resetpassword_message_fix' );
 
 //Fix register email bug </>
 function new_user_message_fix( $message ) {
-    $show_register_ip = '注册IP | Registration IP: '.get_the_user_ip()." (".convertip(get_the_user_ip()).")\r\n\r\n如非本人操作请忽略此邮件 | Please ignore this email if this was not your operation.\r\n\r\n";
+    $show_register_ip = '注册IP | Registration IP: '.get_the_user_ip()." (".esc_attr(convertip(get_the_user_ip())).")\r\n\r\n如非本人操作请忽略此邮件 | Please ignore this email if this was not your operation.\r\n\r\n";
     $message = str_replace('To set your password, visit the following address:', $show_register_ip.'在此设置密码 | To set your password, visit the following address:', $message);
 	$message = str_replace('<', '', $message);
     return str_replace('>', "\r\n\r\n设置密码后在此登陆 | Login here after setting password: ", $message);
@@ -1522,7 +1522,7 @@ function save_markdown_comment($comment_ID, $comment_approved) {
     global $wpdb,$comment_markdown_content;
     $comment = get_comment($comment_ID);
     $comment_content = $comment_markdown_content;
-    $address = convertip($comment->comment_author_IP);
+    $address = esc_attr(convertip($comment->comment_author_IP));
     //store markdow content
     $wpdb->update($table = 'wp_comments',
                 $data = [
