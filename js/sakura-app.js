@@ -437,7 +437,7 @@ function iconsvg() {
                 .then(async res=>{
                     const data = await res.json();
                     if (res.ok){
-                        const imgurl = data.url[0];
+                        const imgurl = data.url;
                         imgurl.unshift(document.querySelector("svg image").href.baseVal);
                         imgurl_total = imgurl.length;
                         for (let i = 0; i<imgurl_total; i++){
