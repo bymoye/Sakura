@@ -1446,16 +1446,16 @@ if (akina_option('cover_cdn_options') == 'type_2'){
 }
 
 function get_random_bg_url(): array|string {
-	if (akina_option('cover_cdn_options') == 'type_2'){
-		return get_template_directory_uri() . '/feature/index.php?' . rand(1,1000);
-	}elseif(akina_option('cover_cdn_options') == 'type_1'){
+    if(akina_option('cover_cdn_options') == 'type_1'){
 		if (wp_is_mobile()){
 			return bgapi::getbg('mobile');
 		}else{
 			return bgapi::getbg();
 		}
 		// return get_random_image_url();
-	}}
+	}
+    return get_template_directory_uri() . '/feature/index.php?' . rand(1,1000);
+}
 //防止设置置顶文章造成的图片同侧bug
 add_action( 'pre_get_posts', function($q){
     if ($q->is_home() && $q->is_main_query()){
