@@ -96,7 +96,7 @@ class bgapi
         }
         $randomurl_list = file($randomurl_file);
         $k = array_rand($randomurl_list);
-        $html = str_replace(PHP_EOL , '' , $k);
+        $html = str_replace(PHP_EOL , '' , $randomurl_list[$k]);
         $gs = self::check() ? 'webp' : 'jpg';
         return [
             'md' => $html . '!q80.150p.' . $gs,
