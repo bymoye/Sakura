@@ -32,13 +32,13 @@ nazo_option.global.ini = {
 function imgError(ele, type) {
     switch (type) {
         case 1:
-            ele.src = 'https://proxy.nmxc.ltd/gh/bymoye/cdn@1.6/sakura/images/Transparent_Akkarin.th.jpg';
+            ele.src = 'https://jsd.nmxc.ltd/gh/bymoye/cdn@1.6/sakura/images/Transparent_Akkarin.th.jpg';
             break;
         case 2:
             ele.src = 'https://sdn.geekzu.org/avatar/?s=80&d=mm&r=g';
             break;
         default:
-            ele.src = 'https://proxy.nmxc.ltd/gh/bymoye/cdn@1.6/sakura/images/image-404.png';
+            ele.src = 'https://jsd.nmxc.ltd/gh/bymoye/cdn@1.6/sakura/images/image-404.png';
     }
 }
 
@@ -230,7 +230,7 @@ function attach_image() {
                 }, 1000);
                 if (data.status === 200){
                     const get_the_url = data.proxy;
-                    document.getElementById("upload-img-show").insertAdjacentHTML('afterend', `<img class="lazyload upload-image-preview" src="https://proxy.nmxc.ltd/gh/moezx/cdn@3.0.2/img/svg/loader/trans.ajax-spinner-preloader.svg" data-src="${get_the_url}" onclick="window.open('${get_the_url}')" onerror="imgError(this)"  alt=""/>`);
+                    document.getElementById("upload-img-show").insertAdjacentHTML('afterend', `<img class="lazyload upload-image-preview" src="https://jsd.nmxc.ltd/gh/moezx/cdn@3.0.2/img/svg/loader/trans.ajax-spinner-preloader.svg" data-src="${get_the_url}" onclick="window.open('${get_the_url}')" onerror="imgError(this)"  alt=""/>`);
                     lazyload();
                     addComment.createButterbar("图片上传成功~<br>Uploaded successfully~");
                     grin(get_the_url,'Img');
@@ -636,7 +636,7 @@ function coverVideoIni() {
             loadHls();
         } else {
             //不保证可用 需测试
-            loadJS("https://proxy.nmxc.ltd/gh/bymoye/sakura@0.0.3/cdn/js/src/16.hls.js", function () {
+            loadJS("https://jsd.nmxc.ltd/gh/bymoye/sakura@0.0.3/cdn/js/src/16.hls.js", function () {
                 loadHls();
                 nazo_option.global.ini.has_hls = true;
             })

@@ -21,7 +21,7 @@ if ( $site_description && ( is_home() || is_front_page() ) ) echo " - $site_desc
 <?php wp_head(); ?>
 <script>
 const getsvg = new XMLHttpRequest();
-getsvg.open("GET", "https://proxy.nmxc.ltd/gh/bymoye/sakura@latest/images/icon.svg", true);
+getsvg.open("GET", "https://jsd.nmxc.ltd/gh/bymoye/sakura@latest/images/icon.svg", true);
 getsvg.onload = function(e) {
     document.body.insertAdjacentHTML("beforeEnd", '<div style="display:none;">' + getsvg.responseText + '</div>');
 }
@@ -46,5 +46,5 @@ let the_dom="<?php echo str_replace("http://", "", str_replace("https://", "", g
 </form>
 </div>
 </section>
-<script src="https://proxy.nmxc.ltd/gh/bymoye/cdn@1.1/sakura/js/other/404.min.js" type="text/javascript"></script>
+<script src="https://jsd.nmxc.ltd/gh/bymoye/cdn@1.1/sakura/js/other/404.min.js" type="text/javascript"></script>
 </body>

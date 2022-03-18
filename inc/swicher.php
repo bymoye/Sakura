@@ -8,10 +8,10 @@ function font_end_js_control() {
     }
     $x = akina_option('app_no_jsdelivr_cdn');
     $entry_content_theme = akina_option('entry_content_theme','sakura');
-    $app_cdn_url = $x ? get_template_directory_uri() : 'https://proxy.nmxc.ltd/gh/bymoye/Sakura@1.3.7';
+    $app_cdn_url = $x ? get_template_directory_uri() : 'https://jsd.nmxc.ltd/gh/bymoye/Sakura@1.3.7';
     $app_file = "/cdn/theme/{$entry_content_theme}.css";
     $x = akina_option('jsdelivr_cdn_test');
-    $lib_cdn_url = $x ? get_template_directory_uri() : 'https://proxy.nmxc.ltd/gh/bymoye/Sakura';
+    $lib_cdn_url = $x ? get_template_directory_uri() : 'https://jsd.nmxc.ltd/gh/bymoye/Sakura';
     $lib_file = '/cdn/css/lib' . ($x ? '.css' : '.min.css');
     //Poi
     $mv_live = akina_option('focus_mvlive') ? 'open' : 'close';
