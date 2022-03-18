@@ -397,6 +397,10 @@ if(!function_exists('akina_comment_format')){
     function add_comments_ipaddress($comment_ID,$comment_author_IP):string{
         global $wpdb;
         $address = esc_attr(convertip($comment_author_IP));
+        $column_names = $wpdb->get_row("SELECT data_TYPE FROM information_schema.columns where table_name='wp_comments' and column_name = 'comment_author_IP_address' LIMIT 1");
+        if (!$column_names) {
+            $wpdb->query("ALTER TABLE wp_comments ADD comment_author_IP_address VARCHAR(255)");
+        }
         $wpdb->update($table = 'wp_comments',
                     $data = [
                     'comment_author_IP_address' => $address
