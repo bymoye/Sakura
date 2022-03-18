@@ -1301,9 +1301,9 @@ dash_scheme($key='sakura', $name='Sakura🌸',
        
 //custom
 dash_scheme($key='custom', $name='Custom', 
-            $col1=akina_option('dash_scheme_color_a'), $col2=akina_option('dash_scheme_color_b'), $col3=akina_option('dash_scheme_color_c'), $col4=akina_option('dash_scheme_color_d'), 
-            $base=akina_option('dash_scheme_color_base'), $focus=akina_option('dash_scheme_color_focus'), $current=akina_option('dash_scheme_color_current'),
-            $rules=akina_option('dash_scheme_css_rules'));
+            $col1=akina_option('dash_scheme_color_a',''), $col2=akina_option('dash_scheme_color_b',''), $col3=akina_option('dash_scheme_color_c',''), $col4=akina_option('dash_scheme_color_d',''), 
+            $base=akina_option('dash_scheme_color_base',''), $focus=akina_option('dash_scheme_color_focus',''), $current=akina_option('dash_scheme_color_current',''),
+            $rules=akina_option('dash_scheme_css_rules',''));
 
 //Set Default Admin Color Scheme for New Users
 function set_default_admin_color($user_id) {
