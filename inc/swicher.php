@@ -7,7 +7,7 @@ function font_end_js_control() {
         return false;
     }
     $x = akina_option('app_no_jsdelivr_cdn');
-    $entry_content_theme = akina_option('entry_content_theme');
+    $entry_content_theme = akina_option('entry_content_theme','Sakura');
     $app_cdn_url = $x ? get_template_directory_uri() : 'https://proxy.nmxc.ltd/gh/bymoye/Sakura@1.3.7';
     $app_file = "/cdn/theme/{$entry_content_theme}.css";
     $x = akina_option('jsdelivr_cdn_test');
