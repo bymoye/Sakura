@@ -743,7 +743,7 @@ function custom_html() {
     document.addEventListener("DOMContentLoaded", ()=>{
         const captchaimg = document.getElementById("captchaimg"),
             getcaptcha = ()=>{
-                url = new URL(',rest_url('sakura/v1/captcha/create'),')
+                url = new URL("',rest_url('sakura/v1/captcha/create'),'")
                 url.searchParams.append("_wpnonce","',wp_create_nonce('wp_rest'),'");
                 fetch(url.href)
                 .then(response=>response.json())
