@@ -25,7 +25,7 @@
 			<p style="font-family: 'Ubuntu', sans-serif;">
 					<span style="color: #666;">
 						<?php /* 能保留下面两个链接吗？算是我一个小小的心愿吧~ */ ?>
-						Nazo © 2018-2022 Theme <a href="https://github.com/bymoye/Sakura/" rel="noreferrer" target="_blank" style="color: #666;text-decoration: underline dotted rgba(0, 0, 0, .1);">Sakura</a><br>
+						Nazo © 2018-2022 Theme <a href="https://github.com/bymoye/Sakura/" rel="noreferrer" target="_blank" style="color: #b9b9b9;text-decoration: underline dotted rgba(0, 0, 0, .1);">Sakura</a><br>
 						<?php printf(' 耗时 %.3f 秒 | 查询 %d 次 | 内存 %.2f MB',timer_stop(),get_num_queries(), memory_get_peak_usage() / 1024 / 1024);?>
 				</span>
 				</p>
