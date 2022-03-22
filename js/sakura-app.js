@@ -2,7 +2,7 @@
  * @Author: bymoye
  * @Date:   2021-12-27 19:50:11
  * @Last Modified by:   bymoye
- * @Last Modified time: 2022-03-22 20:13:13
+ * @Last Modified time: 2022-03-22 20:20:41
  */
 "use strict";
 
@@ -427,12 +427,8 @@ function iconsvg() {
             filter.append(fe);
             svg.append(filter);
             window.addEventListener("load",()=>{
-                let url;
-                if (window.screen.height > window.screen.width){
-                    url = "https://api.nmxc.ltd/randimg?type=pc&n=3&encode=json&type=mobile";
-                }else{
-                    url = "https://api.nmxc.ltd/randimg?type=pc&n=3&encode=json"
-                }
+                // let url;
+                let url = `https://api.nmxc.ltd/randimg?method=${window.screen.height > window.screen.width ? 'moblie' : 'pc'}&number=3&encode=json`;
                 fetch(url)
                 .then(async res=>{
                     const data = await res.json();
