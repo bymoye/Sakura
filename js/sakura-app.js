@@ -1,8 +1,8 @@
-/*！
- * Sakura theme application bundle
- * @author bymoye
- * @url https://nmxc.ltd
- * @date 2021/03/20
+/**
+ * @Author: bymoye
+ * @Date:   2021-12-27 19:50:11
+ * @Last Modified by:   bymoye
+ * @Last Modified time: 2022-03-22 20:13:13
  */
 "use strict";
 
@@ -438,6 +438,7 @@ function iconsvg() {
                     const data = await res.json();
                     if (res.ok){
                         const imgurl = data.url;
+                        console.log(imgurl)
                         imgurl.unshift(document.querySelector("svg image").href.baseVal);
                         imgurl_total = imgurl.length;
                         for (let i = 0; i<imgurl_total; i++){
