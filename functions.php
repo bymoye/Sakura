@@ -1,4 +1,11 @@
 <?php
+/**
+ * @Author: bymoye
+ * @Date:   2021-12-27 19:50:11
+ * @Last Modified by:   bymoye
+ * @Last Modified time: 2022-03-24 20:58:37
+ */
+
 declare(strict_types=1);
 /**
  * Sakura functions and definitions.
@@ -9,7 +16,7 @@ declare(strict_types=1);
  */
 
 
-const NMX_VERSION = '1.3.6';
+const NMX_VERSION = '1.3.7';
 const BUILD_VERSION = '3';
 
 //error_reporting(E_ALL);   
