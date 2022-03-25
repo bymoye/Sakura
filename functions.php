@@ -3,7 +3,7 @@
  * @Author: bymoye
  * @Date:   2021-12-27 19:50:11
  * @Last Modified by:   bymoye
- * @Last Modified time: 2022-03-24 20:58:37
+ * @Last Modified time: 2022-03-25 22:42:51
  */
 
 declare(strict_types=1);
@@ -16,7 +16,7 @@ declare(strict_types=1);
  */
 
 
-const NMX_VERSION = '1.3.7';
+const NMX_VERSION = '1.3.8';
 const BUILD_VERSION = '3';
 
 //error_reporting(E_ALL);   

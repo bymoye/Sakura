@@ -1,4 +1,11 @@
 <?php
+/**
+ * @Author: bymoye
+ * @Date:   2021-09-14 00:22:56
+ * @Last Modified by:   bymoye
+ * @Last Modified time: 2022-03-25 22:40:22
+ */
+
 declare(strict_types=1);
 namespace Sakura\API;
 
@@ -11,7 +18,6 @@ class bgapi
         "Version"=>14,
         "Opera"=>19
     ];
-
 	/**
 	 * @param string $url
 	 * @param string|null $type
@@ -38,7 +44,7 @@ class bgapi
 	public static function check():bool{
         $match = preg_match_all ("/(Firefox|Chrome|Version|Opera)\/(\d+)/i", $_SERVER['HTTP_USER_AGENT'], $result);
         $flag = false;
-        if ($match != false){
+        if ($match){
             foreach ($result[1] as $key => $value) {
                 if ((int)$result[2][$key] > self::Version[$value]){
                     $flag = true;
@@ -55,32 +61,34 @@ class bgapi
 	 * @return array
 	 */
 	private static function privateapi(string $type=null):array{
-        if ($type == 'mobile'){
-            $randomurl_file = file_get_contents(get_template_directory() .'/inc/randomimg_mb.json');
-        }else{ 
-            $randomurl_file = file_get_contents(get_template_directory() .'/inc/randomimg.json');
-        }
+        $randomurl_file = file_get_contents(STYLESHEETPATH . '/inc/' . ($type == 'mobile' ? 'manifest_mobile' : 'manifest') . '.json');
+        $fileurl = 'https://file.nmxc.ltd/';
         $randomurl_list = json_decode($randomurl_file,true);
         $k = array_rand($randomurl_list);
-        $urllist = $randomurl_list[$k];
-        if (self::check()){
-            if (isset($urllist['webp_md']) && isset($urllist['webp_th'])){
-                $md = self::PrivateKeyC($urllist['webp_md'],$type);
-                $th = self::PrivateKeyC($urllist['webp_th'],$type);
-            }
-            $webp = self::PrivateKeyC($urllist['webp'],$type);
-        }else{
-            if (isset($urllist['jpeg_md']) && isset($urllist['jpeg_th'])){
-            $md = self::PrivateKeyC($urllist['jpeg_md'],$type);
-            $th = self::PrivateKeyC($urllist['jpeg_th'],$type);
-            }
-            $webp = self::PrivateKeyC($urllist['jpeg'],$type);
-        }
+        $format = self::check() ? 'webp' : 'jpeg';
         return [
-            'md' => $md??null,
-            'th' => $th??null,
-            'large' => $webp
+            'md' => "${fileurl}${format}/${k}.md.${format}",
+            'th' => "${fileurl}${format}/${k}.th.${format}",
+            'large' => "${fileurl}${format}/${k}.source.${format}",
         ];
+        // if (self::check()){
+        //     if (isset($urllist['webp_md']) && isset($urllist['webp_th'])){
+        //         $md = self::PrivateKeyC($urllist['webp_md'],$type);
+        //         $th = self::PrivateKeyC($urllist['webp_th'],$type);
+        //     }
+        //     $webp = self::PrivateKeyC($urllist['webp'],$type);
+        // }else{
+        //     if (isset($urllist['jpeg_md']) && isset($urllist['jpeg_th'])){
+        //     $md = self::PrivateKeyC($urllist['jpeg_md'],$type);
+        //     $th = self::PrivateKeyC($urllist['jpeg_th'],$type);
+        //     }
+        //     $webp = self::PrivateKeyC($urllist['jpeg'],$type);
+        // }
+        // return [
+        //     'md' => $md??null,
+        //     'th' => $th??null,
+        //     'large' => $webp
+        // ];
     }
 
 	/**
