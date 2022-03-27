@@ -425,10 +425,6 @@ function iconsvg() {
             document.querySelector("svg image").style.filter = "url(#svg_blurfilter)";
             filter.append(fe);
             svg.append(filter);
-            const f = ()=>{
-                _dom.splice(i,1);
-                imgurl_total--;
-            }
             window.addEventListener("load",()=>{
                 let url = `https://api.nmxc.ltd/randimg?method=${window.screen.height > window.screen.width ? 'mobile' : 'pc'}&number=3&encode=json`;
                 fetch(url)
@@ -438,8 +434,12 @@ function iconsvg() {
                         const imgurl = data.url;
                         imgurl.unshift(document.querySelector("svg image").href.baseVal);
                         imgurl_total = imgurl.length;
-                        imgurl.forEach(e=>{
-                            const image_dom = createimage(e)
+                        imgurl.forEach((item,index)=>{
+                            const f = ()=>{
+                                _dom.splice(index,1);
+                                imgurl_total--;
+                            }
+                            const image_dom = createimage(item)
                             image_dom.addEventListener("error",f)
                             image_dom.addEventListener("load",function n(){
                                 image_dom.removeEventListener("error",f)
