@@ -1,5 +1,12 @@
 <?php
 /**
+ * @Author: bymoye
+ * @Date:   2021-12-27 19:50:11
+ * @Last Modified by:   bymoye
+ * @Last Modified time: 2022-03-27 17:08:13
+ */
+
+/**
  * The header for our theme.
  *
  * This is the template that displays all of the <head> section and everything up until <div id="content">
@@ -14,7 +21,7 @@
 <html <?php language_attributes(); ?>>
 <head>
 <meta charset="<?php bloginfo( 'charset' ); ?>">
-<meta  name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<meta  name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
 <title><?php global $page, $paged;wp_title( '-', true, 'right' );
 bloginfo( 'name' );$site_description = get_bloginfo( 'description', 'display' );
 if ( $site_description && ( is_home() || is_front_page() ) ) echo " - $site_description";if ( $paged >= 2 || $page >= 2 ) echo ' - ' . sprintf( __( 'page %s ','sakura'), max( $paged, $page ) );/*第 %s 页*/?>

@@ -2,7 +2,7 @@
  * @Author: bymoye
  * @Date:   2021-12-27 19:50:11
  * @Last Modified by:   bymoye
- * @Last Modified time: 2022-03-22 20:28:25
+ * @Last Modified time: 2022-03-27 16:57:58
  */
 "use strict";
 
@@ -362,16 +362,16 @@ function scrollBar() {
 
 function iconsvg() {
     if (!document.getElementById("svg_blurfilter") && nazo_option.pjax) {
-            const a = "http://www.w3.org/2000/svg",
+            const namespaceURI = "http://www.w3.org/2000/svg",
                 svg = document.querySelector("svg"),
-                filter = document.createElementNS(a, "filter"),
-                fe = document.createElementNS(a, "feGaussianBlur"),
+                filter = document.createElementNS(namespaceURI, "filter"),
+                fe = document.createElementNS(namespaceURI, "feGaussianBlur"),
                 _dom = [];
             let imgurl_total,
                 j=0,
-                timer1=null;
+                timer=null;
             const createanimate=()=>{
-                const opacity = document.createElementNS(a, "animate");
+                const opacity = document.createElementNS(namespaceURI, "animate");
                 opacity.setAttribute("attributeName", "opacity");
                 opacity.setAttribute("from", "1");
                 opacity.setAttribute("to", "0");
@@ -380,9 +380,9 @@ function iconsvg() {
                 opacity.setAttribute("repeatCount","1");
                 opacity.setAttribute("fill","freeze");
                 return opacity
-            },
-            createimage = (href)=>{
-                const n = document.createElementNS(a, "image");
+            }
+            const createimage = (href)=>{
+                const n = document.createElementNS(namespaceURI, "image");
                 n.setAttribute("href",href)
                 n.setAttribute("x","-5")
                 n.setAttribute("y","-5")
@@ -391,34 +391,33 @@ function iconsvg() {
                 n.setAttribute("preserveAspectRatio","xMidYMid slice")
                 n.style.filter = "url(#svg_blurfilter)";
                 return n;
-            },
-            addevent = ()=>{
-                if (_dom.length != 0){
-                    const background = ()=>{
-                            if (imgurl_total == 1){
-                                clearInterval(timer1);
-                                return false;
-                            }
-                            j = j == imgurl_total -1 ? 0 : ++j;
-                            let image = document.querySelector("svg image"),
-                                opacity = createanimate();
-                            image.before(_dom[j]);
-                            image.append(opacity);
-                            opacity.beginElement();
-                            opacity.addEventListener("endEvent",function _event(){
-                                opacity.remove();
-                                image.remove();
-                                opacity.removeEventListener("endEvent",_event)
-                                opacity = null;
-                                image = null;
-                            })
+            }
+            const addevent = ()=>{
+                const background = ()=>{
+                        if (imgurl_total == 1){
+                            clearInterval(timer);
+                            return false;
                         }
-                    
-                    timer1 = setInterval(background,10000);
-                    document.addEventListener("visibilitychange",()=>{
-                        document.hidden ? (clearInterval(timer1),timer1=null) : timer1 = setInterval(background,10000);
-                    });
-                }
+                        j = j == imgurl_total -1 ? 0 : ++j;
+                        let image = document.querySelector("svg image");
+                        // 此处 chrome是可以只创建一个然后反复使用的 但是 firefox 不行
+                        let opacity = createanimate();
+                        image.before(_dom[j]);
+                        image.append(opacity);
+                        opacity.beginElement();
+                        opacity.addEventListener("endEvent",function _event(){
+                            opacity.remove();
+                            image.remove();
+                            opacity.removeEventListener("endEvent",_event)
+                            image = null;
+                            opacity = null;
+                        })
+                    }
+                
+                timer = setInterval(background,10000);
+                document.addEventListener("visibilitychange",()=>{
+                    document.hidden ? (clearInterval(timer),timer=null) : timer = setInterval(background,10000);
+                });
             }
             filter.id = "svg_blurfilter";
             fe.setAttribute("stdDeviation", "5");
@@ -426,31 +425,30 @@ function iconsvg() {
             document.querySelector("svg image").style.filter = "url(#svg_blurfilter)";
             filter.append(fe);
             svg.append(filter);
+            const f = ()=>{
+                _dom.splice(i,1);
+                imgurl_total--;
+            }
             window.addEventListener("load",()=>{
-                // let url;
                 let url = `https://api.nmxc.ltd/randimg?method=${window.screen.height > window.screen.width ? 'mobile' : 'pc'}&number=3&encode=json`;
                 fetch(url)
                 .then(async res=>{
                     const data = await res.json();
                     if (res.ok){
                         const imgurl = data.url;
-                        console.log(imgurl)
                         imgurl.unshift(document.querySelector("svg image").href.baseVal);
                         imgurl_total = imgurl.length;
-                        for (let i = 0; i<imgurl_total; i++){
-                            _dom[i] = createimage(imgurl[i])
-                            const f = ()=>{
-                                _dom.splice(i,1);
-                                imgurl_total--;
-                            }
-                            _dom[i].addEventListener("error",f);
-                            _dom[i].addEventListener("load",function n(){
-                                _dom[i].removeEventListener("error",f);
-                                _dom[i].removeEventListener("load",n);
+                        imgurl.forEach(e=>{
+                            const image_dom = createimage(e)
+                            image_dom.addEventListener("error",f)
+                            image_dom.addEventListener("load",function n(){
+                                image_dom.removeEventListener("error",f)
+                                image_dom.removeEventListener("load",n)
                             })
-                        }
+                            _dom.push(image_dom);
+                        })
                         url=null;
-                        addevent();
+                        _dom.length && addevent();
                     }
                 })
             })
@@ -1229,8 +1227,9 @@ const Siren = {
                 //     }
                 // });
             }
-            document.querySelector(".js-toggle-search").addEventListener("click", function () {
-                document.querySelector(".js-toggle-search").classList.toggle("is-active");
+            const toggle_search = document.querySelector(".js-toggle-search")
+            toggle_search.addEventListener("click", function () {
+                toggle_search.classList.toggle("is-active");
                 document.querySelector(".js-search").classList.toggle("is-visible");
                 document.documentElement.style.overflowY = "hidden";
                 if (nazo_option.live_search) {

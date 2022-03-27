@@ -11,9 +11,7 @@ $icon_Version = 'icon_' . $Version . '_svg';
             </h1>
         <?php else: ?>
             <div class="header-tou">
-                <a href="<?php bloginfo('url')?>">
                     <img src="<?=akina_option('focus_logo', '') ?: (bloginfo('template_url').'/images/avatar.jpg')?>" alt="">
-                </a>
             </div>
         <?php endif; ?>
 		<div class="header-info">
@@ -21,7 +19,7 @@ $icon_Version = 'icon_' . $Version . '_svg';
             <?php if ($Version === 'v1'):?>
                 </div>
             <?php endif; ?>
-            <div class="top-social_<?=$Version;?>">
+            <ol class="top-social_<?=$Version;?>">
             <?php 
                 include('all_opt.php');
                 foreach($opt as $key => $value):
@@ -44,7 +42,7 @@ $icon_Version = 'icon_' . $Version . '_svg';
                 <li><a onclick="mail_me()" rel="noopener" title="E-mail"><i class=<?=$icon_Version;?> style="--svg-name: var(--svg_email);--color: #ffbf00;"></i></a></li>
             <?php } ?>	
             <?php if($Version ==='v2'):?>
-                </div>
+            </ol>
             <?php endif;?>
         </div>
 	</div>
